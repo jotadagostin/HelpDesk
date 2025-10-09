@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
 
-export function LogIn() {
+export function SignIn() {
   const navigate = useNavigate();
 
   return (
@@ -11,15 +11,27 @@ export function LogIn() {
           <div className="mb-7">
             <img src={headerLogoSvg} alt="Helpdesk purple iconlogo" />
           </div>
-          <form className="w-[400px] h-[360px] border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+          <form className="w-[400px] h-[460px] border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
             <div className="mb-10">
-              <h1 className="text-xl font-bold">Acess the portal</h1>
+              <h1 className="text-xl font-bold">Create your account</h1>
               <p className="font-normal text-[12px] text-[var(--gray-300)] ">
-                Log in using your e-mail and password registered
+                Inform your name, e-mail and password to create your account
               </p>
             </div>
 
             <div className="mb-10 flex flex-col gap-4">
+              <label
+                htmlFor="name"
+                className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+              >
+                NAME
+              </label>
+              <input
+                id="name"
+                type="name"
+                placeholder="Type your full name"
+                className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+              />
               <label
                 htmlFor="email"
                 className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
@@ -34,7 +46,7 @@ export function LogIn() {
               />
               <label
                 htmlFor="password"
-                className="text-[var(--gray-300)] font-bold text-[10px] not-italic "
+                className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
               >
                 PASSWORD
               </label>
@@ -50,21 +62,21 @@ export function LogIn() {
               type="submit"
               className="w-[344px] h-[40px] not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
             >
-              Enter
+              Register
             </button>
           </form>
           <div className="w-[400px] h-[161px] border border-gray-200 p-7 rounded">
             <div className="mb-6">
-              <h1 className="text-xl font-bold">Don't have an account yet?</h1>
+              <h1 className="text-xl font-bold">Already have an account?</h1>
               <p className="font-normal text-[12px] text-[var(--gray-300)]">
-                Register right now
+                Enter right now
               </p>
             </div>
             <button
               className="w-[344px] h-[40px] not-italic font-bold text-[14px] text-[var(--gray-100)] bg-[var(--gray-500)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-200)] hover:text-[var(--gray-600)] transition-all duration-200"
-              onClick={() => navigate("/signin")}
+              onClick={() => navigate("/")}
             >
-              Create Account
+              Access account
             </button>
           </div>
         </div>
