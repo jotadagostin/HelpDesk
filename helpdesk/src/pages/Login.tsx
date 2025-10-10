@@ -6,12 +6,12 @@ export function LogIn() {
 
   return (
     <div className="w-full h-screen bg-login  bg-cover bg-center flex items-end justify-end">
-      <div className="w-[50%] h-[98%] bg-[var(--gray-600)] rounded-tl flex flex-col items-center justify-start ">
+      <div className="w-full md:w-[50%] h-full md:h-[98%] bg-[var(--gray-600)] rounded-tl flex flex-col items-center justify-start ">
         <div className="flex flex-col items-center pt-13 gap-3">
           <div className="mb-7">
             <img src={headerLogoSvg} alt="Helpdesk purple iconlogo" />
           </div>
-          <form className="w-[400px] h-[360px] border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+          <form className="w-full max-w-sm h-[360px] border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
             <div className="mb-10">
               <h1 className="text-xl font-bold">Acess the portal</h1>
               <p className="font-normal text-[12px] text-[var(--gray-300)] ">
@@ -48,12 +48,12 @@ export function LogIn() {
 
             <button
               type="submit"
-              className="w-[344px] h-[40px] not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
+              className="w-full h-10 not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
             >
               Enter
             </button>
           </form>
-          <div className="w-[400px] h-[161px] border border-gray-200 p-7 rounded">
+          <div className="w-full max-w-sm  border border-gray-200 p-7 rounded">
             <div className="mb-6">
               <h1 className="text-xl font-bold">Don't have an account yet?</h1>
               <p className="font-normal text-[12px] text-[var(--gray-300)]">
@@ -61,7 +61,7 @@ export function LogIn() {
               </p>
             </div>
             <button
-              className="w-[344px] h-[40px] not-italic font-bold text-[14px] text-[var(--gray-100)] bg-[var(--gray-500)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-200)] hover:text-[var(--gray-600)] transition-all duration-200"
+              className="w-full h-10 not-italic font-bold text-[14px] text-[var(--gray-100)] bg-[var(--gray-500)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-200)] hover:text-[var(--gray-600)] transition-all duration-200"
               onClick={() => navigate("/signin")}
             >
               Create Account

@@ -4,4 +4,4 @@ This is a practical challenge of fullstack training.
 
 Front-end:
 
--tailwindcss for style (with an index.css for styles and variables)
+Tailwindcss for style (with an index.css for styles and variables): -[x] LogIn.tsx (login with your account created) -[x] SignIn.tsx (create your account)
