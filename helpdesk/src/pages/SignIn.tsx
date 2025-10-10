@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
-import { motion } from "framer-motion";
 
 export function SignIn() {
   const navigate = useNavigate();

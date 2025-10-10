@@ -1,5 +1,4 @@
 import { Route, Routes, useLocation } from "react-router";
-
 import { LogIn } from "../pages/LogIn";
 import { SignIn } from "../pages/SignIn";
 
