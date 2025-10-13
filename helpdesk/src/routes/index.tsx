@@ -1,7 +1,7 @@
 import { Route, Routes, useLocation } from "react-router";
 import { LogIn } from "../pages/LogIn";
 import { SignIn } from "../pages/SignIn";
-import { Admin } from "../pages/Admin";
+import { Admin } from "../pages/Admin/Admin";
 
 export function AppRoutes() {
   const location = useLocation();
