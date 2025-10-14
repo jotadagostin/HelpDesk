@@ -2,8 +2,11 @@ import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import techniciansSvg from "../../assets/icons/icon/tecnicos.svg";
+import techiciansWhiteSvg from "../../assets/icons/icon/tecnicos-white.svg";
 import clientsSvg from "../../assets/icons/icon/briefcase-business.svg";
+import clientsWhiteSvg from "../../assets/icons/icon/briefcase-business-white.svg";
 import serviceSvg from "../../assets/icons/icon/service.svg";
+import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 
@@ -36,34 +39,64 @@ export function Admin() {
                 </span>
               </a>
             </li>
-            <li className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all">
+            <li
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+            >
               <a href="" className="flex items-center justify-center gap-3">
                 <img
-                  src={techniciansSvg}
+                  src={isHovered ? techiciansWhiteSvg : techniciansSvg}
                   alt="cliboard icon "
                   className="w-[20px] h-[20px] color-[var(--gray-400)] transition-all hover:pink group-hover:invert"
                 />
-                <span className="text-[var(--gray-400)]">Technicians</span>
+                <span
+                  className={`transition-all ${
+                    isHovered ? "text-white" : "text-[var(--gray-400)]"
+                  }`}
+                >
+                  Technicians
+                </span>
               </a>
             </li>
-            <li className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all">
+            <li
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+            >
               <a href="" className="flex items-center justify-center gap-3">
                 <img
-                  src={clientsSvg}
+                  src={isHovered ? clientsWhiteSvg : clientsSvg}
                   alt="cliboard icon "
                   className="w-[20px] h-[20px]"
                 />
-                <span className="text-[var(--gray-400)]">Clients</span>
+                <span
+                  className={`transition-all ${
+                    isHovered ? "text-white" : "text-[var(--gray-400)]"
+                  }`}
+                >
+                  Clients
+                </span>
               </a>
             </li>
-            <li className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all">
+            <li
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+            >
               <a href="" className="flex items-center justify-center gap-3">
                 <img
-                  src={serviceSvg}
+                  src={isHovered ? servicesWhiteSvg : serviceSvg}
                   alt="cliboard icon "
                   className="w-[20px] h-[20px]"
                 />
-                <span className="text-[var(--gray-400)]">Services</span>
+                <span
+                  className={`transition-all ${
+                    isHovered ? "text-white" : "text-[var(--gray-400)]"
+                  }`}
+                >
+                  Services
+                </span>
               </a>
             </li>
           </ul>
