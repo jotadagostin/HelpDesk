@@ -9,6 +9,8 @@ import serviceSvg from "../../assets/icons/icon/service.svg";
 import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
+import statusOpensvg from "../../assets/icons/icon/TagStatus(open).svg";
+import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 
 export function Admin() {
   const [isHovered, setIsHovered] = useState(false);
@@ -104,17 +106,103 @@ export function Admin() {
 
         <div className="h-[70%]  flex justify-center items-end ">
           <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
-            <img src={avatarSvg} alt="" />
+            <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
-              <span>User Admin</span>
-              <p>user.adm@test.com</p>
+              <span className="text-[var(--gray-600)] text-[14px]">
+                User Admin
+              </span>
+              <p className="text-[var(--gray-400)] text-[12px]">
+                user.adm@test.com
+              </p>
             </div>
           </div>
         </div>
       </div>
       <div className=" w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3">
-        <h1>Calls</h1>
-        <div>table</div>
+        <h1 className="w-[1070px] h-[44px]  font-bold text-[24px] text-[var(--blue-dark)] px-[48px]  py-[52px]">
+          Calls
+        </h1>
+        <div className="px-[48px]  py-[52px]">
+          <table>
+            <thead>
+              <tr>
+                <th>Updated on</th>
+                <th>Id</th>
+                <th>Title and Service</th>
+                <th>Total amount</th>
+                <th>Client</th>
+                <th>Technician</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>12/04/25 15:50</td>
+                <td>00004</td>
+                <td>
+                  <div className="flex flex-col">
+                    <strong>Backup is not working</strong>
+                    <small>Data recuparation</small>
+                  </div>
+                </td>
+                <td>$ 200,00</td>
+                <td>
+                  <div className="flex ">
+                    <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
+                    <small>Andre Costa</small>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex ">
+                    <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
+                    <small>Carlos Silva</small>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex">
+                    <img src={statusOpensvg} alt="" />
+                    <button>
+                      <img src={buttonEditSvg} alt="" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <td>13/04/25 20:56</td>
+                <td>00003</td>
+                <td>
+                  <div className="flex flex-col">
+                    <strong>Slow net</strong>
+                    <small>Net Instation</small>
+                  </div>
+                </td>
+                <td>$ 170,00</td>
+                <td>
+                  <div className="flex ">
+                    <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
+                    <small>Andre Costa</small>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex ">
+                    <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
+                    <small>Carlos Silva</small>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex">
+                    <img src={statusOpensvg} alt="" />
+                    <button>
+                      <img src={buttonEditSvg} alt="" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
