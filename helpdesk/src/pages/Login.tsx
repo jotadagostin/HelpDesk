@@ -42,13 +42,13 @@ export function LogIn() {
                 id="password"
                 type="password"
                 placeholder="Type your password"
-                className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
+                className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)] "
               />
             </div>
 
             <button
               type="submit"
-              className="w-full h-10 not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)] rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
+              className="w-full h-10 not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)]  rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
             >
               Enter
             </button>
