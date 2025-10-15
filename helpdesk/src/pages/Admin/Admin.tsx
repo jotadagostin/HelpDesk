@@ -152,7 +152,7 @@ export function Admin() {
                   </td>
                   <td>$ 200,00</td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2 ">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -162,7 +162,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2 ">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -172,7 +172,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex">
+                    <div className="flex justify-between p-2">
                       <img src={statusOpenSvg} alt="" />
                       <button>
                         <img src={buttonEditSvg} alt="" />
@@ -193,7 +193,7 @@ export function Admin() {
                   </td>
                   <td>$ 170,00</td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -203,7 +203,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -213,7 +213,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex">
+                    <div className="flex justify-between p-2">
                       <img src={statusOpenSvg} alt="" />
                       <button>
                         <img src={buttonEditSvg} alt="" />
@@ -234,7 +234,7 @@ export function Admin() {
                   </td>
                   <td>$ 200,00</td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -244,7 +244,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -254,7 +254,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex">
+                    <div className="flex justify-between p-2">
                       <img src={statusInProgresSvg} alt="" />
                       <button>
                         <img src={buttonEditSvg} alt="" />
@@ -263,9 +263,9 @@ export function Admin() {
                   </td>
                 </tr>
               </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)]">
-                <tr>
-                  <td>10/04/25 10:56</td>
+              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
+                <tr className="">
+                  <td className="">10/04/25 10:56</td>
                   <td>00005</td>
                   <td>
                     <div className="flex flex-col">
@@ -275,7 +275,7 @@ export function Admin() {
                   </td>
                   <td>$ 80,00</td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -285,7 +285,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -295,7 +295,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex">
+                    <div className="flex justify-between p-2">
                       <img src={statusClosedSvg} alt="" />
                       <button>
                         <img src={buttonEditSvg} alt="" />
@@ -318,7 +318,7 @@ export function Admin() {
                   </td>
                   <td>$ 80,00</td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex  gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -328,7 +328,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex ">
+                    <div className="flex gap-2">
                       <img
                         src={avatarSvg}
                         alt=""
@@ -338,7 +338,7 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex">
+                    <div className="flex justify-between p-2">
                       <img src={statusClosedSvg} alt="" />
                       <button>
                         <img src={buttonEditSvg} alt="" />
