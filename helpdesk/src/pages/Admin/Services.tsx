@@ -13,6 +13,8 @@ import { useNavigate } from "react-router";
 import { Button } from "../../components/Button";
 import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 import buttonDeleteSvg from "../../assets/icons/icon/trashButton.svg";
+import blockSvg from "../../assets/icons/icon/ban.svg";
+import checkSvg from "../../assets/icons/icon/circle-check.svg";
 
 export function Services() {
   const [isHovered, setIsHovered] = useState(false);
@@ -141,28 +143,32 @@ export function Services() {
         <div className="w-[90%]  px-[48px]  py-[52px]  flex items-center justify-center  ">
           <div className="w-full border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full ">
-              <thead className="border border-gray-300 ">
+              <thead className="border border-gray-300  ">
                 <tr className="text-[var(--gray-300)] text-[14px]">
-                  <th className="p-[14px] text-left">Name</th>
-                  <th className="p-[14px] text-left">E-mail</th>
+                  <th className="p-[14px] text-left w-[35%]">Title</th>
+                  <th className="p-[14px] text-left w-[35%]">Value</th>
+                  <th className="p-[14px] text-left  flex justify-center">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr className="">
                   <td className="px-2 py-4">
                     <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small className="font-bold">Carlos Silva</small>
+                      <small className="font-bold">Net Instalation</small>
                     </div>
                   </td>
-                  <td>carlos.silve@test.com</td>
-                  <div className="flex items-center justify-end h-[50px] gap-2 pr-2">
+                  <td>$190,00</td>
+                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
+                    <span className="flex mr-9 text-[12px] text-[var(--feedback-done)] font-bold bg-[var(--feedback-bg)] py-1 px-2 rounded-2xl">
+                      Active
+                    </span>
+                    <img src={blockSvg} alt="" />
+                    <small className="text-[var(--gray-300)] text-[12px]">
+                      Desactivate
+                    </small>
                     <img src={buttonEditSvg} alt="" />
-                    <img src={buttonDeleteSvg} alt="" />
                   </div>
                 </tr>
               </tbody>
@@ -170,18 +176,19 @@ export function Services() {
                 <tr className="">
                   <td className="px-2 py-4">
                     <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small className="font-bold">Carlos Silva</small>
+                      <small className="font-bold">Recover Data</small>
                     </div>
                   </td>
-                  <td>carlos.silve@test.com</td>
-                  <div className="flex items-center justify-end h-[50px] gap-2 pr-2">
+                  <td> $200,00</td>
+                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
+                    <span className="flex mr-9 text-[12px] text-[var(--feedback-danger)] font-bold bg-[var(--feedback-danger-bg)] py-1 px-2 rounded-2xl">
+                      Inactive
+                    </span>
+                    <img src={blockSvg} alt="" />
+                    <small className="text-[var(--gray-300)] text-[12px]">
+                      Desactivate
+                    </small>
                     <img src={buttonEditSvg} alt="" />
-                    <img src={buttonDeleteSvg} alt="" />
                   </div>
                 </tr>
               </tbody>
@@ -189,18 +196,19 @@ export function Services() {
                 <tr className="">
                   <td className="px-2 py-4">
                     <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small className="font-bold">Carlos Silva</small>
+                      <small className="font-bold">Hardware Support</small>
                     </div>
                   </td>
-                  <td>carlos.silve@test.com</td>
-                  <div className="flex items-center justify-end h-[50px] gap-2 pr-2">
+                  <td>$140,00</td>
+                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
+                    <span className="flex mr-9 text-[12px] text-[var(--feedback-done)] font-bold bg-[var(--feedback-bg)] py-1 px-2 rounded-2xl">
+                      Active
+                    </span>
+                    <img src={blockSvg} alt="" />
+                    <small className="text-[var(--gray-300)] text-[12px]">
+                      Desactivate
+                    </small>
                     <img src={buttonEditSvg} alt="" />
-                    <img src={buttonDeleteSvg} alt="" />
                   </div>
                 </tr>
               </tbody>
@@ -208,37 +216,19 @@ export function Services() {
                 <tr className="">
                   <td className="px-2 py-4">
                     <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small className="font-bold">Carlos Silva</small>
+                      <small className="font-bold">Software Support</small>
                     </div>
                   </td>
-                  <td>carlos.silve@test.com</td>
-                  <div className="flex items-center justify-end h-[50px] gap-2 pr-2">
+                  <td>$200,00</td>
+                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
+                    <span className="flex mr-9 text-[12px] text-[var(--feedback-done)] font-bold bg-[var(--feedback-bg)] py-1 px-2 rounded-2xl">
+                      Active
+                    </span>
+                    <img src={blockSvg} alt="" />
+                    <small className="text-[var(--gray-300)] text-[12px]">
+                      Desactivate
+                    </small>
                     <img src={buttonEditSvg} alt="" />
-                    <img src={buttonDeleteSvg} alt="" />
-                  </div>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="px-2 py-4">
-                    <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small className="font-bold">Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td>carlos.silve@test.com</td>
-                  <div className="flex items-center justify-end h-[50px] gap-2 pr-2">
-                    <img src={buttonEditSvg} alt="" />
-                    <img src={buttonDeleteSvg} alt="" />
                   </div>
                 </tr>
               </tbody>
