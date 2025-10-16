@@ -2,6 +2,9 @@ import { Route, Routes, useLocation } from "react-router";
 import { LogIn } from "../pages/LogIn";
 import { SignIn } from "../pages/SignIn";
 import { Admin } from "../pages/Admin/Admin";
+import { Tec } from "../pages/Admin/Tec";
+import { Clients } from "../pages/Admin/Clients";
+import { Services } from "../pages/Admin/Services";
 
 export function AppRoutes() {
   const location = useLocation();
@@ -10,6 +13,9 @@ export function AppRoutes() {
       <Route path="/" element={<LogIn />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/tec" element={<Tec />} />
+      <Route path="/clients" element={<Clients />} />
+      <Route path="/services" element={<Services />} />
     </Routes>
   );
 }

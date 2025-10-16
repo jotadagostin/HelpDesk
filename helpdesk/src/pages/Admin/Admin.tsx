@@ -9,6 +9,7 @@ import serviceSvg from "../../assets/icons/icon/service.svg";
 import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
 import statusInProgresSvg from "../../assets/icons/icon/TagStatus(inprogress).svg";
 import statusClosedSvg from "../../assets/icons/icon/TagStatus(closed).svg";
@@ -16,6 +17,7 @@ import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 
 export function Admin() {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="w-full h-screen bg-[var(--gray-100)] flex ">
@@ -48,7 +50,11 @@ export function Admin() {
               onMouseLeave={() => setIsHovered(false)}
               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
-              <a href="" className="flex items-center justify-center gap-3">
+              <a
+                href=""
+                className="flex items-center justify-center gap-3"
+                onClick={() => navigate("/tec")}
+              >
                 <img
                   src={isHovered ? techiciansWhiteSvg : techniciansSvg}
                   alt="cliboard icon "
@@ -68,7 +74,11 @@ export function Admin() {
               onMouseLeave={() => setIsHovered(false)}
               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
-              <a href="" className="flex items-center justify-center gap-3">
+              <a
+                href=""
+                className="flex items-center justify-center gap-3"
+                onClick={() => navigate("/clients")}
+              >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
                   alt="cliboard icon "
@@ -88,7 +98,11 @@ export function Admin() {
               onMouseLeave={() => setIsHovered(false)}
               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
-              <a href="" className="flex items-center justify-center gap-3">
+              <a
+                href=""
+                className="flex items-center justify-center gap-3"
+                onClick={() => navigate("/services")}
+              >
                 <img
                   src={isHovered ? servicesWhiteSvg : serviceSvg}
                   alt="cliboard icon "
@@ -128,7 +142,7 @@ export function Admin() {
         </h1>
         <div className="w-[90%]  px-[48px]  py-[52px]  flex items-center justify-center  ">
           <div className="w-full border border-gray-200 rounded-xl overflow-hidden">
-            <table className="w-full  ">
+            <table className="w-full ">
               <thead className="border border-gray-300 ">
                 <tr className="text-[var(--gray-300)] text-[14px]">
                   <th className="p-[14px] text-left">Updated on</th>
@@ -140,18 +154,18 @@ export function Admin() {
                   <th className="p-[14px] text-left">Status</th>
                 </tr>
               </thead>
-              <tbody className="border border-gray-200 text-[var(--gray-100)]">
+              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr className="">
-                  <td>12/04/25 15:50</td>
-                  <td>00004</td>
-                  <td>
+                  <td className="p-[14px]">12/04/25 15:50</td>
+                  <td className="p-[14px]">00004</td>
+                  <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Backup is not working</strong>
                       <small>Data recuparation</small>
                     </div>
                   </td>
-                  <td>$ 200,00</td>
-                  <td>
+                  <td className="p-[14px]">$ 200,00</td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2 ">
                       <img
                         src={avatarSvg}
@@ -161,7 +175,7 @@ export function Admin() {
                       <small>Andre Costa</small>
                     </div>
                   </td>
-                  <td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2 ">
                       <img
                         src={avatarSvg}
@@ -183,16 +197,16 @@ export function Admin() {
               </tbody>
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
                 <tr>
-                  <td>13/04/25 20:56</td>
-                  <td>00003</td>
-                  <td>
+                  <td className="p-[14px]">13/04/25 20:56</td>
+                  <td className="p-[14px]">00003</td>
+                  <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Slow net</strong>
                       <small>Net Instation</small>
                     </div>
                   </td>
-                  <td>$ 170,00</td>
-                  <td>
+                  <td className="p-[14px]">$ 170,00</td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -202,7 +216,7 @@ export function Admin() {
                       <small>Andre Costa</small>
                     </div>
                   </td>
-                  <td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -224,16 +238,16 @@ export function Admin() {
               </tbody>
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
                 <tr>
-                  <td>12/04/25 09:56</td>
-                  <td>00004</td>
-                  <td>
+                  <td className="p-[14px]">12/04/25 09:56</td>
+                  <td className="p-[14px]">00004</td>
+                  <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Pc does not turn on</strong>
                       <small>Hardware support</small>
                     </div>
                   </td>
-                  <td>$ 200,00</td>
-                  <td>
+                  <td className="p-[14px]">$ 200,00</td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -243,7 +257,7 @@ export function Admin() {
                       <small>Julia Maria</small>
                     </div>
                   </td>
-                  <td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -265,16 +279,16 @@ export function Admin() {
               </tbody>
               <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr className="">
-                  <td className="">10/04/25 10:56</td>
-                  <td>00005</td>
-                  <td>
+                  <td className="p-[14px]">10/04/25 10:56</td>
+                  <td className="p-[14px]">00005</td>
+                  <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Instalation of Software</strong>
                       <small>Software support</small>
                     </div>
                   </td>
-                  <td>$ 80,00</td>
-                  <td>
+                  <td className="p-[14px]">$ 80,00</td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -284,7 +298,7 @@ export function Admin() {
                       <small>Julia Maria</small>
                     </div>
                   </td>
-                  <td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -306,9 +320,9 @@ export function Admin() {
               </tbody>
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
                 <tr>
-                  <td>11/04/25 10:56</td>
-                  <td>00006</td>
-                  <td>
+                  <td className="p-[14px]">11/04/25 10:56</td>
+                  <td className="p-[14px]">00006</td>
+                  <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>
                         My phone does not connect with the computer
@@ -316,8 +330,8 @@ export function Admin() {
                       <small>Software support</small>
                     </div>
                   </td>
-                  <td>$ 80,00</td>
-                  <td>
+                  <td className="p-[14px]">$ 80,00</td>
+                  <td className="p-[14px]">
                     <div className="flex  gap-2">
                       <img
                         src={avatarSvg}
@@ -327,7 +341,7 @@ export function Admin() {
                       <small>Suzana Moura</small>
                     </div>
                   </td>
-                  <td>
+                  <td className="p-[14px]">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
