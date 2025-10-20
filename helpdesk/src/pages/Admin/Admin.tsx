@@ -17,11 +17,13 @@ import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 
 export function Admin() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-screen bg-[var(--gray-100)] flex ">
-      <div className="w-[200px] h-screen bg-[var(--gray-100)]   flex flex-col">
+    // sidebar desktop:
+    <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row ">
+      <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)]    flex-col">
         <img src={adminMenuSvg} alt="HelpDesk logo" />
         <nav className="w-full  justify-center items-center pt-5">
           <ul className="">
