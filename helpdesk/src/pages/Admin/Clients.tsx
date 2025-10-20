@@ -16,11 +16,127 @@ import buttonDeleteSvg from "../../assets/icons/icon/trashButton.svg";
 
 export function Clients() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-screen bg-[var(--gray-100)] flex ">
-      <div className="w-[200px] h-screen bg-[var(--gray-100)]   flex flex-col">
+    <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row">
+      {/* Topbar - apenas para mobile */}
+      <div className="flex items-center justify-between px-4 py-3 md:hidden bg-[var(--gray-100)]">
+        {/* Mobile Sidebar */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden fixed top-0 left-0 z-50 w-[200px] h-full bg-[var(--gray-100)] shadow-lg flex flex-col">
+            {/* Botão de fechar */}
+            <div className="flex justify-end p-4">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[var(--gray-600)] hover:text-[var(--blue-dark)]"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Nav Items */}
+            <nav className="flex-1 px-2">
+              <ul className="flex flex-col gap-2">
+                <li
+                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
+                  onClick={() => {
+                    navigate("/admin");
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <img src={callsSvg} alt="Calls" className="w-5 h-5" />
+                  <span className="text-[var(--gray-400)]">Calls</span>
+                </li>
+                <li
+                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
+                  onClick={() => {
+                    navigate("/tec");
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <img
+                    src={techniciansSvg}
+                    alt="Technicians"
+                    className="w-5 h-5"
+                  />
+                  <span className="text-[var(--gray-400)]">Technicians</span>
+                </li>
+                <li
+                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
+                  onClick={() => {
+                    navigate("/clients");
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <img src={clientsSvg} alt="Clients" className="w-5 h-5" />
+                  <span className="text-[var(--gray-400)]">Clients</span>
+                </li>
+                <li
+                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
+                  onClick={() => {
+                    navigate("/services");
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <img src={serviceSvg} alt="Services" className="w-5 h-5" />
+                  <span className="text-[var(--gray-400)]">Services</span>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
+
+        {/* Botão burger */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="bg-[var(--gray-200)]"
+        >
+          <svg
+            className="w-6 h-6 text-[var(--gray-600)]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+
+        {/* Logo ou título */}
+        <div className="w-[200px] h-[44px] flex items-center">
+          <img src={adminMenuSvg} alt="" />
+        </div>
+
+        {/* Avatar Admin */}
+        <div>
+          <img
+            src={avatarSvg}
+            alt="User avatar"
+            className="w-8 h-8 rounded-full"
+          />
+        </div>
+      </div>
+      <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)]    flex-col">
         <img src={adminMenuSvg} alt="HelpDesk logo" />
         <nav className="w-full  justify-center items-center pt-5">
           <ul className="">
