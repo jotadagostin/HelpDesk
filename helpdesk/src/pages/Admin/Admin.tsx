@@ -11,8 +11,11 @@ import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
+import statusOpenMobile from "../../assets/icons/icon/statusOpenMobile.svg";
 import statusInProgresSvg from "../../assets/icons/icon/TagStatus(inprogress).svg";
+import statusInProgressMobile from "../../assets/icons/icon/statusInProgressMobile.svg";
 import statusClosedSvg from "../../assets/icons/icon/TagStatus(closed).svg";
+import statusClosedMobile from "../../assets/icons/icon/statusClosedMobile.svg";
 import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 
 export function Admin() {
@@ -138,36 +141,44 @@ export function Admin() {
       </div>
 
       {/* Div Calls starts here: */}
-      <div className=" w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center">
-        <h1 className="w-[90%] h-[44px]  font-bold text-[24px] text-[var(--blue-dark)] px-[48px]  py-[52px] ">
+      <div className=" w-full  bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-left px-4 py-4 sm:px-26">
+        <h1 className="w-full max-w-screen-lg  font-bold text-[20px] sm:text-[24px] text-[var(--blue-dark)] px-[48px]  py-6">
           Calls
         </h1>
-        <div className="w-[90%]  px-[48px]  py-[52px]  flex items-center justify-center  ">
+        <div className="w-full h-screen max-w-screen-lg  overflow-x-auto   ">
           <div className="w-full border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full ">
               <thead className="border border-gray-300 ">
                 <tr className="text-[var(--gray-300)] text-[14px]">
                   <th className="p-[14px] text-left">Updated on</th>
-                  <th className="p-[14px] text-left">Id</th>
+                  <th className="p-[14px] text-left hidden md:table-cell">
+                    Id
+                  </th>
                   <th className="p-[14px] text-left">Title and Service</th>
-                  <th className="p-[14px] text-left">Total amount</th>
-                  <th className="p-[14px] text-left">Client</th>
-                  <th className="p-[14px] text-left">Technician</th>
+                  <th className="p-[14px] text-left hidden md:table-cell">
+                    Total amount
+                  </th>
+                  <th className="p-[14px] text-left hidden md:table-cell">
+                    Client
+                  </th>
+                  <th className="p-[14px] text-left hidden md:table-cell">
+                    Technician
+                  </th>
                   <th className="p-[14px] text-left">Status</th>
                 </tr>
               </thead>
               <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr className="">
                   <td className="p-[14px]">12/04/25 15:50</td>
-                  <td className="p-[14px]">00004</td>
+                  <td className="p-[14px] hidden md:table-cell">00004</td>
                   <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Backup is not working</strong>
                       <small>Data recuparation</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">$ 200,00</td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">$ 200,00</td>
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2 ">
                       <img
                         src={avatarSvg}
@@ -177,7 +188,7 @@ export function Admin() {
                       <small>Andre Costa</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2 ">
                       <img
                         src={avatarSvg}
@@ -189,26 +200,35 @@ export function Admin() {
                   </td>
                   <td>
                     <div className="flex justify-between p-2">
-                      <img src={statusOpenSvg} alt="" />
+                      <img
+                        src={statusOpenSvg}
+                        alt=""
+                        className="hidden md:block "
+                      />
+                      <img
+                        src={statusOpenMobile}
+                        alt=""
+                        className="block md:hidden"
+                      />
                       <button>
-                        <img src={buttonEditSvg} alt="" />
+                        <img src={buttonEditSvg} alt="" className="" />
                       </button>
                     </div>
                   </td>
                 </tr>
               </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)]">
+              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr>
                   <td className="p-[14px]">13/04/25 20:56</td>
-                  <td className="p-[14px]">00003</td>
+                  <td className="p-[14px] hidden md:table-cell">00003</td>
                   <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Slow net</strong>
                       <small>Net Instation</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">$ 170,00</td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">$ 170,00</td>
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -218,7 +238,7 @@ export function Admin() {
                       <small>Andre Costa</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -230,7 +250,16 @@ export function Admin() {
                   </td>
                   <td>
                     <div className="flex justify-between p-2">
-                      <img src={statusOpenSvg} alt="" />
+                      <img
+                        src={statusOpenSvg}
+                        alt=""
+                        className="hidden md:block "
+                      />
+                      <img
+                        src={statusOpenMobile}
+                        alt=""
+                        className="block md:hidden"
+                      />
                       <button>
                         <img src={buttonEditSvg} alt="" />
                       </button>
@@ -241,15 +270,15 @@ export function Admin() {
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
                 <tr>
                   <td className="p-[14px]">12/04/25 09:56</td>
-                  <td className="p-[14px]">00004</td>
+                  <td className="p-[14px] hidden md:table-cell">00004</td>
                   <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Pc does not turn on</strong>
                       <small>Hardware support</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">$ 200,00</td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px ] hidden md:table-cell">$ 200,00</td>
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -259,7 +288,7 @@ export function Admin() {
                       <small>Julia Maria</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -270,8 +299,17 @@ export function Admin() {
                     </div>
                   </td>
                   <td>
-                    <div className="flex justify-between p-2">
-                      <img src={statusInProgresSvg} alt="" />
+                    <div className="flex justify-between items-center gap-1 p-2">
+                      <img
+                        src={statusInProgresSvg}
+                        alt=""
+                        className="hidden md:block"
+                      />
+                      <img
+                        src={statusInProgressMobile}
+                        alt=""
+                        className="block md:hidden "
+                      />
                       <button>
                         <img src={buttonEditSvg} alt="" />
                       </button>
@@ -282,15 +320,15 @@ export function Admin() {
               <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr className="">
                   <td className="p-[14px]">10/04/25 10:56</td>
-                  <td className="p-[14px]">00005</td>
+                  <td className="p-[14px] hidden md:table-cell">00005</td>
                   <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>Instalation of Software</strong>
                       <small>Software support</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">$ 80,00</td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">$ 80,00</td>
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -300,7 +338,7 @@ export function Admin() {
                       <small>Julia Maria</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -312,7 +350,16 @@ export function Admin() {
                   </td>
                   <td>
                     <div className="flex justify-between p-2">
-                      <img src={statusClosedSvg} alt="" />
+                      <img
+                        src={statusClosedSvg}
+                        alt=""
+                        className="hidden md:block"
+                      />
+                      <img
+                        src={statusClosedMobile}
+                        alt=""
+                        className="block md:hidden"
+                      />
                       <button>
                         <img src={buttonEditSvg} alt="" />
                       </button>
@@ -323,7 +370,7 @@ export function Admin() {
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
                 <tr>
                   <td className="p-[14px]">11/04/25 10:56</td>
-                  <td className="p-[14px]">00006</td>
+                  <td className="p-[14px] hidden md:table-cell">00006</td>
                   <td className="p-[14px]">
                     <div className="flex flex-col">
                       <strong>
@@ -332,8 +379,8 @@ export function Admin() {
                       <small>Software support</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">$ 80,00</td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">$ 80,00</td>
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex  gap-2">
                       <img
                         src={avatarSvg}
@@ -343,7 +390,7 @@ export function Admin() {
                       <small>Suzana Moura</small>
                     </div>
                   </td>
-                  <td className="p-[14px]">
+                  <td className="p-[14px] hidden md:table-cell">
                     <div className="flex gap-2">
                       <img
                         src={avatarSvg}
@@ -355,7 +402,16 @@ export function Admin() {
                   </td>
                   <td>
                     <div className="flex justify-between p-2">
-                      <img src={statusClosedSvg} alt="" />
+                      <img
+                        src={statusClosedSvg}
+                        alt=""
+                        className="hidden md:block"
+                      />
+                      <img
+                        src={statusClosedMobile}
+                        alt=""
+                        className="block md:hidden"
+                      />
                       <button>
                         <img src={buttonEditSvg} alt="" />
                       </button>
