@@ -251,9 +251,9 @@ export function Tec() {
       </div>
 
       {/* Div Tecs starts here: */}
-      <div className=" w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center">
+      {/* <div className=" w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center">
         <div className="w-[90%] flex items-center gap-3 ">
-          <h1 className="w-[90%] h-[44px]  font-bold text-[24px] text-[var(--blue-dark)] px-[48px]  py-[52px] ">
+          <h1 className="w-[90%] h-[44px]  font-bold text-[24px] text-[var(--blue-dark)]  px-4 py-6 md:px-[48px] md:py-[52px] ">
             Technicians
           </h1>
           <Button />
@@ -264,7 +264,9 @@ export function Tec() {
               <thead className="border border-gray-300 ">
                 <tr className="text-[var(--gray-300)] text-[14px]">
                   <th className="p-[14px] text-left">Name</th>
-                  <th className="p-[14px] text-left">E-mail</th>
+                  <th className="p-[14px] text-left  hidden md:table-cell">
+                    E-mail
+                  </th>
                   <th className="p-[14px] text-left">Available</th>
                 </tr>
               </thead>
@@ -280,7 +282,9 @@ export function Tec() {
                       <small className="font-bold">Carlos Silva</small>
                     </div>
                   </td>
-                  <td>carlos.silve@test.com</td>
+                  <td className=" hidden md:table-cell">
+                    carlos.silve@test.com
+                  </td>
                   <td className="px-2 py-4">
                     <div className="flex justify-between">
                       <div className="flex gap-1">
@@ -313,7 +317,9 @@ export function Tec() {
                       <small className="font-bold">Ana Oliveria</small>
                     </div>
                   </td>
-                  <td>ana.oliveira@test.com</td>
+                  <td className=" hidden md:table-cell">
+                    ana.oliveira@test.com
+                  </td>
                   <td className="px-2 py-4">
                     <div className="flex justify-between">
                       <div className="flex gap-1">
@@ -346,7 +352,9 @@ export function Tec() {
                       <small className="font-bold">Cintia lucia</small>
                     </div>
                   </td>
-                  <td>cintia.lucia@test.com</td>
+                  <td className=" hidden md:table-cell">
+                    cintia.lucia@test.com
+                  </td>
                   <td className="px-2 py-4">
                     <div className="flex justify-between">
                       <div className="flex gap-1">
@@ -379,7 +387,9 @@ export function Tec() {
                       <small className="font-bold">Marcos Alves</small>
                     </div>
                   </td>
-                  <td>marcos.alves@test.com</td>
+                  <td className=" hidden md:table-cell">
+                    marcos.alves@test.com
+                  </td>
                   <td className="px-2 py-4">
                     <div className="flex justify-between">
                       <div className="flex gap-1">
@@ -395,6 +405,162 @@ export function Tec() {
                       </div>
                       <div className="">
                         <img src={buttonEditSvg} alt="" className="" />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> */}
+      <div className="w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center min-h-screen md:min-h-auto">
+        <div className="w-[90%] flex items-center gap-3  h-[10%] justify-center">
+          <h1 className="w-[90%] h-[44px] font-bold text-[24px] text-[var(--blue-dark)] px-4 py-6 md:px-[48px] md:py-[52px] flex items-center">
+            Technicians
+          </h1>
+          <Button />
+        </div>
+        <div className=" w-[90%] px-4 py-6 md:px-[48px] md:py-[52px] flex items-center justify-center">
+          {/* Container com scroll horizontal no mobile */}
+          <div className="w-full border border-gray-200 rounded-xl overflow-x-auto">
+            <table className="w-full min-w-[600px] md:min-w-full table-auto">
+              <thead className="border border-gray-300">
+                <tr className="text-[var(--gray-300)] text-[14px]">
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left hidden md:table-cell">E-mail</th>
+                  <th className="p-3 text-left">Available</th>
+                </tr>
+              </thead>
+              <tbody className="border border-gray-200 text-[var(--gray-100)]">
+                <tr>
+                  <td className="px-2 py-3">
+                    <div className="flex items-center gap-2">
+                      <img src={avatarSvg} alt="" className="w-5 h-5" />
+                      <small className="font-bold text-sm">Carlos Silva</small>
+                    </div>
+                  </td>
+                  <td className="hidden md:table-cell text-sm">
+                    carlos.silve@test.com
+                  </td>
+                  <td className="px-2 py-3">
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-1">
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          08:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          09:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          10:00
+                        </div>
+                      </div>
+                      <div>
+                        <img
+                          src={buttonEditSvg}
+                          alt="Edit"
+                          className="w-5 h-5"
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-2 py-3">
+                    <div className="flex gap-2 items-center">
+                      <img src={avatarSvg} alt="" className="w-5 h-5" />
+                      <small className="font-bold text-sm">Ana Oliveria</small>
+                    </div>
+                  </td>
+                  <td className="hidden md:table-cell text-sm">
+                    ana.oliveira@test.com
+                  </td>
+                  <td className="px-2 py-3">
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-1">
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          08:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          15:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          16:00
+                        </div>
+                      </div>
+                      <div>
+                        <img
+                          src={buttonEditSvg}
+                          alt="Edit"
+                          className="w-5 h-5"
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-2 py-3">
+                    <div className="flex gap-2 items-center">
+                      <img src={avatarSvg} alt="" className="w-5 h-5" />
+                      <small className="font-bold text-sm">Cintia Lucia</small>
+                    </div>
+                  </td>
+                  <td className="hidden md:table-cell text-sm">
+                    cintia.lucia@test.com
+                  </td>
+                  <td className="px-2 py-3">
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-1">
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          08:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          11:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          18:00
+                        </div>
+                      </div>
+                      <div>
+                        <img
+                          src={buttonEditSvg}
+                          alt="Edit"
+                          className="w-5 h-5"
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-2 py-3">
+                    <div className="flex gap-2 items-center">
+                      <img src={avatarSvg} alt="" className="w-5 h-5" />
+                      <small className="font-bold text-sm">Marcos Alves</small>
+                    </div>
+                  </td>
+                  <td className="hidden md:table-cell text-sm">
+                    marcos.alves@test.com
+                  </td>
+                  <td className="px-2 py-3">
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-1">
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          08:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          09:00
+                        </div>
+                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
+                          10:00
+                        </div>
+                      </div>
+                      <div>
+                        <img
+                          src={buttonEditSvg}
+                          alt="Edit"
+                          className="w-5 h-5"
+                        />
                       </div>
                     </div>
                   </td>
