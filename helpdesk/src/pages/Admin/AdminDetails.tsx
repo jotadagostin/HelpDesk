@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/clock-2.svg";
 import checkSvg from "../../assets/icons/icon/circle-check-big.svg";
+import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
 
 export function CallsDetails() {
   const [isHovered, setIsHovered] = useState(false);
@@ -248,11 +249,16 @@ export function CallsDetails() {
 
       {/* Div Calldetails starts here: */}
       <div className=" w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center">
-        <div className="flex items-center  gap-1">
-          <div className="flex flex-col">
+        <div className="flex items-center    w-full justify-between  mt-[52px] px-45 ">
+          <div className="flex flex-col gap-2">
             <div className="flex gap-1 items-center">
               <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
-              <button className="text-[var(--gray-300)] text-[12px]">
+              <button
+                className="text-[var(--gray-300)] text-[12px]"
+                onClick={() => {
+                  navigate("/admin");
+                }}
+              >
                 return
               </button>
             </div>
@@ -261,17 +267,40 @@ export function CallsDetails() {
             </h1>
           </div>
           <div className="flex gap-2 text-[var(--gray-100)]">
-            <button className="flex bg-gray-300 rounded p-2 gap-1">
+            <button className="flex bg-gray-300 rounded p-3 gap-2">
               <img src={clockSvg} alt="" />
-              <span>In attendance</span>
+              <span className="font-bold text-[14px] text-center">
+                In attendance
+              </span>
             </button>
-            <button className="flex bg-gray-300 rounded p-2 gap-1">
+            <button className="flex bg-gray-300 rounded p-3 gap-2 font-bold text-[14px]">
               <img src={checkSvg} alt="" />
-              <span>Closed</span>
+              <span className="font-bold">Closed</span>
             </button>
           </div>
         </div>
+
+        {/* Calls details table: */}
+        <div className="flex  w-full">
+          <div className="border flex ">
+            <div>
+              <div className="flex">
+                <span>0004</span>
+                <h3>Backup is not working</h3>
+              </div>
+              <img src={statusOpen} alt="" />
+            </div>
+          </div>
+          <div>
+            <span>Description</span>
+          </div>
+
+          <div className="">
+            <h1>table 2</h1>
+          </div>
+        </div>
       </div>
+
       {/* Div Callsdetails ends here. */}
     </div>
   );

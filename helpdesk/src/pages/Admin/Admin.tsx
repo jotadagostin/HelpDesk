@@ -326,7 +326,12 @@ export function Admin() {
                         className="block md:hidden"
                       />
                       <button>
-                        <img src={buttonEditSvg} alt="" className="" />
+                        <img
+                          src={buttonEditSvg}
+                          alt=""
+                          className=""
+                          onClick={() => navigate("/callsdetails")}
+                        />
                       </button>
                     </div>
                   </td>
