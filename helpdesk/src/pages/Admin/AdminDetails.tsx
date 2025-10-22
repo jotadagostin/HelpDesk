@@ -232,7 +232,7 @@ export function CallsDetails() {
           </ul>
         </nav>
 
-        <div className="h-[70%]  flex justify-center items-end ">
+        <div className="h-[70%]  flex justify-center items-end">
           <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
@@ -248,8 +248,9 @@ export function CallsDetails() {
       </div>
 
       {/* Div Calldetails starts here: */}
-      <div className=" w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center">
-        <div className="flex items-center    w-full justify-between  mt-[52px] px-45 ">
+      <div className="w-full bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center px-4 sm:px-8">
+        {/* Top Navigation & Title */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center w-full max-w-[1200px] justify-between mt-[52px] gap-4">
           <div className="flex flex-col gap-2">
             <div className="flex gap-1 items-center">
               <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
@@ -266,25 +267,28 @@ export function CallsDetails() {
               Detailed call
             </h1>
           </div>
-          <div className="flex gap-2 text-[var(--gray-100)]">
-            <button className="flex bg-gray-300 rounded p-3 gap-2">
+
+          {/* Buttons */}
+          <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
+            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
               <img src={clockSvg} alt="" />
               <span className="font-bold text-[14px] text-center">
                 In attendance
               </span>
             </button>
-            <button className="flex bg-gray-300 rounded p-3 gap-2 font-bold text-[14px]">
+            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
               <img src={checkSvg} alt="" />
               <span className="font-bold">Closed</span>
             </button>
           </div>
         </div>
 
-        {/* Calls details table: */}
-        <div className="flex  w-full">
-          <div className="border rounded border-[var(--gray-500)]">
-            <div className="flex justify-between p-1">
-              <div className="mb-5">
+        {/* Call Details and Technician Info */}
+        <div className="flex flex-col lg:flex-row w-full max-w-[1200px] gap-6 justify-center items-stretch mt-6">
+          {/* Call Details Card */}
+          <div className="border rounded border-[var(--gray-500)] w-full lg:w-[800px] p-5">
+            <div className="flex justify-between mb-5">
+              <div>
                 <span className="text-[var(--gray-300)] text-[12px]">0004</span>
                 <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
                   Backup is not working
@@ -292,6 +296,7 @@ export function CallsDetails() {
               </div>
               <img src={statusOpen} alt="" />
             </div>
+
             <div className="mb-5">
               <span className="text-[var(--gray-400)] text-[12px]">
                 Description
@@ -301,14 +306,16 @@ export function CallsDetails() {
                 successful run was a week ago.
               </p>
             </div>
+
             <div className="mb-5">
               <span className="text-[var(--gray-400)] text-[12px]">
                 Category
               </span>
               <p className="text-[var(--gray-200)] text-[14px]">Data recover</p>
             </div>
-            <div className="flex items-center justify-start gap-20">
-              <div className="">
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-10 sm:gap-20 mb-5">
+              <div>
                 <span className="text-[var(--gray-400)] text-[12px]">
                   Created at
                 </span>
@@ -316,19 +323,20 @@ export function CallsDetails() {
                   12/04/25 09:12
                 </p>
               </div>
-              <div className="mb-5">
+              <div>
                 <span className="text-[var(--gray-400)] text-[12px]">
-                  Created at
+                  Updated at
                 </span>
                 <p className="text-[var(--gray-200)] text-[14px]">
                   12/04/25 09:12
                 </p>
               </div>
             </div>
+
             <div className="mb-5">
               <span className="text-[var(--gray-400)] text-[12px]">Client</span>
-              <div className="flex gap-2">
-                <img src={avatarSvg} alt="" className="w-[20px] h-[20px] " />
+              <div className="flex gap-2 items-center">
+                <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
                 <p className="text-[var(--gray-200)] text-[14px]">
                   Andre Costa
                 </p>
@@ -336,45 +344,51 @@ export function CallsDetails() {
             </div>
           </div>
 
-          <div className="border rounded border-[var(--gray-500)]">
-            <div>
+          {/* Technician + Prices Card */}
+          <div className="border rounded border-[var(--gray-500)] p-6 w-full lg:max-w-[400px]">
+            <div className="mb-5">
               <span className="text-[var(--gray-400)] text-[12px]">
                 Responsible technician
               </span>
-              <div className="flex gap-2 items-center">
-                <img src={avatarSvg} alt="" className="w-[32px] h-[32px] " />
+              <div className="flex gap-2 items-center mt-2">
+                <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
                 <div>
                   <p className="text-[var(--gray-200)] text-[14px]">
                     Carlos Silva
                   </p>
-                  <small>carlos.silva@test.com</small>
+                  <small className="text-[var(--gray-300)]">
+                    carlos.silva@test.com
+                  </small>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col ">
+
+            <div className="flex flex-col gap-2 mb-5">
               <span className="text-[var(--gray-400)] text-[12px]">Prices</span>
-              <div className="flex">
+              <div className="flex justify-between">
                 <p className="text-[var(--gray-200)] text-[14px]">Base price</p>
                 <p className="text-[var(--gray-200)] text-[14px]">$400,00</p>
               </div>
             </div>
-            <div className="flex flex-col">
+
+            <div className="flex flex-col gap-2">
               <span className="text-[var(--gray-400)] text-[12px]">
                 Additional
               </span>
-              <div className="flex">
+              <div className="flex justify-between">
                 <p className="text-[var(--gray-200)] text-[14px]">
                   Backup sign up
                 </p>
                 <p className="text-[var(--gray-200)] text-[14px]">$120,00</p>
               </div>
-              <div className="flex">
+              <div className="flex justify-between">
                 <p className="text-[var(--gray-200)] text-[14px]">
                   PC formatting
                 </p>
                 <p className="text-[var(--gray-200)] text-[14px]">$70,00</p>
               </div>
-              <div className="flex gap-1 border-t border-[var(--gray-500)]">
+
+              <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
                 <span className="text-[var(--gray-200)] text-[14px] font-bold">
                   Total
                 </span>
@@ -386,7 +400,6 @@ export function CallsDetails() {
           </div>
         </div>
       </div>
-
       {/* Div Callsdetails ends here. */}
     </div>
   );
