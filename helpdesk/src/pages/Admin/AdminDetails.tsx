@@ -282,21 +282,107 @@ export function CallsDetails() {
 
         {/* Calls details table: */}
         <div className="flex  w-full">
-          <div className="border flex ">
-            <div>
-              <div className="flex">
-                <span>0004</span>
-                <h3>Backup is not working</h3>
+          <div className="border rounded border-[var(--gray-500)]">
+            <div className="flex justify-between p-1">
+              <div className="mb-5">
+                <span className="text-[var(--gray-300)] text-[12px]">0004</span>
+                <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
+                  Backup is not working
+                </h3>
               </div>
               <img src={statusOpen} alt="" />
             </div>
-          </div>
-          <div>
-            <span>Description</span>
+            <div className="mb-5">
+              <span className="text-[var(--gray-400)] text-[12px]">
+                Description
+              </span>
+              <p className="text-[var(--gray-200)] text-[14px]">
+                The automatic backup system has stopped working. The last
+                successful run was a week ago.
+              </p>
+            </div>
+            <div className="mb-5">
+              <span className="text-[var(--gray-400)] text-[12px]">
+                Category
+              </span>
+              <p className="text-[var(--gray-200)] text-[14px]">Data recover</p>
+            </div>
+            <div className="flex items-center justify-start gap-20">
+              <div className="">
+                <span className="text-[var(--gray-400)] text-[12px]">
+                  Created at
+                </span>
+                <p className="text-[var(--gray-200)] text-[14px]">
+                  12/04/25 09:12
+                </p>
+              </div>
+              <div className="mb-5">
+                <span className="text-[var(--gray-400)] text-[12px]">
+                  Created at
+                </span>
+                <p className="text-[var(--gray-200)] text-[14px]">
+                  12/04/25 09:12
+                </p>
+              </div>
+            </div>
+            <div className="mb-5">
+              <span className="text-[var(--gray-400)] text-[12px]">Client</span>
+              <div className="flex gap-2">
+                <img src={avatarSvg} alt="" className="w-[20px] h-[20px] " />
+                <p className="text-[var(--gray-200)] text-[14px]">
+                  Andre Costa
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="">
-            <h1>table 2</h1>
+          <div className="border rounded border-[var(--gray-500)]">
+            <div>
+              <span className="text-[var(--gray-400)] text-[12px]">
+                Responsible technician
+              </span>
+              <div className="flex gap-2 items-center">
+                <img src={avatarSvg} alt="" className="w-[32px] h-[32px] " />
+                <div>
+                  <p className="text-[var(--gray-200)] text-[14px]">
+                    Carlos Silva
+                  </p>
+                  <small>carlos.silva@test.com</small>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col ">
+              <span className="text-[var(--gray-400)] text-[12px]">Prices</span>
+              <div className="flex">
+                <p className="text-[var(--gray-200)] text-[14px]">Base price</p>
+                <p className="text-[var(--gray-200)] text-[14px]">$400,00</p>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[var(--gray-400)] text-[12px]">
+                Additional
+              </span>
+              <div className="flex">
+                <p className="text-[var(--gray-200)] text-[14px]">
+                  Backup sign up
+                </p>
+                <p className="text-[var(--gray-200)] text-[14px]">$120,00</p>
+              </div>
+              <div className="flex">
+                <p className="text-[var(--gray-200)] text-[14px]">
+                  PC formatting
+                </p>
+                <p className="text-[var(--gray-200)] text-[14px]">$70,00</p>
+              </div>
+              <div className="flex gap-1 border-t border-[var(--gray-500)]">
+                <span className="text-[var(--gray-200)] text-[14px] font-bold">
+                  Total
+                </span>
+                <span className="text-[var(--gray-200)] text-[14px] font-bold">
+                  $395,00
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
