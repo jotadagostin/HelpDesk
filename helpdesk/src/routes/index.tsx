@@ -7,6 +7,7 @@ import { Clients } from "../pages/Admin/Clients";
 import { Services } from "../pages/Admin/Services";
 import { CallsDetails } from "../pages/Admin/AdminDetails";
 import { TecProfile } from "../pages/Admin/TecProfile";
+import { TecProfileEdit } from "../pages/Admin/TecProfileEdit";
 
 export function AppRoutes() {
   const location = useLocation();
@@ -20,6 +21,7 @@ export function AppRoutes() {
       <Route path="/services" element={<Services />} />
       <Route path="/callsdetails" element={<CallsDetails />} />
       <Route path="/tecprofile" element={<TecProfile />} />
+      <Route path="/tecprofileedit" element={<TecProfileEdit />} />
     </Routes>
   );
 }
