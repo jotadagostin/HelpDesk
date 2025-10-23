@@ -10,10 +10,9 @@ import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Button } from "../../components/Button";
-import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
+import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 
-export function Tec() {
+export function TecProfile() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -251,170 +250,160 @@ export function Tec() {
       </div>
 
       <div className="w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center min-h-screen md:min-h-auto">
-        <div className="w-[90%] flex items-center h-[10%] justify-start ">
-          <h1 className="w-[90%] h-[44px] font-bold text-[24px] text-[var(--blue-dark)] px-4 py-6 md:px-[48px] md:py-[52px] flex items-center">
-            Technicians
-          </h1>
-          <Button />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center w-full max-w-[1200px] justify-between mt-[52px] gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-1 items-center">
+              <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
+              <button
+                className="text-[var(--gray-300)] text-[12px]"
+                onClick={() => {
+                  navigate("/admin");
+                }}
+              >
+                return
+              </button>
+            </div>
+            <h1 className="text-[var(--blue-dark)] text-[24px] font-bold">
+              Technician profile
+            </h1>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
+            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
+              <span className="font-bold text-[14px] text-center px-3">
+                Cancel
+              </span>
+            </button>
+            <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
+              <span className="font-bold px-3 ">Save</span>
+            </button>
+          </div>
         </div>
-        <div className=" w-[90%] px-4 py-6 md:px-[48px] md:py-[52px] flex items-center justify-center">
-          {/* Container com scroll horizontal no mobile */}
-          <div className="w-full border border-gray-200 rounded-xl overflow-x-auto">
-            <table className="w-full min-w-[600px] md:min-w-full table-auto">
-              <thead className="border border-gray-300">
-                <tr className="text-[var(--gray-300)] text-[14px]">
-                  <th className="p-3 text-left">Name</th>
-                  <th className="p-3 text-left hidden md:table-cell">E-mail</th>
-                  <th className="p-3 text-left">Available</th>
-                </tr>
-              </thead>
-              <tbody className="border border-gray-200 text-[var(--gray-100)]">
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex items-center gap-2">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    carlos.silve@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          09:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          10:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex gap-2 items-center">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Ana Oliveria</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    ana.oliveira@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          15:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          16:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex gap-2 items-center">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Cintia Lucia</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    cintia.lucia@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          11:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          18:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex gap-2 items-center">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Marcos Alves</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    marcos.alves@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          09:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          10:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+        <div className="flex  justify-center gap-10 items-start mt-10 w-[100%] ">
+          <div className="border border-[var(--gray-600)] rounded ">
+            <div className="">
+              <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+                <div className="mb-10">
+                  <h1 className="text-xl font-bold">Personal data</h1>
+                  <p className="font-normal text-[12px] text-[var(--gray-300)] ">
+                    Set technician profile information
+                  </p>
+                </div>
+
+                <div className="mb-10 flex flex-col gap-4">
+                  <label
+                    htmlFor="name"
+                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                  >
+                    NAME
+                  </label>
+                  <input
+                    id="name"
+                    type="name"
+                    placeholder="Type your full name"
+                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                  />
+                  <label
+                    htmlFor="email"
+                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                  >
+                    E-MAIL
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="example@email.com"
+                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                  />
+                  <label
+                    htmlFor="password"
+                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                  >
+                    PASSWORD
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="Set the acess password"
+                    className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+          <div className="border border-[var(--gray-500)] rounded flex flex-col items-start justify-start pt-5 pl-10 pb-10 w-[45%] ">
+            <div className="mb-10">
+              <h1 className="text-xl font-bold">Opening hours</h1>
+              <p className="font-normal text-[12px] text-[var(--gray-300)] ">
+                Select the technician's availability hours for service
+              </p>
+            </div>
+            <div>
+              <div className="mb-5">
+                <h3 className="text-[var(--gray-300)] text-[10px]">MORNING</h3>
+                <div className="flex gap-1">
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    7:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    8:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    9:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    10:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    11:00
+                  </span>
+                </div>
+              </div>
+              <div className="mb-5">
+                <h3 className="text-[var(--gray-300)] text-[10px]">
+                  AFTERNOON
+                </h3>
+                <div className="flex gap-1">
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    7:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    8:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    9:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    10:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    11:00
+                  </span>
+                </div>
+              </div>
+              <div className="">
+                <h3 className="text-[var(--gray-300)] text-[10px]">EVENING</h3>
+                <div className="flex gap-1">
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    7:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    8:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    9:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    10:00
+                  </span>
+                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                    11:00
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

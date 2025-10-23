@@ -260,7 +260,7 @@ export function Admin() {
         <h1 className="w-full max-w-screen-lg  font-bold text-[20px] sm:text-[24px] text-[var(--blue-dark)] px-[48px]  py-6">
           Calls
         </h1>
-        <div className="w-full h-screen max-w-screen-lg  overflow-x-auto   ">
+        <div className="w-full h-screen md:max-w-screen-2xl overflow-x-auto mx-auto px-4   ">
           <div className="w-full border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full ">
               <thead className="border border-gray-300 ">
