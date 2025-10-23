@@ -64,7 +64,7 @@ export function TecProfileEdit() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/tec");
+                    navigate("tec");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -78,7 +78,7 @@ export function TecProfileEdit() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/clients");
+                    navigate("clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -88,7 +88,7 @@ export function TecProfileEdit() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/services");
+                    navigate("services");
                     setIsMobileMenuOpen(false);
                   }}
                 >

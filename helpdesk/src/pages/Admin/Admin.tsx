@@ -70,7 +70,7 @@ export function Admin() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/tec");
+                    navigate("/admin/tec");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -84,7 +84,7 @@ export function Admin() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/clients");
+                    navigate("clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -94,7 +94,7 @@ export function Admin() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/services");
+                    navigate("services");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -173,7 +173,7 @@ export function Admin() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/tec")}
+                onClick={() => navigate("/admin/tec")}
               >
                 <img
                   src={isHovered ? techiciansWhiteSvg : techniciansSvg}
@@ -197,7 +197,7 @@ export function Admin() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
+                onClick={() => navigate("clients")}
               >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
@@ -221,7 +221,7 @@ export function Admin() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("services")}
               >
                 <img
                   src={isHovered ? servicesWhiteSvg : serviceSvg}
