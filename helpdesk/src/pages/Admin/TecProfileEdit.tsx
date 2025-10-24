@@ -11,6 +11,7 @@ import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
+import bigAvatar from "../../assets/icons/icon/bigAvatar.svg";
 
 export function TecProfileEdit() {
   const [isHovered, setIsHovered] = useState(false);
@@ -64,7 +65,7 @@ export function TecProfileEdit() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("tec");
+                    navigate("/admin/tec");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -78,7 +79,7 @@ export function TecProfileEdit() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("clients");
+                    navigate("/admin/clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -88,7 +89,7 @@ export function TecProfileEdit() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("services");
+                    navigate("/admin/services");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -168,7 +169,11 @@ export function TecProfileEdit() {
               onMouseLeave={() => setIsHovered(false)}
               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
-              <a href="" className="flex items-center justify-center gap-3">
+              <a
+                href=""
+                className="flex items-center justify-center gap-3"
+                onClick={() => navigate("/admin/tec")}
+              >
                 <img
                   src={isHovered ? techiciansWhiteSvg : techniciansSvg}
                   alt="cliboard icon "
@@ -191,7 +196,7 @@ export function TecProfileEdit() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
+                onClick={() => navigate("/admin/clients")}
               >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
@@ -215,7 +220,7 @@ export function TecProfileEdit() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/admin/services")}
               >
                 <img
                   src={isHovered ? servicesWhiteSvg : serviceSvg}
@@ -250,159 +255,101 @@ export function TecProfileEdit() {
       </div>
 
       <div className="w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center min-h-screen md:min-h-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center w-full max-w-[1200px] justify-between mt-[52px] gap-4">
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-1 items-center">
-              <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
-              <button
-                className="text-[var(--gray-300)] text-[12px]"
-                onClick={() => {
-                  navigate("/admin");
-                }}
-              >
-                return
+        {/* Header */}
+        <div className="w-full flex flex-col items-center">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center w-full max-w-[1200px] justify-between mt-[52px] gap-4 px-4">
+            <div className="flex flex-col gap-2 w-full">
+              <div className="flex gap-1 items-center">
+                <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
+                <button
+                  className="text-[var(--gray-300)] text-[12px]"
+                  onClick={() => navigate("/admin/tec")}
+                >
+                  return
+                </button>
+              </div>
+              <h1 className="text-[var(--blue-dark)] text-[24px] font-bold">
+                Technician profile
+              </h1>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 text-[var(--gray-100)] w-full sm:w-auto">
+              <button className="flex items-center bg-gray-300 rounded p-3 gap-2 justify-center w-full sm:w-auto">
+                <span className="font-bold text-[14px] text-center px-3">
+                  Cancel
+                </span>
+              </button>
+              <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] justify-center w-full sm:w-auto">
+                <span className="font-bold px-3">Save</span>
               </button>
             </div>
-            <h1 className="text-[var(--blue-dark)] text-[24px] font-bold">
-              Technician profile
-            </h1>
-          </div>
-
-          {/* Buttons */}
-          <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
-              <span className="font-bold text-[14px] text-center px-3">
-                Cancel
-              </span>
-            </button>
-            <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
-              <span className="font-bold px-3 ">Save</span>
-            </button>
           </div>
         </div>
 
-        <div className="flex  justify-center gap-10 items-start mt-10 w-[100%] ">
-          <div className="border border-[var(--gray-600)] rounded ">
-            <div className="">
-              <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
-                <div className="mb-10">
-                  <h1 className="text-xl font-bold">Personal data</h1>
-                  <p className="font-normal text-[12px] text-[var(--gray-300)] ">
-                    Set technician profile information
-                  </p>
-                </div>
+        {/* Main content */}
+        <div className="flex flex-col lg:flex-row justify-center gap-50 items-start mt-10 w-full px-4 max-w-[1200px]">
+          {/* Left box */}
+          <div className="border border-[var(--gray-600)] rounded w-full lg:w-[45%] ">
+            <form className="w-full border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+              <div className="mb-10">
+                <h1 className="text-xl font-bold">Personal data</h1>
+                <p className="font-normal text-[12px] text-[var(--gray-300)]">
+                  Set technician profile information
+                </p>
+              </div>
 
-                <div className="mb-10 flex flex-col gap-4">
-                  <label
-                    htmlFor="name"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    NAME
-                  </label>
-                  <input
-                    id="name"
-                    type="name"
-                    placeholder="Type your full name"
-                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
-                  />
-                  <label
-                    htmlFor="email"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    E-MAIL
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="example@email.com"
-                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
-                  />
-                  <label
-                    htmlFor="password"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    PASSWORD
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    placeholder="Set the acess password"
-                    className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
-                  />
-                </div>
-              </form>
-            </div>
+              <div className="mb-10 flex flex-col gap-4 w-full">
+                <img src={bigAvatar} alt="" className="w-[48px] h-[48px]" />
+                <label
+                  htmlFor="name"
+                  className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                >
+                  NAME
+                </label>
+                <span className="text-[16px] text-[var(--gray-200)] border-b border-[var(--gray-500)] pb-2 w-full sm:w-[60%] md:w-[40%]">
+                  Carlos Silva
+                </span>
+                <label
+                  htmlFor="email"
+                  className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                >
+                  E-MAIL
+                </label>
+                <span className="text-[16px] text-[var(--gray-200)] border-b border-[var(--gray-500)] pb-2 w-full sm:w-[60%] md:w-[40%]">
+                  carlos.silva@test.com
+                </span>
+              </div>
+            </form>
           </div>
-          <div className="border border-[var(--gray-500)] rounded flex flex-col items-start justify-start pt-5 pl-10 pb-10 w-[45%] ">
+
+          {/* Right box */}
+          <div className="border border-[var(--gray-500)] rounded flex flex-col items-start justify-start p-5 w-full lg:w-[45%]">
             <div className="mb-10">
               <h1 className="text-xl font-bold">Opening hours</h1>
-              <p className="font-normal text-[12px] text-[var(--gray-300)] ">
+              <p className="font-normal text-[12px] text-[var(--gray-300)]">
                 Select the technician's availability hours for service
               </p>
             </div>
-            <div>
-              <div className="mb-5">
-                <h3 className="text-[var(--gray-300)] text-[10px]">MORNING</h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
+
+            <div className="space-y-5">
+              {["MORNING", "AFTERNOON", "EVENING"].map((period) => (
+                <div key={period}>
+                  <h3 className="text-[var(--gray-300)] text-[10px]">
+                    {period}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {["7:00", "8:00", "9:00", "10:00", "11:00"].map((hour) => (
+                      <span
+                        key={hour}
+                        className="border rounded-2xl px-2 py-1 border-[var(--gray-400)] text-sm"
+                      >
+                        {hour}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="mb-5">
-                <h3 className="text-[var(--gray-300)] text-[10px]">
-                  AFTERNOON
-                </h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
-                </div>
-              </div>
-              <div className="">
-                <h3 className="text-[var(--gray-300)] text-[10px]">EVENING</h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

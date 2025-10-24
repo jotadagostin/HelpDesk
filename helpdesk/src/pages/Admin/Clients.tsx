@@ -65,7 +65,7 @@ export function Clients() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/tec");
+                    navigate("/admin/tec");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -79,7 +79,7 @@ export function Clients() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/clients");
+                    navigate("/admin/clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -89,7 +89,7 @@ export function Clients() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/services");
+                    navigate("/admin/services");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -169,7 +169,11 @@ export function Clients() {
               onMouseLeave={() => setIsHovered(false)}
               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
-              <a href="" className="flex items-center justify-center gap-3">
+              <a
+                href=""
+                className="flex items-center justify-center gap-3"
+                onClick={() => navigate("/admin/tec")}
+              >
                 <img
                   src={isHovered ? techiciansWhiteSvg : techniciansSvg}
                   alt="cliboard icon "
@@ -192,7 +196,7 @@ export function Clients() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
+                onClick={() => navigate("/admin/clients")}
               >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
@@ -216,7 +220,7 @@ export function Clients() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/admin/services")}
               >
                 <img
                   src={isHovered ? servicesWhiteSvg : serviceSvg}

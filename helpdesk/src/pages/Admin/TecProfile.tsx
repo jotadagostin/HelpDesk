@@ -257,7 +257,7 @@ export function TecProfile() {
               <button
                 className="text-[var(--gray-300)] text-[12px]"
                 onClick={() => {
-                  navigate("/admin");
+                  navigate("/admin/tec");
                 }}
               >
                 return
@@ -275,7 +275,10 @@ export function TecProfile() {
                 Cancel
               </span>
             </button>
-            <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
+            <button
+              className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto "
+              onClick={() => navigate("/admin/tecprofileedit")}
+            >
               <span className="font-bold px-3 ">Save</span>
             </button>
           </div>

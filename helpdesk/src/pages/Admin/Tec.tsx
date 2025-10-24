@@ -65,7 +65,7 @@ export function Tec() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/tec");
+                    navigate("/admin/tec");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -79,7 +79,7 @@ export function Tec() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/clients");
+                    navigate("/admin/clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -89,7 +89,7 @@ export function Tec() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/services");
+                    navigate("/admin/services");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -192,7 +192,7 @@ export function Tec() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
+                onClick={() => navigate("/admin/clients")}
               >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
@@ -216,7 +216,7 @@ export function Tec() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/admin/services")}
               >
                 <img
                   src={isHovered ? servicesWhiteSvg : serviceSvg}
@@ -298,7 +298,7 @@ export function Tec() {
                             src={buttonEditSvg}
                             alt="Edit"
                             className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
+                            onClick={() => navigate("/admin/tecprofile")}
                           />
                         </button>
                       </div>
@@ -334,7 +334,7 @@ export function Tec() {
                             src={buttonEditSvg}
                             alt="Edit"
                             className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
+                            onClick={() => navigate("/admin/tecprofile")}
                           />
                         </button>
                       </div>
@@ -370,7 +370,7 @@ export function Tec() {
                             src={buttonEditSvg}
                             alt="Edit"
                             className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
+                            onClick={() => navigate("/admin/tecprofile")}
                           />
                         </button>
                       </div>
@@ -406,7 +406,7 @@ export function Tec() {
                             src={buttonEditSvg}
                             alt="Edit"
                             className="w-5 h-5"
-                            onClick={() => navigate("/tecprofile")}
+                            onClick={() => navigate("/admin/tecprofile")}
                           />
                         </button>
                       </div>

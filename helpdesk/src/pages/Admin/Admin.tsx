@@ -84,7 +84,7 @@ export function Admin() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("clients");
+                    navigate("/admin/clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -94,7 +94,7 @@ export function Admin() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("services");
+                    navigate("/admin/services");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -197,7 +197,7 @@ export function Admin() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("clients")}
+                onClick={() => navigate("/admin/clients")}
               >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
@@ -221,7 +221,7 @@ export function Admin() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("services")}
+                onClick={() => navigate("/admin/services")}
               >
                 <img
                   src={isHovered ? servicesWhiteSvg : serviceSvg}
@@ -330,7 +330,7 @@ export function Admin() {
                           src={buttonEditSvg}
                           alt=""
                           className=""
-                          onClick={() => navigate("/callsdetails")}
+                          onClick={() => navigate("/admin/callsdetails")}
                         />
                       </button>
                     </div>
@@ -381,7 +381,11 @@ export function Admin() {
                         className="block md:hidden"
                       />
                       <button>
-                        <img src={buttonEditSvg} alt="" />
+                        <img
+                          src={buttonEditSvg}
+                          alt=""
+                          onClick={() => navigate("/admin/callsdetails")}
+                        />
                       </button>
                     </div>
                   </td>
@@ -431,7 +435,11 @@ export function Admin() {
                         className="block md:hidden "
                       />
                       <button>
-                        <img src={buttonEditSvg} alt="" />
+                        <img
+                          src={buttonEditSvg}
+                          alt=""
+                          onClick={() => navigate("/admin/callsdetails")}
+                        />
                       </button>
                     </div>
                   </td>
@@ -481,7 +489,11 @@ export function Admin() {
                         className="block md:hidden"
                       />
                       <button>
-                        <img src={buttonEditSvg} alt="" />
+                        <img
+                          src={buttonEditSvg}
+                          alt=""
+                          onClick={() => navigate("/admin/callsdetails")}
+                        />
                       </button>
                     </div>
                   </td>
@@ -533,7 +545,11 @@ export function Admin() {
                         className="block md:hidden"
                       />
                       <button>
-                        <img src={buttonEditSvg} alt="" />
+                        <img
+                          src={buttonEditSvg}
+                          alt=""
+                          onClick={() => navigate("/admin/callsdetails")}
+                        />
                       </button>
                     </div>
                   </td>

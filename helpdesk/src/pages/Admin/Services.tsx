@@ -12,9 +12,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../../components/Button";
 import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
-import buttonDeleteSvg from "../../assets/icons/icon/trashButton.svg";
 import blockSvg from "../../assets/icons/icon/ban.svg";
-import checkSvg from "../../assets/icons/icon/circle-check.svg";
 
 export function Services() {
   const [isHovered, setIsHovered] = useState(false);
@@ -67,7 +65,7 @@ export function Services() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/tec");
+                    navigate("/admin/tec");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -81,7 +79,7 @@ export function Services() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/clients");
+                    navigate("/admin/clients");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -91,7 +89,7 @@ export function Services() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/services");
+                    navigate("/admin/services");
                     setIsMobileMenuOpen(false);
                   }}
                 >
@@ -171,7 +169,11 @@ export function Services() {
               onMouseLeave={() => setIsHovered(false)}
               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
-              <a href="" className="flex items-center justify-center gap-3">
+              <a
+                href=""
+                className="flex items-center justify-center gap-3"
+                onClick={() => navigate("/admin/tec")}
+              >
                 <img
                   src={isHovered ? techiciansWhiteSvg : techniciansSvg}
                   alt="cliboard icon "
@@ -194,7 +196,7 @@ export function Services() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
+                onClick={() => navigate("/admin/clients")}
               >
                 <img
                   src={isHovered ? clientsWhiteSvg : clientsSvg}
