@@ -17,6 +17,7 @@ import blockSvg from "../../assets/icons/icon/ban.svg";
 export function Services() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNewOpen, setIsNewOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -256,7 +257,7 @@ export function Services() {
           <h1 className="w-[90%] h-[44px]  font-bold text-[24px] text-[var(--blue-dark)] px-[48px]  py-[52px] ">
             Services
           </h1>
-          <Button />
+          <Button onClick={() => setIsNewOpen(true)} />
         </div>
         <div className="w-[90%]  px-[48px]  py-[52px]  flex items-center justify-center  ">
           <div className="w-full border border-gray-200 rounded-xl overflow-hidden">
@@ -354,6 +355,78 @@ export function Services() {
           </div>
         </div>
       </div>
+      {/* ✅ Modal new open*/}
+      {isNewOpen && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white w-[440px] h-[336px] rounded-xl p-6 flex flex-col gap-4 shadow-lg">
+            <h2 className="text-xl font-semibold text-[var(--blue-dark)]">
+              {/* ✅ Modal fica aqui, antes do fechamento final do container principal */}
+              {isNewOpen && (
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+                  <div className="bg-white w-[440px] h-[336px] rounded-xl p-6 flex flex-col gap-4 shadow-lg">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-md font-bold text-[var(--gray-200)]">
+                        Service registration
+                      </h2>
+                      <button
+                        onClick={() => setIsNewOpen(false)}
+                        className="text-[var(--gray-400)] hover:text-[var(--gray-300)] transition"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <label
+                        htmlFor=""
+                        className="text-[var(--gray-300)] text-[16px]"
+                      >
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Name of the service"
+                        className="border border-gray-300 rounded-md p-2 focus:border-[var(--gray-400)] outline-none text-[var(--gray-300)] text-[16px]"
+                      />
+                      <label
+                        htmlFor=""
+                        className="text-[var(--gray-300)] text-[16px]"
+                      >
+                        Value
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="Value"
+                        className="border border-gray-300 rounded-md p-2 focus:border-[var(--gray-400)] outline-none text-[var(--gray-300)] text-[16px]"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-3 mt-auto">
+                      <button
+                        onClick={() => setIsNewOpen(false)}
+                        className="px-4 py-2 rounded-md bg-[var(--gray-200)] text-white hover:bg-[var(--gray-300)] transition-all w-full"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
