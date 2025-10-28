@@ -1,19 +1,14 @@
 import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
-import techniciansSvg from "../../assets/icons/icon/tecnicos.svg";
-import techiciansWhiteSvg from "../../assets/icons/icon/tecnicos-white.svg";
-import clientsSvg from "../../assets/icons/icon/briefcase-business.svg";
-import clientsWhiteSvg from "../../assets/icons/icon/briefcase-business-white.svg";
-import serviceSvg from "../../assets/icons/icon/service.svg";
-import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
-import clockSvg from "../../assets/icons/icon/clock-2.svg";
-import checkSvg from "../../assets/icons/icon/circle-check-big.svg";
+import clockSvg from "../../assets/icons/icon/white-clock.svg";
+import checkSvg from "../../assets/icons/icon/black-circle-check.svg";
 import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
+import plusSvg from "../../assets/icons/icon/plus.svg";
 
 export function TechnicianDetails() {
   const [isHovered, setIsHovered] = useState(false);
@@ -62,40 +57,6 @@ export function TechnicianDetails() {
                 >
                   <img src={callsSvg} alt="Calls" className="w-5 h-5" />
                   <span className="text-[var(--gray-400)]">Calls</span>
-                </li>
-                <li
-                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
-                  onClick={() => {
-                    navigate("/tec");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <img
-                    src={techniciansSvg}
-                    alt="Technicians"
-                    className="w-5 h-5"
-                  />
-                  <span className="text-[var(--gray-400)]">Technicians</span>
-                </li>
-                <li
-                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
-                  onClick={() => {
-                    navigate("/clients");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <img src={clientsSvg} alt="Clients" className="w-5 h-5" />
-                  <span className="text-[var(--gray-400)]">Clients</span>
-                </li>
-                <li
-                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
-                  onClick={() => {
-                    navigate("/services");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <img src={serviceSvg} alt="Services" className="w-5 h-5" />
-                  <span className="text-[var(--gray-400)]">Services</span>
                 </li>
               </ul>
             </nav>
@@ -149,7 +110,7 @@ export function TechnicianDetails() {
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/technician")}
               >
                 <img
                   src={isHovered ? callsWhiteSvg : callsSvg}
@@ -165,75 +126,11 @@ export function TechnicianDetails() {
                 </span>
               </a>
             </li>
-            <li
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
-            >
-              <a href="" className="flex items-center justify-center gap-3">
-                <img
-                  src={isHovered ? techiciansWhiteSvg : techniciansSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px] color-[var(--gray-400)] transition-all hover:pink group-hover:invert"
-                />
-                <span
-                  className={`transition-all ${
-                    isHovered ? "text-white" : "text-[var(--gray-400)]"
-                  }`}
-                >
-                  Technicians
-                </span>
-              </a>
-            </li>
-            <li
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
-            >
-              <a
-                href=""
-                className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
-              >
-                <img
-                  src={isHovered ? clientsWhiteSvg : clientsSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px]"
-                />
-                <span
-                  className={`transition-all ${
-                    isHovered ? "text-white" : "text-[var(--gray-400)]"
-                  }`}
-                >
-                  Clients
-                </span>
-              </a>
-            </li>
-            <li
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
-            >
-              <a href="" className="flex items-center justify-center gap-3">
-                <img
-                  src={isHovered ? servicesWhiteSvg : serviceSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px]"
-                />
-                <span
-                  className={`transition-all ${
-                    isHovered ? "text-white" : "text-[var(--gray-400)]"
-                  }`}
-                >
-                  Services
-                </span>
-              </a>
-            </li>
           </ul>
         </nav>
 
-        <div className="h-[70%]  flex justify-center items-end">
-          <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
+        <div className="h-[82%]  flex justify-center items-end">
+          <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 ">
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
@@ -257,28 +154,26 @@ export function TechnicianDetails() {
               <button
                 className="text-[var(--gray-300)] text-[12px]"
                 onClick={() => {
-                  navigate("/admin");
+                  navigate("/technician");
                 }}
               >
                 return
               </button>
             </div>
             <h1 className="text-[var(--blue-dark)] text-[24px] font-bold">
-              Detailed call 2
+              Detailed call
             </h1>
           </div>
 
           {/* Buttons */}
           <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
-              <img src={clockSvg} alt="" />
-              <span className="font-bold text-[14px] text-center">
-                In attendance
-              </span>
-            </button>
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
+            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto hover:bg-[var(--gray-500)]">
               <img src={checkSvg} alt="" />
-              <span className="font-bold">Closed</span>
+              <span className="font-bold text-[14px] text-center">Closed</span>
+            </button>
+            <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto hover:bg-[var(--gray-300)] hover:text-white">
+              <img src={clockSvg} alt="" />
+              <span className="font-bold">In attendance</span>
             </button>
           </div>
         </div>
@@ -286,60 +181,74 @@ export function TechnicianDetails() {
         {/* Call Details and Technician Info */}
         <div className="flex flex-col lg:flex-row w-full max-w-[1200px] gap-6 justify-center items-stretch mt-6">
           {/* Call Details Card */}
-          <div className="border rounded border-[var(--gray-500)] w-full lg:w-[800px] p-5">
-            <div className="flex justify-between mb-5">
-              <div>
-                <span className="text-[var(--gray-300)] text-[12px]">0004</span>
-                <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
-                  Backup is not working
-                </h3>
+          <div className="flex flex-col">
+            <div className="border rounded border-[var(--gray-500)] w-full lg:w-[800px] p-5">
+              <div className="flex justify-between mb-5">
+                <div>
+                  <span className="text-[var(--gray-300)] text-[12px]">
+                    0004
+                  </span>
+                  <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
+                    Backup is not working
+                  </h3>
+                </div>
+                <img src={statusOpen} alt="" />
               </div>
-              <img src={statusOpen} alt="" />
-            </div>
-
-            <div className="mb-5">
-              <span className="text-[var(--gray-400)] text-[12px]">
-                Description
-              </span>
-              <p className="text-[var(--gray-200)] text-[14px]">
-                The automatic backup system has stopped working. The last
-                successful run was a week ago.
-              </p>
-            </div>
-
-            <div className="mb-5">
-              <span className="text-[var(--gray-400)] text-[12px]">
-                Category
-              </span>
-              <p className="text-[var(--gray-200)] text-[14px]">Data recover</p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-10 sm:gap-20 mb-5">
-              <div>
+              <div className="mb-5">
                 <span className="text-[var(--gray-400)] text-[12px]">
-                  Created at
+                  Description
                 </span>
                 <p className="text-[var(--gray-200)] text-[14px]">
-                  12/04/25 09:12
+                  The automatic backup system has stopped working. The last
+                  successful run was a week ago.
                 </p>
               </div>
-              <div>
+              <div className="mb-5">
                 <span className="text-[var(--gray-400)] text-[12px]">
-                  Updated at
+                  Category
                 </span>
                 <p className="text-[var(--gray-200)] text-[14px]">
-                  12/04/25 09:12
+                  Data recover
                 </p>
               </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-10 sm:gap-20 mb-5">
+                <div>
+                  <span className="text-[var(--gray-400)] text-[12px]">
+                    Created at
+                  </span>
+                  <p className="text-[var(--gray-200)] text-[14px]">
+                    12/04/25 09:12
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[var(--gray-400)] text-[12px]">
+                    Updated at
+                  </span>
+                  <p className="text-[var(--gray-200)] text-[14px]">
+                    12/04/25 09:12
+                  </p>
+                </div>
+              </div>
+              <div className="mb-5">
+                <span className="text-[var(--gray-400)] text-[12px]">
+                  Client
+                </span>
+                <div className="flex gap-2 items-center">
+                  <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
+                  <p className="text-[var(--gray-200)] text-[14px]">
+                    Andre Costa
+                  </p>
+                </div>
+              </div>
             </div>
-
-            <div className="mb-5">
-              <span className="text-[var(--gray-400)] text-[12px]">Client</span>
-              <div className="flex gap-2 items-center">
-                <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  Andre Costa
-                </p>
+            <div className="border border-[var(--gray-500)] rounded-md mt-3">
+              <div className="flex items-center justify-between p-6">
+                <span className="text-[var(--gray-400)] text-[12px] font-bold">
+                  Additional services
+                </span>
+                <button className="bg-[var(--gray-200)] p-2 rounded-md w-[28px] h-[28px]">
+                  <img src={plusSvg} alt="" />
+                </button>
               </div>
             </div>
           </div>
