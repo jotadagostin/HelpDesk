@@ -4,7 +4,9 @@ import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import statusOpen from "../../assets/icons/icon/tecStatusOpen.svg";
+import statusInProgress from "../../assets/icons/icon/TagStatus(inprogress).svg";
+import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
+import statusClosed from "../../assets/icons/icon/TagStatus(closed).svg";
 import penEdit from "../../assets/icons/icon/pen-line.svg";
 import circleClose from "../../assets/icons/icon/white-circle.svg";
 import mobileStatusInProgress from "../../assets/icons/icon/statusInProgressMobile.svg";
@@ -147,10 +149,10 @@ export function Technician() {
             My calls
           </h1>
         </div>
-        <div className=" w-full h-screen">
+        <div className=" w-full h-screen ">
           <div>
             <div className="pb-5">
-              <img src={statusOpen} alt="" />
+              <img src={statusInProgress} alt="" />
             </div>
             <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
               <div className="">
@@ -159,7 +161,10 @@ export function Technician() {
                     00003
                   </span>
                   <div className="flex gap-1">
-                    <button className="bg-[var(--gray-500)] p-2 rounded-md">
+                    <button
+                      className="bg-[var(--gray-500)] p-2 rounded-md"
+                      onClick={() => navigate("details")}
+                    >
                       <img src={penEdit} className="w-[14px] h-[14px]" alt="" />
                     </button>
                     <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
@@ -175,7 +180,166 @@ export function Technician() {
                   <p className="text-[var(--gray-100)] text-[12px]">
                     Network instalation
                   </p>
-                  <div className="flex border-b border-b-[var(--gray-500)] pb-4 justify-between px-3">
+                  <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
+                    <span>10/04/25 15:30</span>
+                    <span>$200,00</span>
+                  </div>
+                  <div className="flex justify-between mt-4 ">
+                    <div className="flex gap-1 items-center  ">
+                      <img
+                        src={avatarSvg}
+                        alt=""
+                        className="w-[20px] h-[20px]"
+                      />
+                      <span>Andre Costa</span>
+                    </div>
+                    <img src={mobileStatusInProgress} alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <div className="pb-5">
+              <img src={statusOpen} alt="" />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)] flex gap-55">
+                <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
+                  <div className="">
+                    <div className="flex justify-between p-3">
+                      <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
+                        00004
+                      </span>
+                      <div className="flex gap-1">
+                        <button
+                          className="bg-[var(--gray-500)] p-2 rounded-md"
+                          onClick={() => navigate("details")}
+                        >
+                          <img
+                            src={penEdit}
+                            className="w-[14px] h-[14px]"
+                            alt=""
+                          />
+                        </button>
+                        <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
+                          <img src={circleClose} alt="" />
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                    <div className="px-3">
+                      <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
+                        Network slow
+                      </h1>
+                      <p className="text-[var(--gray-100)] text-[12px]">
+                        Network instalation
+                      </p>
+                      <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
+                        <span>10/04/25 15:30</span>
+                        <span>$200,00</span>
+                      </div>
+                      <div className="flex justify-between mt-4 ">
+                        <div className="flex gap-1 items-center  ">
+                          <img
+                            src={avatarSvg}
+                            alt=""
+                            className="w-[20px] h-[20px]"
+                          />
+                          <span>Andre Costa</span>
+                        </div>
+                        <img src={mobileStatusInProgress} alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)] flex gap-55">
+                <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
+                  <div className="">
+                    <div className="flex justify-between p-3">
+                      <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
+                        00006
+                      </span>
+                      <div className="flex gap-1">
+                        <button
+                          className="bg-[var(--gray-500)] p-2 rounded-md"
+                          onClick={() => navigate("/technician/details")}
+                        >
+                          <img
+                            src={penEdit}
+                            className="w-[14px] h-[14px]"
+                            alt=""
+                          />
+                        </button>
+                        <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
+                          <img src={circleClose} alt="" />
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                    <div className="px-3">
+                      <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
+                        Network slow
+                      </h1>
+                      <p className="text-[var(--gray-100)] text-[12px]">
+                        Network instalation
+                      </p>
+                      <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
+                        <span>10/04/25 15:30</span>
+                        <span>$200,00</span>
+                      </div>
+                      <div className="flex justify-between mt-4 ">
+                        <div className="flex gap-1 items-center  ">
+                          <img
+                            src={avatarSvg}
+                            alt=""
+                            className="w-[20px] h-[20px]"
+                          />
+                          <span>Andre Costa</span>
+                        </div>
+                        <img src={mobileStatusInProgress} alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6">
+            <div className="pb-5">
+              <img src={statusClosed} alt="" />
+            </div>
+            <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
+              <div className="">
+                <div className="flex justify-between p-3">
+                  <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
+                    00003
+                  </span>
+                  <div className="flex gap-1">
+                    <button className="bg-[var(--gray-500)] p-2 rounded-md">
+                      <img
+                        src={penEdit}
+                        className="w-[14px] h-[14px]"
+                        alt=""
+                        onClick={() => navigate("details")}
+                      />
+                    </button>
+                    <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
+                      <img src={circleClose} alt="" />
+                      Close
+                    </button>
+                  </div>
+                </div>
+                <div className="px-3">
+                  <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
+                    Network slow
+                  </h1>
+                  <p className="text-[var(--gray-100)] text-[12px]">
+                    Network instalation
+                  </p>
+                  <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
                     <span>10/04/25 15:30</span>
                     <span>$200,00</span>
                   </div>

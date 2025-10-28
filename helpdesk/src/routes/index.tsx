@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from "react-router";
 import { LogIn } from "../pages/LogIn";
 import { SignIn } from "../pages/SignIn";
 import { AdminRoutes } from "./AdminRoutes";
-import { Technician } from "../pages/Technician/Technician";
+import { TecRoutes } from "./TecRoutes";
 
 export function AppRoutes() {
   const location = useLocation();
@@ -16,7 +16,7 @@ export function AppRoutes() {
       <Route path="/admin/*" element={<AdminRoutes />} />
 
       {/* Technician Routes */}
-      <Route path="/technician" element={<Technician />} />
+      <Route path="/technician/*" element={<TecRoutes />} />
     </Routes>
   );
 }
