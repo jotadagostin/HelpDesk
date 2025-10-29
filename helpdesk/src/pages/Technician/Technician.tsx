@@ -21,7 +21,7 @@ export function Technician() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(true);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -100,11 +100,11 @@ export function Technician() {
         </div>
 
         {/* Avatar Admin */}
-        <div>
+        <div className="cursor-pointer">
           <img
             src={avatarSvg}
             alt="User avatar"
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 rounded-full cursor-pointer"
           />
         </div>
       </div>
@@ -179,14 +179,15 @@ export function Technician() {
               <div className="fixed inset-0 bg-black/40 z-40"></div>
 
               {/* Modal central */}
-              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[440px] h-[588px] bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-4">
+              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[440px] h-[600px] bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-4">
                 <div className="flex flex-col gap-2 ">
                   <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-4">
                     <span className="font-bold text-md">Perfil</span>
                     <img
                       src={buttonXSvg}
                       alt=""
-                      className="w-[18px] h-[18px]"
+                      className="w-[18px] h-[18px] cursor-pointer"
+                      onClick={() => setIsProfileModalOpen(false)}
                     />
                   </div>
                   <div className="flex gap-3">
@@ -216,7 +217,7 @@ export function Technician() {
                   <input
                     type="text"
                     placeholder="Carlos Silva"
-                    className="border-b border-[var(--gray-500)] pb-3 placeholder-[var(--gray-200)]"
+                    className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
                   />
                   <label
                     htmlFor=""
@@ -227,18 +228,56 @@ export function Technician() {
                   <input
                     type="email"
                     placeholder="carlos.silva@test.com"
-                    className="border-b border-[var(--gray-500)] pb-3 placeholder-[var(--gray-200)]"
+                    className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
                   />
-                  <input
-                    type="password"
-                    placeholder="Senha"
-                    className="border border-[var(--gray-300)] rounded px-2 py-1"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Disponibilidade"
-                    className="border border-[var(--gray-300)] rounded px-2 py-1"
-                  />
+                  <label
+                    htmlFor=""
+                    className="text-[var(--gray-300)] text-xs mt-3"
+                  >
+                    Password
+                  </label>
+
+                  <div className="relative w-[400px]">
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)] w-full pr-16"
+                    />
+                    <button className="absolute right-1 bottom-2 bg-[var(--gray-500)] text-[var(--gray-200)] text-xs font-bold px-2 py-2 rounded-md">
+                      Change
+                    </button>
+                  </div>
+
+                  <div>
+                    <div className="flex flex-col gap-1 mt-3">
+                      <h2 className="text-sm text-[var(--gray-200)] font-bold">
+                        Availability
+                      </h2>
+                      <p className="text-xs text-[var(--gray-300)]">
+                        Business hours defined by the admin.
+                      </p>
+                    </div>
+                    <div className="mt-4 flex gap-2 mb-4 border-b border-[var(--gray-500)] pb-4">
+                      <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                        09:00
+                      </span>
+                      <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                        10:00
+                      </span>
+                      <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                        12:00
+                      </span>
+                      <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                        13:00
+                      </span>
+                      <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                        14:00
+                      </span>
+                      <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                        15:00
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsProfileModalOpen(false)}
@@ -253,7 +292,10 @@ export function Technician() {
       </div>
 
       {/* Div Calls starts here: */}
-      <div className=" w-full  bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-left px-4 py-4 sm:px-26 overflow-y-auto">
+      <div
+        className=" w-full  bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-left px-4 py-4 sm:px-26 overflow-y-auto"
+        onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+      >
         <div className=" ">
           <h1 className="w-full max-w-screen-lg  font-bold text-[20px] sm:text-[24px] text-[var(--blue-dark)]  py-6 ">
             My calls
