@@ -179,7 +179,7 @@ export function Technician() {
               <div className="fixed inset-0 bg-black/40 z-40"></div>
 
               {/* Modal central */}
-              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[440px] h-[388px] bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-4">
+              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[440px] h-[588px] bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-4">
                 <div className="flex flex-col gap-2 ">
                   <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-4">
                     <span className="font-bold text-md">Perfil</span>
