@@ -10,11 +10,12 @@ import checkSvg from "../../assets/icons/icon/black-circle-check.svg";
 import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
 import plusSvg from "../../assets/icons/icon/plus.svg";
 import redTrashSvg from "../../assets/icons/icon/trashRed.svg";
+import buttonXSvg from "../../assets/icons/icon/x.svg";
 
 export function TechnicianDetails() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -342,43 +343,38 @@ export function TechnicianDetails() {
             {/* Conteúdo do modal */}
             <div
               className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                    bg-[var(--gray-100)] rounded-lg shadow-lg z-50 
+                    bg-[var(--gray-600)] rounded-lg shadow-lg z-50 
                     p-6 w-[90%] max-w-md border border-[var(--gray-400)]"
             >
-              <h2 className="text-[var(--blue-dark)] font-bold text-lg mb-4">
-                Adicionar serviço adicional
-              </h2>
+              <div className="flex items-center justify-between  mb-4 border-b border-b-[var(--gray-500)] pb-4">
+                <h2 className="text-[var(--gray-200)] font-bold text-lg ">
+                  Additional service
+                </h2>
+                <button onClick={() => setShowModal(false)}>
+                  <img src={buttonXSvg} alt="" className="w-[24px] h-[24px]" />
+                </button>
+              </div>
 
               <div className="flex flex-col gap-3">
                 <div>
-                  <label className="block text-[var(--gray-700)] text-sm font-semibold mb-1">
-                    Serviço adicional
+                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
+                    Description
                   </label>
                   <input
                     type="text"
-                    className="w-full border border-[var(--gray-400)] rounded-md px-3 py-2 focus:outline-none focus:border-[var(--blue-dark)]"
-                    placeholder="Ex: Instalação extra"
+                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="Backup is not working"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[var(--gray-700)] text-sm font-semibold mb-1">
-                    Descrição
-                  </label>
-                  <textarea
-                    className="w-full border border-[var(--gray-400)] rounded-md px-3 py-2 h-20 focus:outline-none focus:border-[var(--blue-dark)]"
-                    placeholder="Descreva o serviço..."
-                  ></textarea>
-                </div>
-
-                <div>
-                  <label className="block text-[var(--gray-700)] text-sm font-semibold mb-1">
+                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
                     Valor
                   </label>
                   <input
                     type="number"
-                    className="w-full border border-[var(--gray-400)] rounded-md px-3 py-2 focus:outline-none focus:border-[var(--blue-dark)]"
-                    placeholder="Ex: 150"
+                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="$120,00"
                   />
                 </div>
               </div>
@@ -387,9 +383,9 @@ export function TechnicianDetails() {
               <div className="flex justify-end mt-6">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="bg-[var(--blue-dark)] hover:bg-[var(--blue)] text-white px-4 py-2 rounded-md font-semibold transition-colors"
+                  className="bg-[var(--gray-100)] hover:bg-[var(--gray-200)] text-white px-4 py-2 rounded-md font-semibold transition-colors w-screen"
                 >
-                  Salvar
+                  Save
                 </button>
               </div>
             </div>
