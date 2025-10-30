@@ -3,6 +3,7 @@ import { LogIn } from "../pages/LogIn";
 import { SignIn } from "../pages/SignIn";
 import { AdminRoutes } from "./AdminRoutes";
 import { TecRoutes } from "./TecRoutes";
+import { ClientsRoutes } from "./ClientRoutes";
 
 export function AppRoutes() {
   const location = useLocation();
@@ -17,6 +18,9 @@ export function AppRoutes() {
 
       {/* Technician Routes */}
       <Route path="/technician/*" element={<TecRoutes />} />
+
+      {/* Client Routes */}
+      <Route path="/clients/*" element={<ClientsRoutes />} />
     </Routes>
   );
 }
