@@ -16,13 +16,25 @@ import buttonXSvg from "../../assets/icons/icon/x.svg";
 import tecProfileAvatar from "../../assets/icons/icon/tecProfileAvatar.svg";
 import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
+import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 
 export function Technician() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    setIsProfileModalOpen(false);
+    setShowModal(true);
+  };
+
+  const handleClick2 = () => {
+    setIsProfileModalOpen(true);
+    setShowModal(false);
+  };
 
   return (
     // sidebar desktop:
@@ -243,7 +255,10 @@ export function Technician() {
                       placeholder="••••••••"
                       className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)] w-full pr-16"
                     />
-                    <button className="absolute right-1 bottom-2 bg-[var(--gray-500)] text-[var(--gray-200)] text-xs font-bold px-2 py-2 rounded-md">
+                    <button
+                      className="absolute right-1 bottom-2 bg-[var(--gray-500)] text-[var(--gray-200)] text-xs font-bold px-2 py-2 rounded-md"
+                      onClick={handleClick}
+                    >
                       Change
                     </button>
                   </div>
@@ -294,7 +309,7 @@ export function Technician() {
       {/* Div Calls starts here: */}
       <div
         className=" w-full  bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-left px-4 py-4 sm:px-26 overflow-y-auto"
-        onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+        // onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
       >
         <div className=" ">
           <h1 className="w-full max-w-screen-lg  font-bold text-[20px] sm:text-[24px] text-[var(--blue-dark)]  py-6 ">
@@ -511,6 +526,70 @@ export function Technician() {
             </div>
           </div>
         </div>
+        {showModal && (
+          <>
+            {/* Fundo escuro */}
+            <div
+              className="fixed inset-0 bg-black/40 z-40"
+              onClick={() => setShowModal(false)}
+            ></div>
+
+            {/* Conteúdo do modal */}
+            <div
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                    bg-[var(--gray-600)] rounded-lg shadow-lg z-50 
+                    p-6 w-[90%] max-w-md border border-[var(--gray-400)]"
+            >
+              <div className="flex items-center justify-between  mb-4 border-b border-b-[var(--gray-500)] pb-4">
+                <div className="flex gap-2 items-center">
+                  <button onClick={handleClick2}>
+                    <img src={arrowSvg} alt="" className="w-[20px] h-[20px]" />
+                  </button>
+                  <h2 className="text-[var(--gray-200)] font-bold text-lg ">
+                    Change Password
+                  </h2>
+                </div>
+                <button onClick={() => setShowModal(false)}>
+                  <img src={buttonXSvg} alt="" className="w-[24px] h-[24px]" />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div>
+                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
+                    Current password
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="Type your current password"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
+                    New password
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="type your new password"
+                  />
+                </div>
+              </div>
+
+              {/* Botão de salvar */}
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-[var(--gray-100)] hover:bg-[var(--gray-200)] text-white px-4 py-2 rounded-md font-semibold transition-colors w-screen"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
