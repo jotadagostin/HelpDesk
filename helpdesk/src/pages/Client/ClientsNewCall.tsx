@@ -1,30 +1,336 @@
+// import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
+// import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
+// import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
+// import techniciansSvg from "../../assets/icons/icon/tecnicos.svg";
+// import clientsSvg from "../../assets/icons/icon/briefcase-business.svg";
+// import serviceSvg from "../../assets/icons/icon/service.svg";
+// import avatarSvg from "../../assets/images/Avatar.svg";
+// import { useState } from "react";
+// import { useNavigate } from "react-router";
+// import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
+// import plusSvg from "../../assets/icons/icon/plusGraySvg.svg";
+// import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
+
+// export function ClientsNewCall() {
+//   const [isHovered, setIsHovered] = useState(false);
+//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+//   const navigate = useNavigate();
+
+//   return (
+//     //sidebar desktop:
+//     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row">
+//       <div className="flex items-center justify-between px-4 py-3 md:hidden bg-[var(--gray-100)]">
+//         {/* Mobile Sidebar */}
+//         {isMobileMenuOpen && (
+//           <div className="md:hidden fixed top-0 left-0 z-50 w-[200px] h-full bg-[var(--gray-100)] shadow-lg flex flex-col">
+//             {/* Botão de fechar */}
+//             <div className="flex justify-end p-4">
+//               <button
+//                 onClick={() => setIsMobileMenuOpen(false)}
+//                 className="text-[var(--gray-600)] hover:text-[var(--blue-dark)]"
+//               >
+//                 <svg
+//                   className="w-6 h-6"
+//                   fill="none"
+//                   stroke="currentColor"
+//                   viewBox="0 0 24 24"
+//                   xmlns="http://www.w3.org/2000/svg"
+//                 >
+//                   <path
+//                     strokeLinecap="round"
+//                     strokeLinejoin="round"
+//                     strokeWidth={2}
+//                     d="M6 18L18 6M6 6l12 12"
+//                   />
+//                 </svg>
+//               </button>
+//             </div>
+
+//             {/* Nav Items */}
+//             <nav className="flex-1 px-2">
+//               <ul className="flex flex-col gap-2">
+//                 <li
+//                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
+//                   onClick={() => {
+//                     navigate("/admin");
+//                     setIsMobileMenuOpen(false);
+//                   }}
+//                 >
+//                   <img src={callsSvg} alt="Calls" className="w-5 h-5" />
+//                   <span className="text-[var(--gray-400)]">Calls</span>
+//                 </li>
+
+//                 <li
+//                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
+//                   onClick={() => {
+//                     navigate("/clients/newcall");
+//                     setIsMobileMenuOpen(false);
+//                   }}
+//                 >
+//                   <img src={plusSvg} alt="Clients" className="w-5 h-5" />
+//                   <span className="text-[var(--gray-400)]">Create Call</span>
+//                 </li>
+//               </ul>
+//             </nav>
+//           </div>
+//         )}
+
+//         {/* Botão burger */}
+//         <button
+//           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+//           className="bg-[var(--gray-200)]"
+//         >
+//           <svg
+//             className="w-6 h-6 text-[var(--gray-600)]"
+//             fill="none"
+//             stroke="currentColor"
+//             viewBox="0 0 24 24"
+//             xmlns="http://www.w3.org/2000/svg"
+//           >
+//             <path
+//               strokeLinecap="round"
+//               strokeLinejoin="round"
+//               strokeWidth={2}
+//               d="M4 6h16M4 12h16M4 18h16"
+//             />
+//           </svg>
+//         </button>
+
+//         {/* Logo ou título */}
+//         <div className="w-[200px] h-[44px] flex items-center">
+//           <img src={adminMenuSvg} alt="" />
+//         </div>
+
+//         {/* Avatar Admin */}
+//         <div>
+//           <img
+//             src={avatarSvg}
+//             alt="User avatar"
+//             className="w-8 h-8 rounded-full"
+//           />
+//         </div>
+//       </div>
+//       <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)]    flex-col">
+//         <img src={adminMenuSvg} alt="HelpDesk logo" />
+//         <nav className="w-full  justify-center items-center pt-5">
+//           <ul className="">
+//             <li
+//               onMouseEnter={() => setIsHovered(true)}
+//               onMouseLeave={() => setIsHovered(false)}
+//               className="  w-[168px] h-[44px] flex items-center gap-3  pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+//             >
+//               <a
+//                 href=""
+//                 className="flex items-center justify-center gap-3"
+//                 onClick={() => navigate("/clients")}
+//               >
+//                 <img
+//                   src={isHovered ? callsWhiteSvg : callsSvg}
+//                   alt="cliboard icon"
+//                   className="w-[20px] h-[20px]  transition-all"
+//                 />
+//                 <span
+//                   className={`transition-all ${
+//                     isHovered ? "text-white" : "text-[var(--gray-400)]"
+//                   }`}
+//                 >
+//                   Calls
+//                 </span>
+//               </a>
+//             </li>
+//             <li
+//               onMouseEnter={() => setIsHovered(true)}
+//               onMouseLeave={() => setIsHovered(false)}
+//               className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+//             >
+//               <a
+//                 href=""
+//                 className="flex items-center justify-center gap-3"
+//                 onClick={() => navigate("/clients/newcall")}
+//               >
+//                 <img
+//                   src={isHovered ? plusWhiteSvg : plusSvg}
+//                   alt="cliboard icon "
+//                   className="w-[20px] h-[20px] color-[var(--gray-400)] transition-all hover:pink group-hover:invert"
+//                 />
+//                 <span
+//                   className={`transition-all ${
+//                     isHovered ? "text-white" : "text-[var(--gray-400)]"
+//                   }`}
+//                 >
+//                   Create call
+//                 </span>
+//               </a>
+//             </li>
+//           </ul>
+//         </nav>
+
+//         <div className="h-[80%]  flex justify-center items-end ">
+//           <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
+//             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
+//             <div className="">
+//               <span className="text-[var(--gray-600)] text-[14px]">
+//                 User Admin
+//               </span>
+//               <p className="text-[var(--gray-400)] text-[12px]">
+//                 user.adm@test.com
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center min-h-screen md:min-h-auto">
+//         <div className="flex flex-col sm:flex-row items-start sm:items-center w-full max-w-[1200px] justify-between mt-[52px] gap-4">
+//           <div className="flex flex-col gap-2">
+//             <div className="flex gap-1 items-center">
+//               <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
+//               <button
+//                 className="text-[var(--gray-300)] text-[12px]"
+//                 onClick={() => {
+//                   navigate("/clients");
+//                 }}
+//               >
+//                 return
+//               </button>
+//             </div>
+//             <h1 className="text-[var(--blue-dark)] text-[24px] font-bold">
+//               New Call
+//             </h1>
+//           </div>
+//         </div>
+//         <div className="flex  justify-center  items-start mt-10 w-full ">
+//           <div className="border border-[var(--gray-600)] rounded w-[45%]">
+//             <div className="">
+//               <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+//                 <div className="mb-10">
+//                   <h1 className="text-xl font-bold">Informations</h1>
+//                   <p className="font-normal text-[12px] text-[var(--gray-300)] ">
+//                     Set the days and times you are available to answer calls.
+//                   </p>
+//                 </div>
+
+//                 <div className="mb-10 flex flex-col gap-4">
+//                   <label
+//                     htmlFor="name"
+//                     className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+//                   >
+//                     TITLE
+//                   </label>
+//                   <input
+//                     id="name"
+//                     type="name"
+//                     placeholder="Backup is not working"
+//                     className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1  w-[344px]"
+//                   />
+//                   <label
+//                     htmlFor="email"
+//                     className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+//                   >
+//                     DESCRIPTION
+//                   </label>
+
+//                   <textarea
+//                     name=""
+//                     id=""
+//                     rows={4}
+//                     cols={50}
+//                     placeholder="The automatic backup system has stopped working. The last successful backup was a week ago."
+//                     className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px] resize-none"
+//                   ></textarea>
+//                   <label
+//                     htmlFor=""
+//                     className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+//                   >
+//                     SERVICE CATEGORY
+//                   </label>
+//                   <select
+//                     id="categoria"
+//                     name="categoria"
+//                     className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1  w-[344px]"
+//                   >
+//                     <option value="">Select a category</option>
+//                     <option value="limpeza">Data recover</option>
+//                     <option value="manutencao">Backup</option>
+//                     <option value="consultoria">Internet</option>
+//                     <option value="outros">Others</option>
+//                   </select>
+//                 </div>
+//               </form>
+//             </div>
+//           </div>
+//           <div className="border border-[var(--gray-500)] rounded flex flex-col items-center justify-center pt-5  pb-10 w-[30%] ">
+//             <div className="mb-10  w-[72%]">
+//               <h1 className="text-xl font-bold ">Summary</h1>
+//               <p className="font-normal text-[12px] text-[var(--gray-300)] ">
+//                 Values and details
+//               </p>
+//             </div>
+//             <div>
+//               <div className="mb-5">
+//                 <h3 className="text-[var(--gray-400)] text-[12px] font-bold">
+//                   Category of service
+//                 </h3>
+//                 <div className="flex gap-1">
+//                   <span className="text-sm text-[var(--gray-200)] font-normal">
+//                     Network error
+//                   </span>
+//                 </div>
+//               </div>
+//               <div className="mb-5">
+//                 <h3 className="text-[var(--gray-400)] text-[12px] font-bold">
+//                   Initial value
+//                 </h3>
+//                 <div className="flex gap-1  text-[var(--gray-200)] items-center font-bold">
+//                   $
+//                   <span className="text-[25px] text-[var(--gray-200)] font-bold">
+//                     300,00
+//                   </span>
+//                 </div>
+//               </div>
+//               <div className="">
+//                 <div className="flex gap-1 mb-5">
+//                   <p className="text-xs text-[var(--gray-300)]">
+//                     The call will be automatically assigned to an available
+//                     technician.
+//                   </p>
+//                 </div>
+//                 <button className="bg-[var(--gray-200)] text-[14px] text-[var(--gray-600)] px-4 py-4 rounded font-bold hover:opacity-90 transition w-full">
+//                   Create call
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
-import techniciansSvg from "../../assets/icons/icon/tecnicos.svg";
-import clientsSvg from "../../assets/icons/icon/briefcase-business.svg";
-import serviceSvg from "../../assets/icons/icon/service.svg";
-import avatarSvg from "../../assets/images/Avatar.svg";
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import plusSvg from "../../assets/icons/icon/plusGraySvg.svg";
 import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
+import avatarSvg from "../../assets/images/Avatar.svg";
+import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function ClientsNewCall() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const navigate = useNavigate();
 
   return (
-    //sidebar desktop:
     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row">
+      {/* ========== MOBILE HEADER ========== */}
       <div className="flex items-center justify-between px-4 py-3 md:hidden bg-[var(--gray-100)]">
         {/* Mobile Sidebar */}
         {isMobileMenuOpen && (
           <div className="md:hidden fixed top-0 left-0 z-50 w-[200px] h-full bg-[var(--gray-100)] shadow-lg flex flex-col">
-            {/* Botão de fechar */}
+            {/* Botão fechar */}
             <div className="flex justify-end p-4">
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -60,7 +366,6 @@ export function ClientsNewCall() {
                   <img src={callsSvg} alt="Calls" className="w-5 h-5" />
                   <span className="text-[var(--gray-400)]">Calls</span>
                 </li>
-
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
@@ -68,7 +373,7 @@ export function ClientsNewCall() {
                     setIsMobileMenuOpen(false);
                   }}
                 >
-                  <img src={plusSvg} alt="Clients" className="w-5 h-5" />
+                  <img src={plusSvg} alt="Create Call" className="w-5 h-5" />
                   <span className="text-[var(--gray-400)]">Create Call</span>
                 </li>
               </ul>
@@ -97,12 +402,12 @@ export function ClientsNewCall() {
           </svg>
         </button>
 
-        {/* Logo ou título */}
+        {/* Logo */}
         <div className="w-[200px] h-[44px] flex items-center">
-          <img src={adminMenuSvg} alt="" />
+          <img src={adminMenuSvg} alt="Logo" />
         </div>
 
-        {/* Avatar Admin */}
+        {/* Avatar */}
         <div>
           <img
             src={avatarSvg}
@@ -111,14 +416,16 @@ export function ClientsNewCall() {
           />
         </div>
       </div>
-      <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)]    flex-col">
+
+      {/* ========== DESKTOP SIDEBAR ========== */}
+      <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)] flex-col">
         <img src={adminMenuSvg} alt="HelpDesk logo" />
-        <nav className="w-full  justify-center items-center pt-5">
-          <ul className="">
+        <nav className="w-full justify-center items-center pt-5">
+          <ul>
             <li
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="  w-[168px] h-[44px] flex items-center gap-3  pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
               <a
                 href=""
@@ -127,8 +434,8 @@ export function ClientsNewCall() {
               >
                 <img
                   src={isHovered ? callsWhiteSvg : callsSvg}
-                  alt="cliboard icon"
-                  className="w-[20px] h-[20px]  transition-all"
+                  alt="Calls icon"
+                  className="w-[20px] h-[20px] transition-all"
                 />
                 <span
                   className={`transition-all ${
@@ -142,7 +449,7 @@ export function ClientsNewCall() {
             <li
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
               <a
                 href=""
@@ -151,8 +458,8 @@ export function ClientsNewCall() {
               >
                 <img
                   src={isHovered ? plusWhiteSvg : plusSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px] color-[var(--gray-400)] transition-all hover:pink group-hover:invert"
+                  alt="Create call icon"
+                  className="w-[20px] h-[20px] transition-all"
                 />
                 <span
                   className={`transition-all ${
@@ -166,10 +473,11 @@ export function ClientsNewCall() {
           </ul>
         </nav>
 
-        <div className="h-[70%]  flex justify-center items-end ">
+        {/* Footer Avatar */}
+        <div className="h-[80%] flex justify-center items-end">
           <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
-            <div className="">
+            <div>
               <span className="text-[var(--gray-600)] text-[14px]">
                 User Admin
               </span>
@@ -181,16 +489,16 @@ export function ClientsNewCall() {
         </div>
       </div>
 
-      <div className="w-screen bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center min-h-screen md:min-h-auto">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center w-full max-w-[1200px] justify-between mt-[52px] gap-4">
+      {/* ========== MAIN CONTENT ========== */}
+      <div className="w-full bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-start min-h-screen px-16 py-10">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full max-w-[1200px] mb-10">
           <div className="flex flex-col gap-2">
             <div className="flex gap-1 items-center">
-              <img src={arrowSvg} alt="" className="w-[14px] h-[14px]" />
+              <img src={arrowSvg} alt="Back" className="w-[14px] h-[14px]" />
               <button
                 className="text-[var(--gray-300)] text-[12px]"
-                onClick={() => {
-                  navigate("/clients");
-                }}
+                onClick={() => navigate("/clients")}
               >
                 return
               </button>
@@ -199,145 +507,115 @@ export function ClientsNewCall() {
               New Call
             </h1>
           </div>
-
-          {/* Buttons */}
-          <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
-              <span className="font-bold text-[14px] text-center px-3">
-                Cancel
-              </span>
-            </button>
-            <button
-              className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto "
-              onClick={() => navigate("/admin/tecprofileedit")}
-            >
-              <span className="font-bold px-3 ">Save</span>
-            </button>
-          </div>
         </div>
 
-        <div className="flex  justify-center gap-10 items-start mt-10 w-[100%] ">
-          <div className="border border-[var(--gray-600)] rounded ">
-            <div className="">
-              <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
-                <div className="mb-10">
-                  <h1 className="text-xl font-bold">Personal data</h1>
-                  <p className="font-normal text-[12px] text-[var(--gray-300)] ">
-                    Set technician profile information
-                  </p>
-                </div>
+        {/* Information + Summary */}
+        <div className="flex flex-col md:flex-row items-start gap-8 w-full max-w-[1200px]">
+          {/* Information */}
+          <div className="border border-[var(--gray-500)] rounded-lg w-full md:w-[65%] bg-[var(--gray-700)]">
+            <form className="w-full flex flex-col items-start p-7 rounded-lg bg-[var(--gray-800)]">
+              <div className="mb-10">
+                <h1 className="text-xl font-bold text-[var(--gray-200)]">
+                  Informations
+                </h1>
+                <p className="font-normal text-[12px] text-[var(--gray-300)]">
+                  Set the days and times you are available to answer calls.
+                </p>
+              </div>
 
-                <div className="mb-10 flex flex-col gap-4">
-                  <label
-                    htmlFor="name"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    NAME
-                  </label>
-                  <input
-                    id="name"
-                    type="name"
-                    placeholder="Type your full name"
-                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
-                  />
-                  <label
-                    htmlFor="email"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    E-MAIL
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="example@email.com"
-                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
-                  />
-                  <label
-                    htmlFor="password"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    PASSWORD
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    placeholder="Set the acess password"
-                    className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
-                  />
-                </div>
-              </form>
-            </div>
+              <div className="mb-10 flex flex-col gap-4 w-full">
+                <label
+                  htmlFor="title"
+                  className="text-[var(--gray-300)] font-bold text-[10px]"
+                >
+                  TITLE
+                </label>
+                <input
+                  id="title"
+                  type="text"
+                  placeholder="Backup is not working"
+                  className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 w-full bg-transparent focus:outline-none"
+                />
+
+                <label
+                  htmlFor="description"
+                  className="text-[var(--gray-300)] font-bold text-[10px]"
+                >
+                  DESCRIPTION
+                </label>
+                <textarea
+                  id="description"
+                  rows={4}
+                  placeholder="The automatic backup system has stopped working. The last successful backup was a week ago."
+                  className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 px-2 w-full resize-none bg-transparent focus:outline-none"
+                ></textarea>
+
+                <label
+                  htmlFor="categoria"
+                  className="text-[var(--gray-300)] font-bold text-[10px]"
+                >
+                  SERVICE CATEGORY
+                </label>
+                <select
+                  id="categoria"
+                  name="categoria"
+                  className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 w-full bg-transparent focus:outline-none"
+                >
+                  <option value="">Select a category</option>
+                  <option value="data-recover">Data Recover</option>
+                  <option value="backup">Backup</option>
+                  <option value="internet">Internet</option>
+                  <option value="others">Others</option>
+                </select>
+              </div>
+            </form>
           </div>
-          <div className="border border-[var(--gray-500)] rounded flex flex-col items-start justify-start pt-5 pl-10 pb-10 w-[45%] ">
-            <div className="mb-10">
-              <h1 className="text-xl font-bold">Opening hours</h1>
-              <p className="font-normal text-[12px] text-[var(--gray-300)] ">
-                Select the technician's availability hours for service
+
+          {/* Summary */}
+          <div className="border border-[var(--gray-500)] rounded-lg flex flex-col items-center justify-start pt-5 pb-10 w-full md:w-[30%] bg-[var(--gray-700)]">
+            <div className="mb-10 w-[72%]">
+              <h1 className="text-xl font-bold text-[var(--gray-200)]">
+                Summary
+              </h1>
+              <p className="font-normal text-[12px] text-[var(--gray-300)]">
+                Values and details
               </p>
             </div>
-            <div>
+
+            <div className="w-[72%]">
               <div className="mb-5">
-                <h3 className="text-[var(--gray-300)] text-[10px]">MORNING</h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
-                </div>
-              </div>
-              <div className="mb-5">
-                <h3 className="text-[var(--gray-300)] text-[10px]">
-                  AFTERNOON
+                <h3 className="text-[var(--gray-400)] text-[12px] font-bold">
+                  Category of service
                 </h3>
                 <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
+                  <span className="text-sm text-[var(--gray-200)] font-normal">
+                    Network error
                   </span>
                 </div>
               </div>
-              <div className="">
-                <h3 className="text-[var(--gray-300)] text-[10px]">EVENING</h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
+
+              <div className="mb-5">
+                <h3 className="text-[var(--gray-400)] text-[12px] font-bold">
+                  Initial value
+                </h3>
+                <div className="flex gap-1 text-[var(--gray-200)] items-center font-bold">
+                  $
+                  <span className="text-[25px] text-[var(--gray-200)] font-bold">
+                    300,00
                   </span>
                 </div>
               </div>
+
+              <div className="flex gap-1 mb-5">
+                <p className="text-xs text-[var(--gray-300)]">
+                  The call will be automatically assigned to an available
+                  technician.
+                </p>
+              </div>
+
+              <button className="bg-[var(--gray-200)] text-[14px] text-[var(--gray-600)] px-4 py-4 rounded font-bold hover:opacity-90 transition w-full">
+                Create call
+              </button>
             </div>
           </div>
         </div>
