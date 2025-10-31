@@ -1,12 +1,6 @@
 import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
-import techniciansSvg from "../../assets/icons/icon/tecnicos.svg";
-import techiciansWhiteSvg from "../../assets/icons/icon/tecnicos-white.svg";
-import clientsSvg from "../../assets/icons/icon/briefcase-business.svg";
-import clientsWhiteSvg from "../../assets/icons/icon/briefcase-business-white.svg";
-import serviceSvg from "../../assets/icons/icon/service.svg";
-import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -77,7 +71,7 @@ export function Clients() {
                   }}
                 >
                   <img src={plusSvg} alt="Technicians" className="w-5 h-5" />
-                  <span className="text-[var(--gray-400)]">New Call</span>
+                  <span className="text-[var(--gray-400)]">Create Call</span>
                 </li>
               </ul>
             </nav>
@@ -163,7 +157,7 @@ export function Clients() {
                     isHovered ? "text-white" : "text-[var(--gray-400)]"
                   }`}
                 >
-                  New call
+                  Create call
                 </span>
               </a>
             </li>
