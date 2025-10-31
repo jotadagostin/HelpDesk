@@ -1,12 +1,6 @@
 import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
-import techniciansSvg from "../../assets/icons/icon/tecnicos.svg";
-import techiciansWhiteSvg from "../../assets/icons/icon/tecnicos-white.svg";
-import clientsSvg from "../../assets/icons/icon/briefcase-business.svg";
-import clientsWhiteSvg from "../../assets/icons/icon/briefcase-business-white.svg";
-import serviceSvg from "../../assets/icons/icon/service.svg";
-import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -14,6 +8,8 @@ import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/clock-2.svg";
 import checkSvg from "../../assets/icons/icon/circle-check-big.svg";
 import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
+import plusSvg from "../../assets/icons/icon/plusGraySvg.svg";
+import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
 
 export function ClientsDetails() {
   const [isHovered, setIsHovered] = useState(false);
@@ -22,12 +18,12 @@ export function ClientsDetails() {
 
   return (
     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row ">
-      {/* Topbar - apenas para mobile */}
+      {/* ========== MOBILE HEADER ========== */}
       <div className="flex items-center justify-between px-4 py-3 md:hidden bg-[var(--gray-100)]">
         {/* Mobile Sidebar */}
         {isMobileMenuOpen && (
           <div className="md:hidden fixed top-0 left-0 z-50 w-[200px] h-full bg-[var(--gray-100)] shadow-lg flex flex-col">
-            {/* Botão de fechar */}
+            {/* Botão fechar */}
             <div className="flex justify-end p-4">
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -66,36 +62,12 @@ export function ClientsDetails() {
                 <li
                   className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
                   onClick={() => {
-                    navigate("/tec");
+                    navigate("/clients/newcall");
                     setIsMobileMenuOpen(false);
                   }}
                 >
-                  <img
-                    src={techniciansSvg}
-                    alt="Technicians"
-                    className="w-5 h-5"
-                  />
-                  <span className="text-[var(--gray-400)]">Technicians</span>
-                </li>
-                <li
-                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
-                  onClick={() => {
-                    navigate("/clients");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <img src={clientsSvg} alt="Clients" className="w-5 h-5" />
-                  <span className="text-[var(--gray-400)]">Clients</span>
-                </li>
-                <li
-                  className="flex items-center gap-3 p-2 rounded hover:bg-[var(--blue-dark)]"
-                  onClick={() => {
-                    navigate("/services");
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  <img src={serviceSvg} alt="Services" className="w-5 h-5" />
-                  <span className="text-[var(--gray-400)]">Services</span>
+                  <img src={plusSvg} alt="Create Call" className="w-5 h-5" />
+                  <span className="text-[var(--gray-400)]">Create Call</span>
                 </li>
               </ul>
             </nav>
@@ -123,12 +95,12 @@ export function ClientsDetails() {
           </svg>
         </button>
 
-        {/* Logo ou título */}
+        {/* Logo */}
         <div className="w-[200px] h-[44px] flex items-center">
-          <img src={adminMenuSvg} alt="" />
+          <img src={adminMenuSvg} alt="Logo" />
         </div>
 
-        {/* Avatar Admin */}
+        {/* Avatar */}
         <div>
           <img
             src={avatarSvg}
@@ -137,24 +109,26 @@ export function ClientsDetails() {
           />
         </div>
       </div>
+
+      {/* ========== DESKTOP SIDEBAR ========== */}
       <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)] flex-col">
         <img src={adminMenuSvg} alt="HelpDesk logo" />
-        <nav className="w-full  justify-center items-center pt-5">
-          <ul className="">
+        <nav className="w-full justify-center items-center pt-5">
+          <ul>
             <li
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="  w-[168px] h-[44px] flex items-center gap-3  pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/clients")}
               >
                 <img
                   src={isHovered ? callsWhiteSvg : callsSvg}
-                  alt="cliboard icon"
-                  className="w-[20px] h-[20px]  transition-all"
+                  alt="Calls icon"
+                  className="w-[20px] h-[20px] transition-all"
                 />
                 <span
                   className={`transition-all ${
@@ -168,71 +142,31 @@ export function ClientsDetails() {
             <li
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
-            >
-              <a href="" className="flex items-center justify-center gap-3">
-                <img
-                  src={isHovered ? techiciansWhiteSvg : techniciansSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px] color-[var(--gray-400)] transition-all hover:pink group-hover:invert"
-                />
-                <span
-                  className={`transition-all ${
-                    isHovered ? "text-white" : "text-[var(--gray-400)]"
-                  }`}
-                >
-                  Technicians
-                </span>
-              </a>
-            </li>
-            <li
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
+              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
             >
               <a
                 href=""
                 className="flex items-center justify-center gap-3"
-                onClick={() => navigate("/clients")}
+                onClick={() => navigate("/clients/newcall")}
               >
                 <img
-                  src={isHovered ? clientsWhiteSvg : clientsSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px]"
+                  src={isHovered ? plusWhiteSvg : plusSvg}
+                  alt="Create call icon"
+                  className="w-[20px] h-[20px] transition-all"
                 />
                 <span
                   className={`transition-all ${
                     isHovered ? "text-white" : "text-[var(--gray-400)]"
                   }`}
                 >
-                  Clients
-                </span>
-              </a>
-            </li>
-            <li
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="w-[168px] h-[44px] flex items-center gap-3 pl-5 justify-start  ml-2 hover:bg-[var(--blue-dark)] rounded-md transition-all"
-            >
-              <a href="" className="flex items-center justify-center gap-3">
-                <img
-                  src={isHovered ? servicesWhiteSvg : serviceSvg}
-                  alt="cliboard icon "
-                  className="w-[20px] h-[20px]"
-                />
-                <span
-                  className={`transition-all ${
-                    isHovered ? "text-white" : "text-[var(--gray-400)]"
-                  }`}
-                >
-                  Services
+                  Create call
                 </span>
               </a>
             </li>
           </ul>
         </nav>
 
-        <div className="h-[70%]  flex justify-center items-end">
+        <div className="h-[80%]  flex justify-center items-end">
           <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">

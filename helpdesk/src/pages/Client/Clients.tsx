@@ -164,7 +164,7 @@ export function Clients() {
           </ul>
         </nav>
 
-        <div className="h-[77%]  flex justify-center items-end ">
+        <div className="h-[80%]  flex justify-center items-end ">
           <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
