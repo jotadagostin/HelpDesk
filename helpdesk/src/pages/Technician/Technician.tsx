@@ -13,10 +13,10 @@ import mobileStatusInProgress from "../../assets/icons/icon/statusInProgressMobi
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 import buttonXSvg from "../../assets/icons/icon/x.svg";
+import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import tecProfileAvatar from "../../assets/icons/icon/tecProfileAvatar.svg";
 import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
-import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 
 export function Technician() {
   const [isHovered, setIsHovered] = useState(false);

@@ -2,7 +2,7 @@ import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
 import statusOpenMobile from "../../assets/icons/icon/statusOpenMobile.svg";
@@ -13,11 +13,51 @@ import statusClosedMobile from "../../assets/icons/icon/statusClosedMobile.svg";
 import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 import plusSvg from "../../assets/icons/icon/plusGraySvg.svg";
 import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
+import userWhite from "../../assets/icons/icon/user-white.svg";
+import exitRed from "../../assets/icons/icon/log-out-red.svg";
+import buttonXSvg from "../../assets/icons/icon/x.svg";
+import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
+import tecProfileAvatar from "../../assets/icons/icon/tecProfileAvatar.svg";
+import uploadSvg from "../../assets/icons/icon/upload.svg";
+import trashSvg from "../../assets/icons/icon/trashRed.svg";
 
 export function Clients() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsUserPopupOpen(false);
+      }
+    };
+
+    if (isUserPopupOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserPopupOpen]);
+
+  const handleClick = () => {
+    setIsProfileModalOpen(false);
+    setShowModal(true);
+  };
+
+  const handleClick2 = () => {
+    setIsProfileModalOpen(true);
+    setShowModal(false);
+  };
 
   return (
     // sidebar desktop:
@@ -165,7 +205,10 @@ export function Clients() {
         </nav>
 
         <div className="h-[80%]  flex justify-center items-end ">
-          <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
+          <div
+            className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 cursor-pointer"
+            onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+          >
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
@@ -176,8 +219,140 @@ export function Clients() {
               </p>
             </div>
           </div>
+          {/* Popup */}
+          {isUserPopupOpen && (
+            <div
+              ref={popupRef}
+              className="absolute bottom-[80px] left-[50px] w-[198px] h-[142px] bg-[var(--gray-100)] rounded-md shadow-xl border border-[var(--gray-300)] flex flex-col justify-center z-50"
+            >
+              <span className="text-[14px] text-[var(--gray-400)] px-4 py-2">
+                Options
+              </span>
+              <button
+                onClick={() => setIsProfileModalOpen(true)}
+                className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2"
+              >
+                <img src={userWhite} alt="" />
+                Perfil
+              </button>
+              <button
+                onClick={() => alert("Logout")}
+                className="px-4 py-2 text-left text-[var(--feedback-danger)] hover:bg-[var(--gray-200)] flex gap-2"
+              >
+                <img src={exitRed} alt="" />
+                Logout
+              </button>
+            </div>
+          )}
+          {/* Modal de Perfil */}
         </div>
       </div>
+
+      {isProfileModalOpen && (
+        <>
+          {/* Overlay levemente escurecido */}
+          <div className="fixed inset-0 bg-black/40 z-40"></div>
+
+          {/* Modal central */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[440px]  max-h-[90vh] overflow-y-auto bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-4">
+            <div className="flex flex-col gap-2 ">
+              <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-4">
+                <span className="font-bold text-md">Perfil</span>
+                <img
+                  src={buttonXSvg}
+                  alt=""
+                  className="w-[18px] h-[18px] cursor-pointer"
+                  onClick={() => setIsProfileModalOpen(false)}
+                />
+              </div>
+              <div className="flex gap-3">
+                <img src={tecProfileAvatar} alt="" />
+                <button className="flex items-center gap-1">
+                  <div className="flex items-center bg-[var(--gray-500)] p-1 rounded-md gap-1">
+                    <img src={uploadSvg} alt="" className="w-[12px] h-[12px]" />
+                    <span className="text-xs">New Image</span>
+                  </div>
+                  <img
+                    src={trashSvg}
+                    alt=""
+                    className="bg-[var(--gray-500)] p-1 rounded-md"
+                  />
+                </button>
+              </div>
+              <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
+                NAME
+              </label>
+              <input
+                type="text"
+                placeholder="Carlos Silva"
+                className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
+              />
+              <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
+                E-MAIL
+              </label>
+              <input
+                type="email"
+                placeholder="carlos.silva@test.com"
+                className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
+              />
+              <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
+                Password
+              </label>
+
+              <div className="relative w-full mt-4">
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)] w-full pr-16"
+                />
+                <button
+                  className="absolute right-1 bottom-2 bg-[var(--gray-500)] text-[var(--gray-200)] text-xs font-bold px-2 py-2 rounded-md"
+                  onClick={handleClick}
+                >
+                  Change
+                </button>
+              </div>
+
+              <div>
+                <div className="flex flex-col gap-1 mt-3">
+                  <h2 className="text-sm text-[var(--gray-200)] font-bold">
+                    Availability
+                  </h2>
+                  <p className="text-xs text-[var(--gray-300)]">
+                    Business hours defined by the admin.
+                  </p>
+                </div>
+                <div className="mt-4 flex gap-2 mb-4 border-b border-[var(--gray-500)] pb-4">
+                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                    09:00
+                  </span>
+                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                    10:00
+                  </span>
+                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                    12:00
+                  </span>
+                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                    13:00
+                  </span>
+                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                    14:00
+                  </span>
+                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
+                    15:00
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsProfileModalOpen(false)}
+              className="mt-2 bg-[var(--gray-200)] text-white px-4 py-2 rounded"
+            >
+              Save
+            </button>
+          </div>
+        </>
+      )}
 
       {/* Div Calls starts here: */}
       <div className=" w-full  bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-left px-4 py-4 sm:px-26">
@@ -482,6 +657,70 @@ export function Clients() {
             </table>
           </div>
         </div>
+        {showModal && (
+          <>
+            {/* Fundo escuro */}
+            <div
+              className="fixed inset-0 bg-black/40 z-40"
+              onClick={() => setShowModal(false)}
+            ></div>
+
+            {/* Conteúdo do modal */}
+            <div
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                    bg-[var(--gray-600)] rounded-lg shadow-lg z-50 
+                    p-6 w-[90%] max-w-md border border-[var(--gray-400)]"
+            >
+              <div className="flex items-center justify-between  mb-4 border-b border-b-[var(--gray-500)] pb-4">
+                <div className="flex gap-2 items-center">
+                  <button onClick={handleClick2}>
+                    <img src={arrowSvg} alt="" className="w-[20px] h-[20px]" />
+                  </button>
+                  <h2 className="text-[var(--gray-200)] font-bold text-lg ">
+                    Change Password
+                  </h2>
+                </div>
+                <button onClick={() => setShowModal(false)}>
+                  <img src={buttonXSvg} alt="" className="w-[24px] h-[24px]" />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div>
+                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
+                    Current password
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="Type your current password"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
+                    New password
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="type your new password"
+                  />
+                </div>
+              </div>
+
+              {/* Botão de salvar */}
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="bg-[var(--gray-100)] hover:bg-[var(--gray-200)] text-white px-4 py-2 rounded-md font-semibold transition-colors w-screen"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
