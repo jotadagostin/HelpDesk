@@ -1,8 +1,31 @@
 import { useNavigate } from "react-router";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const loginSchema = z.object({
+  email: z.string().email("Insert a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
+type LoginData = z.infer<typeof loginSchema>;
 
 export function LogIn() {
   const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: LoginData) => {
+    console.log("dados", data);
+    navigate("/dashboard");
+  };
 
   return (
     <div className="w-full h-screen bg-login  bg-cover bg-center flex items-end justify-end">
@@ -11,7 +34,10 @@ export function LogIn() {
           <div className="mb-7">
             <img src={headerLogoSvg} alt="Helpdesk purple iconlogo" />
           </div>
-          <form className="w-full max-w-sm h-[360px] border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-sm  border border-gray-200 flex flex-col items-start justify-start p-7 rounded"
+          >
             <div className="mb-10">
               <h1 className="text-xl font-bold">Acess the portal</h1>
               <p className="font-normal text-[12px] text-[var(--gray-300)] ">
@@ -31,7 +57,13 @@ export function LogIn() {
                 type="email"
                 placeholder="example@email.com"
                 className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                {...register("email")}
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email.message}</p>
+              )}
+            </div>
+            <div>
               <label
                 htmlFor="password"
                 className="text-[var(--gray-300)] font-bold text-[10px] not-italic "
@@ -42,13 +74,19 @@ export function LogIn() {
                 id="password"
                 type="password"
                 placeholder="Type your password"
-                className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)] "
+                className="border-0 border-b border-gray-300 py-2 px-2 w-[344px] text-[var(--gray-300)] "
+                {...register("password")}
               />
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-3">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <button
               type="submit"
-              className="w-full h-10 not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)]  rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
+              className="w-full h-10 not-italic font-bold text-[14px] text-[var(--gray-600)] bg-[var(--gray-200)] mt-5 rounded p-3 flex items-center justify-center hover:bg-[var(--gray-500)] hover:text-[var(--gray-100)] transition-all duration-200"
             >
               Enter
             </button>

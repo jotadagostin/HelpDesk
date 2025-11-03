@@ -1,8 +1,40 @@
 import { useNavigate } from "react-router";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
+
+const signInSchema = z
+  .object({
+    name: z.string().min(3, "Name must be at least 3 characters long"),
+    email: z.string().email("Insert a valid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type SignInData = z.infer<typeof signInSchema>;
 
 export function SignIn() {
   const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInData>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit = (data: SignInData) => {
+    console.log("User registered:", data);
+    // Aqui poderia ir a requisição pro backend:
+    // await api.post("/signup", data);
+    navigate("/");
+  };
 
   return (
     <div className="w-full h-screen bg-login  bg-cover bg-center flex items-end justify-end">
@@ -11,7 +43,10 @@ export function SignIn() {
           <div className="mb-7">
             <img src={headerLogoSvg} alt="Helpdesk purple iconlogo" />
           </div>
-          <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded"
+          >
             <div className="mb-10">
               <h1 className="text-xl font-bold">Create your account</h1>
               <p className="font-normal text-[12px] text-[var(--gray-300)] ">
@@ -31,7 +66,13 @@ export function SignIn() {
                 type="name"
                 placeholder="Type your full name"
                 className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                {...register("name")}
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.name.message}
+                </p>
+              )}
               <label
                 htmlFor="email"
                 className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
@@ -43,7 +84,13 @@ export function SignIn() {
                 type="email"
                 placeholder="example@email.com"
                 className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                {...register("email")}
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.email.message}
+                </p>
+              )}
               <label
                 htmlFor="password"
                 className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
@@ -55,7 +102,13 @@ export function SignIn() {
                 type="password"
                 placeholder="Type your password"
                 className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
+                {...register("password")}
               />
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             <button
