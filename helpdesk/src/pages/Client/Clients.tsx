@@ -2,6 +2,7 @@ import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
+import avatarClientSvg from "../../assets/icons/icon/AvatarClient.svg";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
@@ -17,7 +18,6 @@ import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 import buttonXSvg from "../../assets/icons/icon/x.svg";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
-import tecProfileAvatar from "../../assets/icons/icon/tecProfileAvatar.svg";
 import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
 
@@ -25,7 +25,7 @@ export function Clients() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -266,7 +266,7 @@ export function Clients() {
                 />
               </div>
               <div className="flex gap-3">
-                <img src={tecProfileAvatar} alt="" />
+                <img src={avatarClientSvg} alt="" />
                 <button className="flex items-center gap-1">
                   <div className="flex items-center bg-[var(--gray-500)] p-1 rounded-md gap-1">
                     <img src={uploadSvg} alt="" className="w-[12px] h-[12px]" />
@@ -284,7 +284,7 @@ export function Clients() {
               </label>
               <input
                 type="text"
-                placeholder="Carlos Silva"
+                placeholder="Andre Costa"
                 className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
               />
               <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
@@ -292,14 +292,14 @@ export function Clients() {
               </label>
               <input
                 type="email"
-                placeholder="carlos.silva@test.com"
+                placeholder="andre.costa@test.com"
                 className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
               />
               <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
                 Password
               </label>
 
-              <div className="relative w-full mt-4">
+              <div className="relative w-full mt-4 ">
                 <input
                   type="password"
                   placeholder="••••••••"
@@ -312,41 +312,10 @@ export function Clients() {
                   Change
                 </button>
               </div>
-
-              <div>
-                <div className="flex flex-col gap-1 mt-3">
-                  <h2 className="text-sm text-[var(--gray-200)] font-bold">
-                    Availability
-                  </h2>
-                  <p className="text-xs text-[var(--gray-300)]">
-                    Business hours defined by the admin.
-                  </p>
-                </div>
-                <div className="mt-4 flex gap-2 mb-4 border-b border-[var(--gray-500)] pb-4">
-                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
-                    09:00
-                  </span>
-                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
-                    10:00
-                  </span>
-                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
-                    12:00
-                  </span>
-                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
-                    13:00
-                  </span>
-                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
-                    14:00
-                  </span>
-                  <span className="text-xs text-[var(--gray-400)] border rounded-2xl py-1 px-2">
-                    15:00
-                  </span>
-                </div>
-              </div>
             </div>
             <button
               onClick={() => setIsProfileModalOpen(false)}
-              className="mt-2 bg-[var(--gray-200)] text-white px-4 py-2 rounded"
+              className="mt-10 bg-[var(--gray-200)] text-white px-4 py-2 rounded "
             >
               Save
             </button>
