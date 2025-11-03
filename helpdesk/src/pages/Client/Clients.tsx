@@ -25,7 +25,7 @@ export function Clients() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(true);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();

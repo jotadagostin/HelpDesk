@@ -8,7 +8,7 @@ import clientsWhiteSvg from "../../assets/icons/icon/briefcase-business-white.sv
 import serviceSvg from "../../assets/icons/icon/service.svg";
 import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
 import statusOpenMobile from "../../assets/icons/icon/statusOpenMobile.svg";
@@ -17,11 +17,35 @@ import statusInProgressMobile from "../../assets/icons/icon/statusInProgressMobi
 import statusClosedSvg from "../../assets/icons/icon/TagStatus(closed).svg";
 import statusClosedMobile from "../../assets/icons/icon/statusClosedMobile.svg";
 import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
+import userWhite from "../../assets/icons/icon/user-white.svg";
+import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
 export function Admin() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsUserPopupOpen(false);
+      }
+    };
+
+    if (isUserPopupOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserPopupOpen]);
 
   return (
     // sidebar desktop:
@@ -241,7 +265,10 @@ export function Admin() {
         </nav>
 
         <div className="h-[70%]  flex justify-center items-end ">
-          <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4">
+          <div
+            className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 cursor-pointer"
+            onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+          >
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
@@ -252,6 +279,28 @@ export function Admin() {
               </p>
             </div>
           </div>
+          {/* Popup */}
+          {isUserPopupOpen && (
+            <div
+              ref={popupRef}
+              className="absolute bottom-[80px] left-[50px] w-[198px] h-[142px] bg-[var(--gray-100)] rounded-md shadow-xl border border-[var(--gray-300)] flex flex-col justify-center z-50"
+            >
+              <span className="text-[14px] text-[var(--gray-400)] px-4 py-2">
+                Options
+              </span>
+              <button className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2">
+                <img src={userWhite} alt="" />
+                Perfil
+              </button>
+              <button
+                onClick={() => alert("Logout")}
+                className="px-4 py-2 text-left text-[var(--feedback-danger)] hover:bg-[var(--gray-200)] flex gap-2"
+              >
+                <img src={exitRed} alt="" />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
