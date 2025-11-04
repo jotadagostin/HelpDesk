@@ -13,7 +13,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login de usuário
+// User Login:
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;

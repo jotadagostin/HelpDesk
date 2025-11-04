@@ -1,4 +1,3 @@
-// src/controllers/userController.ts
 import prisma from "../config/prisma";
 import { Request, Response } from "express";
 
