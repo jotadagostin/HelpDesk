@@ -3,6 +3,7 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
+import axios from "axios";
 
 const signInSchema = z
   .object({
@@ -29,11 +30,25 @@ export function SignIn() {
     resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit = (data: SignInData) => {
-    console.log("User registered:", data);
-    // Aqui poderia ir a requisição pro backend:
-    // await api.post("/signup", data);
-    navigate("/");
+  const onSubmit = async (data: SignInData) => {
+    try {
+      const response = await axios.post("http://localhost:3000/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      const { token, user } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", user.role);
+
+      // Redirecionamento baseado na role
+      if (user.role === "ADMIN") navigate("/admin");
+      if (user.role === "TEC") navigate("/technician");
+      if (user.role === "CLIENT") navigate("/clients");
+    } catch (err: any) {
+      console.error(err.response?.data || err.message);
+    }
   };
 
   return (
