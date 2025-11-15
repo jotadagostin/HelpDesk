@@ -5,17 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
 import axios from "axios";
 
-const signInSchema = z
-  .object({
-    name: z.string().min(3, "Name must be at least 3 characters long"),
-    email: z.string().email("Insert a valid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+const signInSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters long"),
+  email: z.string().email("Insert a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
 
 type SignInData = z.infer<typeof signInSchema>;
 
@@ -32,10 +26,14 @@ export function SignIn() {
 
   const onSubmit = async (data: SignInData) => {
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
+      const response = await axios.post("http://localhost:3000/auth/register", {
+        name: data.name,
         email: data.email,
         password: data.password,
       });
+
+      alert("Account created successfully!");
+      navigate("/"); // go to login
 
       const { token, user } = response.data;
 
@@ -78,7 +76,7 @@ export function SignIn() {
               </label>
               <input
                 id="name"
-                type="name"
+                type="text"
                 placeholder="Type your full name"
                 className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
                 {...register("name")}

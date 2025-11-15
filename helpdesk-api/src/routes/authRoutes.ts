@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { registerUser, loginUser } from "../services/authService";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -7,7 +8,19 @@ const router = Router();
 router.post("/register", async (req, res) => {
   try {
     const user = await registerUser(req.body);
-    res.status(201).json(user);
+
+    // dont return the password!
+
+    const { password, ...userWithoutPassword } = user;
+
+    // Gera token
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({ user: userWithoutPassword, token });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
@@ -17,8 +30,12 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const result = await loginUser(email, password);
-    res.json(result);
+    const { user, token } = await loginUser(email, password);
+    // remove password:
+
+    const { password: _, ...userWithoutPassword } = user;
+
+    res.json({ user: userWithoutPassword, token });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }

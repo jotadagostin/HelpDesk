@@ -3,6 +3,7 @@ import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 const loginSchema = z.object({
   email: z.string().email("Insert a valid email address"),
@@ -22,9 +23,27 @@ export function LogIn() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginData) => {
-    console.log("dados", data);
-    navigate("/dashboard");
+  const onSubmit = async (data: LoginData) => {
+    try {
+      const response = await axios.post("http://localhost:3000/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      const { token, user } = response.data;
+
+      // Save token and role in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", user.role);
+
+      // Redirection by role
+      if (user.role === "ADMIN") navigate("/admin");
+      if (user.role === "TEC") navigate("/technician");
+      if (user.role === "CLIENT") navigate("/clients");
+    } catch (err: any) {
+      console.error(err.response?.data || err.message);
+      alert("Invalid e-mail or password");
+    }
   };
 
   return (
