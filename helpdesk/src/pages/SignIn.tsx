@@ -32,15 +32,14 @@ export function SignIn() {
         password: data.password,
       });
 
-      alert("Account created successfully!");
-      navigate("/"); // go to login
-
       const { token, user } = response.data;
+
+      alert("Account created successfully!");
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
 
-      // Redirecionamento baseado na role
+      // Redirect by role:
       if (user.role === "ADMIN") navigate("/admin");
       if (user.role === "TEC") navigate("/technician");
       if (user.role === "CLIENT") navigate("/clients");
