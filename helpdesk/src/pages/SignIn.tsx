@@ -3,7 +3,7 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
-import axios from "axios";
+import { registerUser } from "../services/auth";
 
 const signInSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long"),
@@ -26,13 +26,9 @@ export function SignIn() {
 
   const onSubmit = async (data: SignInData) => {
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      });
+      const response = await registerUser(data.name, data.email, data.password);
 
-      const { token, user } = response.data;
+      const { token, user } = response;
 
       alert("Account created successfully!");
 

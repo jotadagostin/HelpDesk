@@ -3,7 +3,7 @@ import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { login } from "../services/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Insert a valid email address"),
@@ -25,12 +25,9 @@ export function LogIn() {
 
   const onSubmit = async (data: LoginData) => {
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        email: data.email,
-        password: data.password,
-      });
+      const response = await login(data.email, data.password);
 
-      const { token, user } = response.data;
+      const { token, user } = response;
 
       // Save token and role in localStorage
       localStorage.setItem("token", token);
