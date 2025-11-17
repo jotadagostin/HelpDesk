@@ -21,7 +21,13 @@ export async function registerUser({
   const user = await prisma.user.create({
     data: { name, email, password: hashedPassword, role },
   });
-  return user;
+
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET!,
+    { expiresIn: "1h" }
+  );
+  return { user, token };
 }
 
 export async function loginUser(email: string, password: string) {

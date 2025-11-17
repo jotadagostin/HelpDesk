@@ -1,24 +1,14 @@
 import { Router } from "express";
 import { registerUser, loginUser } from "../services/authService";
-import jwt from "jsonwebtoken";
 
 const router = Router();
 
 //User registration:
 router.post("/register", async (req, res) => {
   try {
-    const user = await registerUser(req.body);
-
-    // dont return the password!
+    const { user, token } = await registerUser(req.body);
 
     const { password, ...userWithoutPassword } = user;
-
-    // Gera token
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1h" }
-    );
 
     res.status(201).json({ user: userWithoutPassword, token });
   } catch (err: any) {

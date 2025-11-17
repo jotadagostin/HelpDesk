@@ -20,6 +20,7 @@ export function SignIn() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SignInData>({
     resolver: zodResolver(signInSchema),
   });
@@ -31,6 +32,8 @@ export function SignIn() {
       const { token, user } = response;
 
       alert("Account created successfully!");
+
+      reset();
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
