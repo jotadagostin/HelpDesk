@@ -32,21 +32,22 @@ export function SignIn() {
     try {
       const response = await registerUser(data.name, data.email, data.password);
 
-      const { token, user } = response;
+      // Sucess: show the notifications
+      setError(""); // clean error before
+      setTimeout(() => {
+        setError("Account created successfully!");
+      }, 1);
 
-      alert("Account created successfully!");
+      reset(); // clean the form
 
-      reset();
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", user.role);
-
-      // Redirect by role:
-      if (user.role === "ADMIN") navigate("/admin");
-      if (user.role === "TEC") navigate("/technician");
-      if (user.role === "CLIENT") navigate("/clients");
+      // Redirect to login after 1.5s
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (err: any) {
       console.error(err.response?.data || err.message);
+
+      // launch error notification
       setError("");
       setTimeout(() => {
         setError(err.response?.data?.error || err.message);

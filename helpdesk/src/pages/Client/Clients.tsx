@@ -236,7 +236,12 @@ export function Clients() {
                 Perfil
               </button>
               <button
-                onClick={() => alert("Logout")}
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("role");
+
+                  navigate("/");
+                }}
                 className="px-4 py-2 text-left text-[var(--feedback-danger)] hover:bg-[var(--gray-200)] flex gap-2"
               >
                 <img src={exitRed} alt="" />
