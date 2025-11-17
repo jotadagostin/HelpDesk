@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router";
-import z from "zod";
+import z, { set } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import headerLogoSvg from "../assets/images/NavHeader-logo.svg";
 import { registerUser } from "../services/auth";
+import { useState } from "react";
+import { Notification } from "../components/Notification";
 
 const signInSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long"),
@@ -15,6 +17,7 @@ type SignInData = z.infer<typeof signInSchema>;
 
 export function SignIn() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const {
     register,
@@ -44,11 +47,17 @@ export function SignIn() {
       if (user.role === "CLIENT") navigate("/clients");
     } catch (err: any) {
       console.error(err.response?.data || err.message);
+      setError("");
+      setTimeout(() => {
+        setError(err.response?.data?.error || err.message);
+      }, 1);
     }
   };
 
   return (
     <div className="w-full h-screen bg-login  bg-cover bg-center flex items-end justify-end">
+      {/* error notification */}
+      {error && <Notification message={error} duration={4000} />}
       <div className="w-full md:w-[50%]  h-full md:h-[98%] bg-[var(--gray-600)] rounded-tl flex flex-col items-center justify-start ">
         <div className="flex flex-col items-center pt-13 gap-3">
           <div className="mb-7">
