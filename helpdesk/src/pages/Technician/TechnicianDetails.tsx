@@ -2,7 +2,7 @@ import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/white-clock.svg";
@@ -11,12 +11,36 @@ import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
 import plusSvg from "../../assets/icons/icon/plus.svg";
 import redTrashSvg from "../../assets/icons/icon/trashRed.svg";
 import buttonXSvg from "../../assets/icons/icon/x.svg";
+import userWhite from "../../assets/icons/icon/user-white.svg";
+import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
 export function TechnicianDetails() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsUserPopupOpen(false);
+      }
+    };
+
+    if (isUserPopupOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserPopupOpen]);
 
   return (
     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row ">
@@ -133,7 +157,10 @@ export function TechnicianDetails() {
         </nav>
 
         <div className="h-[82%]  flex justify-center items-end">
-          <div className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 ">
+          <div
+            className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 cursor-pointer"
+            onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+          >
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
@@ -144,6 +171,33 @@ export function TechnicianDetails() {
               </p>
             </div>
           </div>
+          {/* Popup */}
+          {isUserPopupOpen && (
+            <div
+              ref={popupRef}
+              className="absolute bottom-[80px] left-[50px] w-[198px] h-[142px] bg-[var(--gray-100)] rounded-md shadow-xl border border-[var(--gray-300)] flex flex-col justify-center z-50"
+            >
+              <span className="text-[14px] text-[var(--gray-400)] px-4 py-2">
+                Options
+              </span>
+              <button className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2">
+                <img src={userWhite} alt="" />
+                Perfil
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("role");
+
+                  navigate("/");
+                }}
+                className="px-4 py-2 text-left text-[var(--feedback-danger)] hover:bg-[var(--gray-200)] flex gap-2"
+              >
+                <img src={exitRed} alt="" />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
