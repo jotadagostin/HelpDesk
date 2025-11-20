@@ -8,7 +8,7 @@ import clientsWhiteSvg from "../../assets/icons/icon/briefcase-business-white.sv
 import serviceSvg from "../../assets/icons/icon/service.svg";
 import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/clock-2.svg";
@@ -24,6 +24,9 @@ export function CallsDetails() {
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+
+  // 🔥 get the user in the localstorage:
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -264,11 +267,9 @@ export function CallsDetails() {
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
-                User Admin
+                {user.name}
               </span>
-              <p className="text-[var(--gray-400)] text-[12px]">
-                user.adm@test.com
-              </p>
+              <p className="text-[var(--gray-400)] text-[12px]">{user.email}</p>
             </div>
           </div>
           {/* Popup */}

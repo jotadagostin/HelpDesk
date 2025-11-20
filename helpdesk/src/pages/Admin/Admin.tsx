@@ -24,7 +24,6 @@ import avatarClientSvg from "../../assets/icons/icon/AvatarClient.svg";
 import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
-import { getProfile, updateProfile } from "../../services/user";
 
 export function Admin() {
   const [isHovered, setIsHovered] = useState(false);
@@ -36,6 +35,9 @@ export function Admin() {
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+
+  // 🔥 get the user in the localstorage:
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -290,10 +292,10 @@ export function Admin() {
           >
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
-              <span className="text-[var(--gray-600)] text-[14px]">ADMIN</span>
-              <p className="text-[var(--gray-400)] text-[12px]">
-                admin@helpdesk.com
-              </p>
+              <span className="text-[var(--gray-600)] text-[14px]">
+                {user.name}
+              </span>
+              <p className="text-[var(--gray-400)] text-[12px]">{user.email}</p>
             </div>
           </div>
           {/* Popup */}

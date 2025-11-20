@@ -33,6 +33,17 @@ export function LogIn() {
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
 
+      // 🔥 Save the user object in localStorage
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        })
+      );
+
       // Redirection by role
       if (user.role === "ADMIN") navigate("/admin");
       if (user.role === "TEC") navigate("/technician");

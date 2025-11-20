@@ -27,6 +27,8 @@ export function Clients() {
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+  // 🔥 get the user in the localstorage:
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -215,11 +217,9 @@ export function Clients() {
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div>
               <span className="text-[var(--gray-600)] text-[14px]">
-                User Admin
+                {user.name}
               </span>
-              <p className="text-[var(--gray-400)] text-[12px]">
-                user.adm@test.com
-              </p>
+              <p className="text-[var(--gray-400)] text-[12px]">{user.email}</p>
             </div>
           </div>
           {/* Popup */}

@@ -27,6 +27,9 @@ export function Technician() {
   const navigate = useNavigate();
   const popupRef = useRef<HTMLDivElement>(null);
 
+  // 🔥 get the user in the localstorage:
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -180,11 +183,9 @@ export function Technician() {
             <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
-                User Technician
+                {user.name}
               </span>
-              <p className="text-[var(--gray-400)] text-[12px]">
-                user.tec@test.com
-              </p>
+              <p className="text-[var(--gray-400)] text-[12px]">{user.email}</p>
             </div>
           </div>
           {/* Popup */}
