@@ -68,6 +68,15 @@ export function Admin() {
     setShowModal(false);
   };
 
+  const getInitials = (fullName: string) => {
+    if (!fullName) return "";
+
+    const parts = fullName.trim().split(" ");
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
   return (
     // sidebar desktop:
     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row ">
@@ -290,7 +299,10 @@ export function Admin() {
             className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 cursor-pointer"
             onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
           >
-            <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
+            <div className="w-[32px] h-[32px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white">
+              {getInitials(user.name)}
+            </div>
+
             <div className="">
               <span className="text-[var(--gray-600)] text-[14px]">
                 {user.name}
