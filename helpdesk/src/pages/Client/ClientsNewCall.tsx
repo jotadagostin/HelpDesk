@@ -16,6 +16,48 @@ export function ClientsNewCall() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
+  //Field states
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+
+  // Submit handler(form):
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !description || !category) {
+      alert("Fill in all the fields.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch("http://localhost:3000/api/calls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title, description, category }),
+      });
+
+      console.log("Status da resposta:", response.status);
+      const data = await response.json();
+      console.log("Resposta da API:", data);
+
+      if (!response.ok) throw new Error("Error creating call");
+
+      alert("Call created successfully!");
+
+      // ✅ Disparar GET para atualizar a lista:
+      // Se você está usando navigate("/clients"), certifique-se que a página Clients refaz o fetch das calls ao montar
+      navigate("/clients");
+    } catch (err) {
+      console.error(err);
+      alert("Error creating call.");
+    }
+  };
+
   const navigate = useNavigate();
 
   // 🔥 get the user in the localstorage:
@@ -270,7 +312,11 @@ export function ClientsNewCall() {
         <div className="flex flex-col md:flex-row items-start gap-8 w-full max-w-[1200px]">
           {/* Information */}
           <div className="border border-[var(--gray-500)] rounded-lg w-full md:w-[65%] bg-[var(--gray-700)]">
-            <form className="w-full flex flex-col items-start p-7 rounded-lg bg-[var(--gray-800)]">
+            <form
+              onSubmit={handleSubmit}
+              id="newCallForm"
+              className="w-full flex flex-col items-start p-7 rounded-lg bg-[var(--gray-800)]"
+            >
               <div className="mb-10">
                 <h1 className="text-xl font-bold text-[var(--gray-200)]">
                   Informations
@@ -291,6 +337,8 @@ export function ClientsNewCall() {
                   id="title"
                   type="text"
                   placeholder="Backup is not working"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 w-full bg-transparent focus:outline-none"
                 />
 
@@ -303,6 +351,8 @@ export function ClientsNewCall() {
                 <textarea
                   id="description"
                   rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   placeholder="The automatic backup system has stopped working. The last successful backup was a week ago."
                   className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 px-2 w-full resize-none bg-transparent focus:outline-none"
                 ></textarea>
@@ -316,6 +366,8 @@ export function ClientsNewCall() {
                 <select
                   id="categoria"
                   name="categoria"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                   className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 w-full bg-transparent focus:outline-none"
                 >
                   <option value="">Select a category</option>
@@ -358,7 +410,7 @@ export function ClientsNewCall() {
                 <div className="flex gap-1 text-[var(--gray-200)] items-center font-bold">
                   $
                   <span className="text-[25px] text-[var(--gray-200)] font-bold">
-                    300,00
+                    100,00
                   </span>
                 </div>
               </div>
@@ -370,7 +422,11 @@ export function ClientsNewCall() {
                 </p>
               </div>
 
-              <button className="bg-[var(--gray-200)] text-[14px] text-[var(--gray-600)] px-4 py-4 rounded font-bold hover:opacity-90 transition w-full">
+              <button
+                type="submit"
+                form="newCallForm"
+                className="bg-[var(--gray-200)] text-[14px] text-[var(--gray-600)] px-4 py-4 rounded font-bold hover:opacity-90 transition w-full"
+              >
                 Create call
               </button>
             </div>

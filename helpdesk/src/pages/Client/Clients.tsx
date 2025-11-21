@@ -71,6 +71,20 @@ export function Clients() {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
+  const [calls, setCalls] = useState([]);
+
+  useEffect(() => {
+    const fetchCalls = async () => {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3000/api/calls", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setCalls(data);
+    };
+    fetchCalls();
+  }, []);
+
   return (
     // sidebar desktop:
     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row ">
@@ -370,7 +384,7 @@ export function Clients() {
                   <th className="p-[14px] text-left">Status</th>
                 </tr>
               </thead>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
+              {/* <tbody className="border border-gray-200 text-[var(--gray-100)] ">
                 <tr className="">
                   <td className="p-[14px]">12/04/25 15:50</td>
                   <td className="p-[14px] hidden md:table-cell">00004</td>
@@ -642,6 +656,94 @@ export function Clients() {
                     </div>
                   </td>
                 </tr>
+              </tbody> */}
+              <tbody className="border border-gray-200 text-[var(--gray-100)]">
+                {calls.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="p-6 text-center text-[var(--gray-300)]"
+                    >
+                      No calls found.
+                    </td>
+                  </tr>
+                ) : (
+                  calls.map((call: any) => (
+                    <tr key={call.id}>
+                      <td className="p-[14px]">
+                        {new Date(call.updatedAt).toLocaleDateString()}{" "}
+                        {new Date(call.updatedAt)
+                          .toLocaleTimeString()
+                          .slice(0, 5)}
+                      </td>
+
+                      <td className="p-[14px] hidden md:table-cell">
+                        {call.id}
+                      </td>
+
+                      <td className="p-[14px]">
+                        <div className="flex flex-col">
+                          <strong>{call.title}</strong>
+                          <small>{call.category}</small>
+                        </div>
+                      </td>
+
+                      <td className="p-[14px] hidden md:table-cell">
+                        ${call.total || "0,00"}
+                      </td>
+
+                      <td className="p-[14px] hidden md:table-cell">
+                        <div className="flex gap-2">
+                          <img src={avatarSvg} className="w-[20px] h-[20px]" />
+                          <small>{user.name}</small>
+                        </div>
+                      </td>
+
+                      <td className="p-[14px] hidden md:table-cell">
+                        <div className="flex gap-2">
+                          <img src={avatarSvg} className="w-[20px] h-[20px]" />
+                          <small>{call.technicianName || "-"}</small>
+                        </div>
+                      </td>
+
+                      <td>
+                        <div className="flex justify-between p-2">
+                          <img
+                            src={
+                              call.status === "open"
+                                ? statusOpenSvg
+                                : call.status === "in-progress"
+                                ? statusInProgresSvg
+                                : statusClosedSvg
+                            }
+                            alt=""
+                            className="hidden md:block"
+                          />
+
+                          <img
+                            src={
+                              call.status === "open"
+                                ? statusOpenMobile
+                                : call.status === "in-progress"
+                                ? statusInProgressMobile
+                                : statusClosedMobile
+                            }
+                            alt=""
+                            className="block md:hidden"
+                          />
+
+                          <button
+                            onClick={() =>
+                              navigate(`/clients/details/${call.id}`)
+                            }
+                          >
+                            <img src={buttonEditSvg} alt="" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
