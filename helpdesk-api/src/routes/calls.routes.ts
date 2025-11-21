@@ -5,9 +5,9 @@ import authMiddleware from "../middlewares/authMiddleware";
 const router = Router();
 
 //Create call (user must login)
-router.post("/", authMiddleware, createCall);
+router.post("/calls", authMiddleware, createCall);
 
 //To list calls (user must login)
-router.get("/", authMiddleware, getCalls);
+router.get("/calls", authMiddleware, getCalls);
 
 export default router;

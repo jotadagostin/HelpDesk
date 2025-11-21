@@ -14,8 +14,12 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
+    // methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// app.options("*", cors());
 
 // authentication Routes:
 app.use("/auth", authRoutes);
@@ -24,6 +28,6 @@ app.use("/auth", authRoutes);
 app.use("/api", router);
 
 //Call Routes:
-app.use("/api/calls", callsRoutes);
+app.use("/api", callsRoutes);
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));

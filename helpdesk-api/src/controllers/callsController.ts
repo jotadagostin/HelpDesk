@@ -4,6 +4,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const createCall = async (req: Request, res: Response) => {
+  // 🔥 Logs para diagnosticar
+  console.log("🔥 RECEBI REQUISIÇÃO /api/calls");
+  console.log("BODY:", req.body);
+  console.log("USER:", req.user);
+
   try {
     const { title, description, category } = req.body;
 

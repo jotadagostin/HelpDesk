@@ -24,6 +24,7 @@ export function ClientsNewCall() {
   // Submit handler(form):
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🔥 HANDLE SUBMIT DISPAROU!");
     if (!title || !description || !category) {
       alert("Fill in all the fields.");
       return;
