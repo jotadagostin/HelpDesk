@@ -52,7 +52,7 @@ export function ClientsNewCall() {
 
       // ✅ Disparar GET para atualizar a lista:
       // Se você está usando navigate("/clients"), certifique-se que a página Clients refaz o fetch das calls ao montar
-      navigate("/clients");
+      navigate("/clients", { state: { newCall: data } });
     } catch (err) {
       console.error(err);
       alert("Error creating call.");

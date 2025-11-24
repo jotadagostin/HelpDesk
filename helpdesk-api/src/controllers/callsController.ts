@@ -21,10 +21,15 @@ export const createCall = async (req: Request, res: Response) => {
     const newCall = await prisma.call.create({
       data: {
         title,
-        description,
+        description: description || "",
         category,
+        total: total || "0,00",
         userId: Number(userId),
+        technicianName: null, // null por padrão, será definido pelo admin
+        status: "open", // default
+        updatedAt: new Date(),
       },
+      include: { user: true }, // para retornar o user completo pro frontend
     });
 
     return res.status(201).json(newCall);

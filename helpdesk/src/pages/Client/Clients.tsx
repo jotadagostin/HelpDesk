@@ -4,7 +4,7 @@ import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import avatarClientSvg from "../../assets/icons/icon/AvatarClient.svg";
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
 import statusOpenMobile from "../../assets/icons/icon/statusOpenMobile.svg";
 import statusInProgresSvg from "../../assets/icons/icon/TagStatus(inprogress).svg";
@@ -21,17 +21,70 @@ import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
 
+export type CallType = {
+  id: string;
+  title: string;
+  category: string;
+  total?: string;
+  updatedAt: string;
+  technicianName?: string;
+  status: "open" | "in-progress" | "closed";
+  user?: string;
+};
+
 export function Clients() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [calls, setCalls] = useState<CallType[]>([]);
+
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.newCall) {
+      const newCallWithDefaults: CallType = {
+        id: location.state.newCall.id || "temp-id",
+        title: location.state.newCall.title,
+        category: location.state.newCall.category,
+        total: location.state.newCall.total || "0,00",
+        updatedAt: location.state.newCall.updatedAt || new Date().toISOString(),
+        technicianName: location.state.newCall.technicianName || "-",
+        status: location.state.newCall.status || "open",
+      };
+
+      setCalls((prev) => [newCallWithDefaults, ...prev]); // adiciona no topo da lista
+      navigate("/clients", { state: { newCall: newCallWithDefaults } });
+    }
+  }, [location.state]);
 
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 📌 Função fetchCalls disponível para todos os useEffects
+  const fetchCalls = async () => {
+    const token = localStorage.getItem("token");
+    const res = await fetch("http://localhost:3000/api/calls", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    setCalls(data);
+  };
+
+  // UseEffect inicial para carregar os calls
+  useEffect(() => {
+    fetchCalls();
+  }, []);
+
+  // UseEffect para atualizar calls ao voltar de outra página
+  useEffect(() => {
+    if (location.state?.refresh) {
+      fetchCalls(); // chama novamente a API
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,20 +123,6 @@ export function Clients() {
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
-
-  const [calls, setCalls] = useState([]);
-
-  useEffect(() => {
-    const fetchCalls = async () => {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3000/api/calls", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setCalls(data);
-    };
-    fetchCalls();
-  }, []);
 
   return (
     // sidebar desktop:
