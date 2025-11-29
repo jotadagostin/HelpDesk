@@ -10,7 +10,7 @@ export const createCall = async (req: Request, res: Response) => {
   console.log("USER:", req.user);
 
   try {
-    const { title, description, category } = req.body;
+    const { title, description, category, total } = req.body;
 
     const userId = (req as any).user?.id;
 
@@ -23,7 +23,8 @@ export const createCall = async (req: Request, res: Response) => {
         title,
         description: description || "",
         category,
-        total: total || "0,00",
+        // `total` is optional in the schema; accept value from the client or store null
+        total: total ?? null,
         userId: Number(userId),
         technicianName: null, // null por padrão, será definido pelo admin
         status: "open", // default
