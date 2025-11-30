@@ -3,7 +3,7 @@ import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/clock-2.svg";
 import checkSvg from "../../assets/icons/icon/circle-check-big.svg";
@@ -19,6 +19,15 @@ export function ClientsDetails() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+
+  // editable call state
+  const [callTitle, setCallTitle] = useState("");
+  const [callDescription, setCallDescription] = useState("");
+  const [callCategory, setCallCategory] = useState("");
+  const [callTotal, setCallTotal] = useState<string>("");
+  const [callTechnician, setCallTechnician] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   //  get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -49,6 +58,60 @@ export function ClientsDetails() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  // load call details when id is present
+  useEffect(() => {
+    async function loadCall() {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:3000/api/calls/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Failed to load call");
+        const data = await res.json();
+        setCallTitle(data.title || "");
+        setCallDescription(data.description || "");
+        setCallCategory(data.category || "");
+        setCallTotal(data.total != null ? String(data.total) : "");
+        setCallTechnician(data.technicianName ?? "");
+      } catch (e) {
+        console.error("Error loading call:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadCall();
+  }, [id]);
+
+  const handleSave = async () => {
+    if (!id) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:3000/api/calls/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: callTitle,
+          description: callDescription,
+          category: callCategory,
+          total: callTotal !== "" ? Number(callTotal) : null,
+          technicianName: callTechnician,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to save");
+      await res.json();
+      navigate("/clients", { state: { refresh: true } });
+    } catch (e) {
+      console.error("Error saving call:", e);
+      alert("Failed to save call");
+    }
   };
 
   return (
@@ -276,9 +339,53 @@ export function ClientsDetails() {
                 In attendance
               </span>
             </button>
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
+            <button
+              onClick={async () => {
+                if (!id) return;
+                const confirmClose = window.confirm(
+                  "Are you sure you want to mark this call as closed?"
+                );
+                if (!confirmClose) return;
+                setLoading(true);
+                try {
+                  const token = localStorage.getItem("token");
+                  const res = await fetch(
+                    `http://localhost:3000/api/calls/${id}`,
+                    {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ status: "closed" }),
+                    }
+                  );
+                  if (!res.ok) throw new Error("Failed to close call");
+                  // navigate back and ask list to refresh
+                  navigate("/clients", {
+                    state: {
+                      refresh: true,
+                      message: "Call closed successfully",
+                    },
+                  });
+                } catch (e) {
+                  console.error("Error closing call:", e);
+                  alert("Failed to close call");
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="flex items-center bg-gray-300 rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto "
+            >
               <img src={checkSvg} alt="" />
               <span className="font-bold">Closed</span>
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="flex items-center bg-[var(--blue-dark)] rounded p-3 gap-2 font-bold text-[14px] text-white w-[120px] h-[40px] justify-center sm:w-auto sm:h-auto"
+            >
+              Save
             </button>
           </div>
         </div>
@@ -288,11 +395,15 @@ export function ClientsDetails() {
           {/* Call Details Card */}
           <div className="border rounded border-[var(--gray-500)] w-full lg:w-[800px] p-5">
             <div className="flex justify-between mb-5">
-              <div>
-                <span className="text-[var(--gray-300)] text-[12px]">0004</span>
-                <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
-                  Backup is not working
-                </h3>
+              <div className="w-full">
+                <span className="text-[var(--gray-300)] text-[12px]">
+                  #{id}
+                </span>
+                <input
+                  value={callTitle}
+                  onChange={(e) => setCallTitle(e.target.value)}
+                  className="w-full text-[var(--gray-200)] text-[16px] font-bold bg-transparent border-b border-[var(--gray-500)] py-1"
+                />
               </div>
               <img src={statusOpen} alt="" />
             </div>
@@ -301,17 +412,29 @@ export function ClientsDetails() {
               <span className="text-[var(--gray-400)] text-[12px]">
                 Description
               </span>
-              <p className="text-[var(--gray-200)] text-[14px]">
-                The automatic backup system has stopped working. The last
-                successful run was a week ago.
-              </p>
+              <textarea
+                value={callDescription}
+                onChange={(e) => setCallDescription(e.target.value)}
+                className="text-[var(--gray-200)] text-[14px] w-full bg-transparent border-b border-[var(--gray-500)] py-2 px-1 resize-none"
+                rows={4}
+              />
             </div>
 
             <div className="mb-5">
               <span className="text-[var(--gray-400)] text-[12px]">
                 Category
               </span>
-              <p className="text-[var(--gray-200)] text-[14px]">Data recover</p>
+              <select
+                value={callCategory}
+                onChange={(e) => setCallCategory(e.target.value)}
+                className="text-[var(--gray-200)] text-[14px] w-full bg-transparent border-b border-[var(--gray-500)] py-1"
+              >
+                <option value="">Select a category</option>
+                <option value="data-recover">Data Recover</option>
+                <option value="backup">Backup</option>
+                <option value="internet">Internet</option>
+                <option value="others">Others</option>
+              </select>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-10 sm:gap-20 mb-5">
@@ -338,7 +461,7 @@ export function ClientsDetails() {
               <div className="flex gap-2 items-center">
                 <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
                 <p className="text-[var(--gray-200)] text-[14px]">
-                  Andre Costa
+                  {user?.name}
                 </p>
               </div>
             </div>
@@ -353,11 +476,14 @@ export function ClientsDetails() {
               <div className="flex gap-2 items-center mt-2">
                 <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
                 <div>
-                  <p className="text-[var(--gray-200)] text-[14px]">
-                    Carlos Silva
-                  </p>
+                  <input
+                    value={callTechnician}
+                    onChange={(e) => setCallTechnician(e.target.value)}
+                    placeholder="Technician name"
+                    className="text-[var(--gray-200)] text-[14px] bg-transparent border-b border-[var(--gray-500)] py-1"
+                  />
                   <small className="text-[var(--gray-300)]">
-                    carlos.silva@test.com
+                    {/* email not available in call payload */}
                   </small>
                 </div>
               </div>
@@ -388,13 +514,30 @@ export function ClientsDetails() {
                 <p className="text-[var(--gray-200)] text-[14px]">$70,00</p>
               </div>
 
-              <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
-                <span className="text-[var(--gray-200)] text-[14px] font-bold">
+              <div className="mt-3">
+                <label className="text-[var(--gray-400)] text-[12px]">
                   Total
-                </span>
-                <span className="text-[var(--gray-200)] text-[14px] font-bold">
-                  $395,00
-                </span>
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={callTotal}
+                  onChange={(e) => setCallTotal(e.target.value)}
+                  className="w-full text-[var(--gray-200)] text-[14px] bg-transparent border-b border-[var(--gray-500)] py-1 mt-2"
+                />
+                <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
+                  <span className="text-[var(--gray-200)] text-[14px] font-bold">
+                    Total
+                  </span>
+                  <span className="text-[var(--gray-200)] text-[14px] font-bold">
+                    {callTotal
+                      ? Number(callTotal).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      : "$0,00"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

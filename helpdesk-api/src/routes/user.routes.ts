@@ -6,6 +6,6 @@ import { getUsers } from "../controllers/getUsers";
 
 const router = Router();
 
-router.get("/users", authMiddleware, authorizeRoles("ADMIN"), getUsers);
+router.get("/users", authMiddleware(), authorizeRoles("ADMIN"), getUsers);
 
 export default router;

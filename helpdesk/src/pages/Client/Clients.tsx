@@ -4,6 +4,7 @@ import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import avatarClientSvg from "../../assets/icons/icon/AvatarClient.svg";
 import { useState, useRef, useEffect } from "react";
+import { Notification } from "../../components/Notification";
 import { useLocation, useNavigate } from "react-router";
 import statusOpenSvg from "../../assets/icons/icon/TagStatus(open).svg";
 import statusOpenMobile from "../../assets/icons/icon/statusOpenMobile.svg";
@@ -46,20 +47,12 @@ export function Clients() {
 
   useEffect(() => {
     if (location.state?.newCall) {
-      const newCallWithDefaults: CallType = {
-        id: location.state.newCall.id || "temp-id",
-        title: location.state.newCall.title,
-        category: location.state.newCall.category,
-        total: location.state.newCall.total || "0,00",
-        updatedAt: location.state.newCall.updatedAt || new Date().toISOString(),
-        technicianName: location.state.newCall.technicianName || "-",
-        status: location.state.newCall.status || "open",
-      };
-
-      setCalls((prev) => [newCallWithDefaults, ...prev]); // adiciona no topo da lista
-      navigate("/clients", { state: { newCall: newCallWithDefaults } });
+      // When returning from newcall, refetch to get the latest calls
+      fetchCalls();
+      // Clear the navigation state to avoid re-running this effect
+      navigate("/clients", { replace: true });
     }
-  }, [location.state]);
+  }, [location.state?.newCall]);
 
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -401,6 +394,12 @@ export function Clients() {
         <h1 className="w-full max-w-screen-lg  font-bold text-[20px] sm:text-[24px] text-[var(--blue-dark)] px-4  py-6">
           Calls
         </h1>
+        {location.state?.message && (
+          <Notification
+            message={String(location.state.message)}
+            duration={3000}
+          />
+        )}
         <div className="w-full h-screen md:max-w-screen-2xl overflow-x-auto mx-auto px-4   ">
           <div className="w-full border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full ">
@@ -707,81 +706,89 @@ export function Clients() {
                     </td>
                   </tr>
                 ) : (
-                  calls.map((call: any) => (
-                    <tr key={call.id}>
-                      <td className="p-[14px]">
-                        {new Date(call.updatedAt).toLocaleDateString()}{" "}
-                        {new Date(call.updatedAt)
-                          .toLocaleTimeString()
-                          .slice(0, 5)}
-                      </td>
+                  calls
+                    .filter((call: any) => call.status !== "closed")
+                    .map((call: any) => (
+                      <tr key={call.id}>
+                        <td className="p-[14px]">
+                          {new Date(call.updatedAt).toLocaleDateString()}{" "}
+                          {new Date(call.updatedAt)
+                            .toLocaleTimeString()
+                            .slice(0, 5)}
+                        </td>
 
-                      <td className="p-[14px] hidden md:table-cell">
-                        {call.id}
-                      </td>
+                        <td className="p-[14px] hidden md:table-cell">
+                          {call.id}
+                        </td>
 
-                      <td className="p-[14px]">
-                        <div className="flex flex-col">
-                          <strong>{call.title}</strong>
-                          <small>{call.category}</small>
-                        </div>
-                      </td>
+                        <td className="p-[14px]">
+                          <div className="flex flex-col">
+                            <strong>{call.title}</strong>
+                            <small>{call.category}</small>
+                          </div>
+                        </td>
 
-                      <td className="p-[14px] hidden md:table-cell">
-                        ${call.total || "0,00"}
-                      </td>
+                        <td className="p-[14px] hidden md:table-cell">
+                          ${call.total || "0,00"}
+                        </td>
 
-                      <td className="p-[14px] hidden md:table-cell">
-                        <div className="flex gap-2">
-                          <img src={avatarSvg} className="w-[20px] h-[20px]" />
-                          <small>{user.name}</small>
-                        </div>
-                      </td>
+                        <td className="p-[14px] hidden md:table-cell">
+                          <div className="flex gap-2">
+                            <img
+                              src={avatarSvg}
+                              className="w-[20px] h-[20px]"
+                            />
+                            <small>{user.name}</small>
+                          </div>
+                        </td>
 
-                      <td className="p-[14px] hidden md:table-cell">
-                        <div className="flex gap-2">
-                          <img src={avatarSvg} className="w-[20px] h-[20px]" />
-                          <small>{call.technicianName || "-"}</small>
-                        </div>
-                      </td>
+                        <td className="p-[14px] hidden md:table-cell">
+                          <div className="flex gap-2">
+                            <img
+                              src={avatarSvg}
+                              className="w-[20px] h-[20px]"
+                            />
+                            <small>{call.technicianName || "-"}</small>
+                          </div>
+                        </td>
 
-                      <td>
-                        <div className="flex justify-between p-2">
-                          <img
-                            src={
-                              call.status === "open"
-                                ? statusOpenSvg
-                                : call.status === "in-progress"
-                                ? statusInProgresSvg
-                                : statusClosedSvg
-                            }
-                            alt=""
-                            className="hidden md:block"
-                          />
+                        <td>
+                          <div className="flex justify-between p-2">
+                            <img
+                              src={
+                                call.status === "open"
+                                  ? statusOpenSvg
+                                  : call.status === "in-progress"
+                                  ? statusInProgresSvg
+                                  : statusClosedSvg
+                              }
+                              alt=""
+                              className="hidden md:block"
+                            />
 
-                          <img
-                            src={
-                              call.status === "open"
-                                ? statusOpenMobile
-                                : call.status === "in-progress"
-                                ? statusInProgressMobile
-                                : statusClosedMobile
-                            }
-                            alt=""
-                            className="block md:hidden"
-                          />
+                            <img
+                              src={
+                                call.status === "open"
+                                  ? statusOpenMobile
+                                  : call.status === "in-progress"
+                                  ? statusInProgressMobile
+                                  : statusClosedMobile
+                              }
+                              alt=""
+                              className="block md:hidden"
+                            />
 
-                          <button
-                            onClick={() =>
-                              navigate(`/clients/details/${call.id}`)
-                            }
-                          >
-                            <img src={buttonEditSvg} alt="" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                            <button
+                              onClick={() =>
+                                navigate(`/clients/details/${call.id}`)
+                              }
+                            >
+                              <img src={buttonEditSvg} alt="" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                 )}
               </tbody>
             </table>

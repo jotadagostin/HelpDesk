@@ -42,11 +42,73 @@ export const createCall = async (req: Request, res: Response) => {
 
 export const getCalls = async (req: Request, res: Response) => {
   try {
+    const user = (req as any).user;
+    const isAdmin = user?.role === "ADMIN";
+
     const calls = await prisma.call.findMany({
+      where: isAdmin ? undefined : { userId: user?.id },
       include: { user: true },
     });
 
     res.json(calls);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getCallById = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const call = await prisma.call.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+
+    if (!call) return res.status(404).json({ error: "Call not found" });
+
+    const user = (req as any).user;
+    // clients can only see their own calls
+    if (user?.role !== "ADMIN" && call.userId !== user?.id) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    res.json(call);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const updateCall = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const { title, description, category, total, status, technicianName } =
+      req.body;
+
+    const existing = await prisma.call.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ error: "Call not found" });
+
+    const user = (req as any).user;
+    // clients can only update their own calls
+    if (user?.role !== "ADMIN" && existing.userId !== user?.id) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const updated = await prisma.call.update({
+      where: { id },
+      data: {
+        title: title ?? existing.title,
+        description: description ?? existing.description,
+        category: category ?? existing.category,
+        total: total ?? existing.total,
+        status: status ?? existing.status,
+        technicianName: technicianName ?? existing.technicianName,
+      },
+      include: { user: true },
+    });
+
+    res.json(updated);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });

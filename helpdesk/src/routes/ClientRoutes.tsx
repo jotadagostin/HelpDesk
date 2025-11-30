@@ -7,7 +7,7 @@ export function ClientsRoutes() {
   return (
     <Routes>
       <Route index element={<Clients />} />
-      <Route path="details" element={<ClientsDetails />} />
+      <Route path="details/:id" element={<ClientsDetails />} />
       <Route path="newcall" element={<ClientsNewCall />} />
     </Routes>
   );

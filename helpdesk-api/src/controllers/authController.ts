@@ -4,11 +4,14 @@ import { generateToken } from "../utils/generateToken";
 
 export async function register(req: Request, res: Response) {
   try {
-    const { name, email, password } = req.body;
-    const user = await registerUser({ name, email, password });
-
-    // generate token:
-    const token = generateToken(user.id, user.role);
+    const { name, email, password, role } = req.body;
+    // registerUser returns { user, token }
+    const { user, token } = await registerUser({
+      name,
+      email,
+      password,
+      role,
+    });
 
     // remove the password before sending:
     const { password: _, ...userWithoutPassword } = user;

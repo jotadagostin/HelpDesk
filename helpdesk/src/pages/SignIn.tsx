@@ -11,6 +11,7 @@ const signInSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long"),
   email: z.string().email("Insert a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
+  role: z.enum(["CLIENT", "TEC"]).optional(),
 });
 
 type SignInData = z.infer<typeof signInSchema>;
@@ -30,7 +31,12 @@ export function SignIn() {
 
   const onSubmit = async (data: SignInData) => {
     try {
-      const response = await registerUser(data.name, data.email, data.password);
+      const response = await registerUser(
+        data.name,
+        data.email,
+        data.password,
+        data.role || "CLIENT"
+      );
 
       // Sucess: show the notifications
       setError(""); // clean error before
@@ -94,6 +100,21 @@ export function SignIn() {
                   {errors.name.message}
                 </p>
               )}
+              <label
+                htmlFor="role"
+                className="text-[var(--gray-300)] font-bold text-[10px] not-italic mt-2"
+              >
+                ROLE
+              </label>
+              <select
+                id="role"
+                className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                {...register("role")}
+                defaultValue="CLIENT"
+              >
+                <option value="CLIENT">Client</option>
+                <option value="TEC">Technician</option>
+              </select>
               <label
                 htmlFor="email"
                 className="text-[var(--gray-300)] font-bold text-[10px] not-italic"

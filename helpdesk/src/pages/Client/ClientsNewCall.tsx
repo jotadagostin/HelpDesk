@@ -31,7 +31,12 @@ export function ClientsNewCall() {
     }
 
     try {
+      console.log("📝 Tentando obter token...");
       const token = localStorage.getItem("token");
+      console.log("🔑 Token obtido:", token ? "✅ Sim" : "❌ Não");
+
+      console.log("📤 Enviando requisição POST para /api/calls...");
+      console.log("Body:", { title, description, category });
 
       const response = await fetch("http://localhost:3000/api/calls", {
         method: "POST",
@@ -42,20 +47,30 @@ export function ClientsNewCall() {
         body: JSON.stringify({ title, description, category }),
       });
 
+      console.log("✅ Resposta recebida!");
       console.log("Status da resposta:", response.status);
+
       const data = await response.json();
       console.log("Resposta da API:", data);
 
-      if (!response.ok) throw new Error("Error creating call");
+      if (!response.ok) {
+        console.error("❌ Error response from API:", data);
+        throw new Error(data.error || "Error creating call");
+      }
 
+      console.log("✅ Call criada com sucesso:", data);
       alert("Call created successfully!");
 
-      // ✅ Disparar GET para atualizar a lista:
-      // Se você está usando navigate("/clients"), certifique-se que a página Clients refaz o fetch das calls ao montar
-      navigate("/clients", { state: { newCall: data } });
+      // ✅ Navigate with the newCall data to trigger refetch in Clients.tsx
+      console.log("🔄 Redirecionando para /clients...");
+      navigate("/clients", { state: { newCall: data }, replace: false });
     } catch (err) {
-      console.error(err);
-      alert("Error creating call.");
+      console.error("❌ Error in handleSubmit:", err);
+      alert(
+        `Error creating call: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`
+      );
     }
   };
 

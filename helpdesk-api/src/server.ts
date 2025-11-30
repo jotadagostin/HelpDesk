@@ -19,6 +19,16 @@ app.use(
   })
 );
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`\n📨 [${new Date().toISOString()}] ${req.method} ${req.path}`);
+  console.log(`Origin: ${req.get("origin")}`);
+  console.log(
+    `Auth header: ${req.get("authorization") ? "✅ Present" : "❌ Missing"}`
+  );
+  next();
+});
+
 // app.options("*", cors());
 
 // authentication Routes:
