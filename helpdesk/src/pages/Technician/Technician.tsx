@@ -1,7 +1,6 @@
 import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
-import avatarSvg from "../../assets/images/Avatar.svg";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import statusInProgress from "../../assets/icons/icon/TagStatus(inprogress).svg";
@@ -169,11 +168,9 @@ export function Technician() {
           onClick={() => setIsProfileModalOpen(true)}
         >
           <button>
-            <img
-              src={avatarSvg}
-              alt="User avatar"
-              className="w-8 h-8 rounded-full cursor-pointer"
-            />
+            <div className="w-8 h-8 rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white">
+              {getInitials(user.name)}
+            </div>
           </button>
         </div>
       </div>
@@ -424,11 +421,9 @@ export function Technician() {
                           </div>
                           <div className="flex justify-between mt-4 ">
                             <div className="flex gap-1 items-center  ">
-                              <img
-                                src={avatarSvg}
-                                alt=""
-                                className="w-[20px] h-[20px]"
-                              />
+                              <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[11px]">
+                                {getInitials(call.user?.name || "")}
+                              </div>
                               <span>{call.user?.name || "Unknown"}</span>
                             </div>
                             <img src={mobileStatusInProgress} alt="" />
@@ -495,11 +490,9 @@ export function Technician() {
                           </div>
                           <div className="flex justify-between mt-4 ">
                             <div className="flex gap-1 items-center  ">
-                              <img
-                                src={avatarSvg}
-                                alt=""
-                                className="w-[20px] h-[20px]"
-                              />
+                              <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[11px]">
+                                {getInitials(call.user?.name || "")}
+                              </div>
                               <span>{call.user?.name || "Unknown"}</span>
                             </div>
                             <img src={statusOpen} alt="" className="w-5 h-5" />

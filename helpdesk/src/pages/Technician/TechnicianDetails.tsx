@@ -22,6 +22,8 @@ export function TechnicianDetails() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [call, setCall] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [newServiceName, setNewServiceName] = useState("");
+  const [newServicePrice, setNewServicePrice] = useState<string>("");
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
@@ -73,6 +75,81 @@ export function TechnicianDetails() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  // Category info with default base prices
+  const CATEGORY_INFO: Record<string, { label: string; price: number }> = {
+    "data-recover": { label: "Data Recover", price: 200.0 },
+    backup: { label: "Backup", price: 150.0 },
+    internet: { label: "Internet", price: 100.0 },
+    others: { label: "Others", price: 50.0 },
+  };
+
+  // Calculate total including additional services
+  const calculateTotal = () => {
+    if (!call) return 0;
+    const basePrice =
+      CATEGORY_INFO[call.category]?.price ?? Number(call.total || 0);
+    const additionalTotal =
+      (call.additionalServices || []).reduce(
+        (sum: number, service: any) => sum + (Number(service.price) || 0),
+        0
+      ) || 0;
+    return basePrice + additionalTotal;
+  };
+
+  const handleAddService = async () => {
+    if (!newServiceName || !newServicePrice || !id) return;
+
+    const updatedServices = [
+      ...(call.additionalServices || []),
+      { name: newServiceName, price: Number(newServicePrice) },
+    ];
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:3000/api/calls/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ additionalServices: updatedServices }),
+      });
+      if (!res.ok) throw new Error("Failed to add service");
+      const data = await res.json();
+      setCall(data);
+      setNewServiceName("");
+      setNewServicePrice("");
+      setShowModal(false);
+    } catch (err) {
+      console.error("Error adding service:", err);
+    }
+  };
+
+  const handleRemoveService = async (index: number) => {
+    if (!id) return;
+
+    const updatedServices = (call.additionalServices || []).filter(
+      (_: any, i: number) => i !== index
+    );
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:3000/api/calls/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ additionalServices: updatedServices }),
+      });
+      if (!res.ok) throw new Error("Failed to remove service");
+      const data = await res.json();
+      setCall(data);
+    } catch (err) {
+      console.error("Error removing service:", err);
+    }
   };
 
   return (
@@ -414,7 +491,12 @@ export function TechnicianDetails() {
                     Base price
                   </p>
                   <p className="text-[var(--gray-200)] text-[14px]">
-                    ${call.total || "0,00"}
+                    {call.total
+                      ? Number(call.total).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      : "R$ 0,00"}
                   </p>
                 </div>
               </div>
@@ -423,12 +505,49 @@ export function TechnicianDetails() {
                 <span className="text-[var(--gray-400)] text-[12px]">
                   Additional
                 </span>
+
+                {/* List of additional services */}
+                {call.additionalServices &&
+                  call.additionalServices.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {call.additionalServices.map(
+                        (service: any, index: number) => (
+                          <div
+                            key={index}
+                            className="flex justify-between items-center"
+                          >
+                            <p className="text-[var(--gray-200)] text-[14px]">
+                              {service.name}
+                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-[var(--gray-200)] text-[14px]">
+                                {service.price.toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })}
+                              </p>
+                              <button
+                                onClick={() => handleRemoveService(index)}
+                                className="text-[var(--feedback-danger)] text-sm hover:underline"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
+
                 <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
                   <span className="text-[var(--gray-200)] text-[14px] font-bold">
                     Total
                   </span>
                   <span className="text-[var(--gray-200)] text-[14px] font-bold">
-                    ${call.total || "0,00"}
+                    {calculateTotal().toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
                   </span>
                 </div>
               </div>
@@ -463,23 +582,28 @@ export function TechnicianDetails() {
               <div className="flex flex-col gap-3">
                 <div>
                   <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
-                    Description
+                    Service name
                   </label>
                   <input
                     type="text"
-                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
-                    placeholder="Backup is not working"
+                    value={newServiceName}
+                    onChange={(e) => setNewServiceName(e.target.value)}
+                    className="w-full border-b border-[var(--gray-500)] bg-transparent text-[var(--gray-200)] py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="e.g. Backup setup"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
-                    Valor
+                    Price
                   </label>
                   <input
                     type="number"
-                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
-                    placeholder="$120,00"
+                    step="0.01"
+                    value={newServicePrice}
+                    onChange={(e) => setNewServicePrice(e.target.value)}
+                    className="w-full border-b border-[var(--gray-500)] bg-transparent text-[var(--gray-200)] py-3 focus:outline-none focus:border-[var(--gray-400)]"
+                    placeholder="0.00"
                   />
                 </div>
               </div>
@@ -487,10 +611,10 @@ export function TechnicianDetails() {
               {/* Botão de salvar */}
               <div className="flex justify-end mt-6">
                 <button
-                  onClick={() => setShowModal(false)}
-                  className="bg-[var(--gray-100)] hover:bg-[var(--gray-200)] text-white px-4 py-2 rounded-md font-semibold transition-colors w-screen"
+                  onClick={handleAddService}
+                  className="bg-[var(--blue-dark)] hover:bg-blue-700 text-white px-4 py-2 rounded-md font-semibold transition-colors"
                 >
-                  Save
+                  Add Service
                 </button>
               </div>
             </div>

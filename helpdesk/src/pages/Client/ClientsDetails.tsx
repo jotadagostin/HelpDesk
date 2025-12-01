@@ -27,6 +27,11 @@ export function ClientsDetails() {
   const [callCategory, setCallCategory] = useState("");
   const [callTotal, setCallTotal] = useState<string>("");
   const [callTechnician, setCallTechnician] = useState<string>("");
+  const [additionalServices, setAdditionalServices] = useState<
+    Array<{ name: string; price: number }>
+  >([]);
+  const [newServiceName, setNewServiceName] = useState("");
+  const [newServicePrice, setNewServicePrice] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   //  get the user in the localstorage:
@@ -60,6 +65,14 @@ export function ClientsDetails() {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
+  // category info with default base prices
+  const CATEGORY_INFO: Record<string, { label: string; price: number }> = {
+    "data-recover": { label: "Data Recover", price: 200.0 },
+    backup: { label: "Backup", price: 150.0 },
+    internet: { label: "Internet", price: 100.0 },
+    others: { label: "Others", price: 50.0 },
+  };
+
   // load call details when id is present
   useEffect(() => {
     async function loadCall() {
@@ -75,8 +88,13 @@ export function ClientsDetails() {
         setCallTitle(data.title || "");
         setCallDescription(data.description || "");
         setCallCategory(data.category || "");
-        setCallTotal(data.total != null ? String(data.total) : "");
+        setCallTotal(
+          data.total != null
+            ? String(data.total)
+            : String(CATEGORY_INFO[data.category]?.price ?? 0)
+        );
         setCallTechnician(data.technicianName ?? "");
+        setAdditionalServices(data.additionalServices || []);
       } catch (e) {
         console.error("Error loading call:", e);
       } finally {
@@ -86,6 +104,43 @@ export function ClientsDetails() {
 
     loadCall();
   }, [id]);
+
+  // Auto-update callTotal when additionalServices or category changes
+  useEffect(() => {
+    const basePrice = CATEGORY_INFO[callCategory]?.price ?? 0;
+    const additionalTotal = additionalServices.reduce(
+      (sum, service) => sum + service.price,
+      0
+    );
+    const newTotal = basePrice + additionalTotal;
+    setCallTotal(String(newTotal));
+  }, [additionalServices, callCategory]);
+
+  // computed base price for current category
+  const basePrice = CATEGORY_INFO[callCategory]?.price ?? 0;
+
+  // Calculate additional services total
+  const additionalServicesTotal = additionalServices.reduce(
+    (sum, service) => sum + service.price,
+    0
+  );
+
+  // Calculate total including base and additional
+  const calculatedTotal = basePrice + additionalServicesTotal;
+
+  const handleAddService = () => {
+    if (!newServiceName || !newServicePrice) return;
+    setAdditionalServices([
+      ...additionalServices,
+      { name: newServiceName, price: Number(newServicePrice) },
+    ]);
+    setNewServiceName("");
+    setNewServicePrice("");
+  };
+
+  const handleRemoveService = (index: number) => {
+    setAdditionalServices(additionalServices.filter((_, i) => i !== index));
+  };
 
   const handleSave = async () => {
     if (!id) return;
@@ -103,6 +158,7 @@ export function ClientsDetails() {
           category: callCategory,
           total: callTotal !== "" ? Number(callTotal) : null,
           technicianName: callTechnician,
+          additionalServices: additionalServices,
         }),
       });
       if (!res.ok) throw new Error("Failed to save");
@@ -480,7 +536,7 @@ export function ClientsDetails() {
                     value={callTechnician}
                     onChange={(e) => setCallTechnician(e.target.value)}
                     placeholder="Technician name"
-                    className="text-[var(--gray-200)] text-[14px] bg-transparent border-b border-[var(--gray-500)] py-1"
+                    className="text-[var(--gray-200)] text-[14px] bg-transparent border-b border-[var(--gray-500)] py-1 px-1"
                   />
                   <small className="text-[var(--gray-300)]">
                     {/* email not available in call payload */}
@@ -493,7 +549,12 @@ export function ClientsDetails() {
               <span className="text-[var(--gray-400)] text-[12px]">Prices</span>
               <div className="flex justify-between">
                 <p className="text-[var(--gray-200)] text-[14px]">Base price</p>
-                <p className="text-[var(--gray-200)] text-[14px]">$400,00</p>
+                <p className="text-[var(--gray-200)] text-[14px]">
+                  {basePrice.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </p>
               </div>
             </div>
 
@@ -501,18 +562,30 @@ export function ClientsDetails() {
               <span className="text-[var(--gray-400)] text-[12px]">
                 Additional
               </span>
-              <div className="flex justify-between">
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  Backup sign up
-                </p>
-                <p className="text-[var(--gray-200)] text-[14px]">$120,00</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  PC formatting
-                </p>
-                <p className="text-[var(--gray-200)] text-[14px]">$70,00</p>
-              </div>
+
+              {/* List of additional services */}
+              {additionalServices.length > 0 && (
+                <div className="space-y-2 mb-3">
+                  {additionalServices.map((service, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      <p className="text-[var(--gray-200)] text-[14px]">
+                        {service.name}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-[var(--gray-200)] text-[14px]">
+                          {service.price.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="mt-3">
                 <label className="text-[var(--gray-400)] text-[12px]">
@@ -530,12 +603,15 @@ export function ClientsDetails() {
                     Total
                   </span>
                   <span className="text-[var(--gray-200)] text-[14px] font-bold">
-                    {callTotal
+                    {callTotal && Number(callTotal)
                       ? Number(callTotal).toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
                         })
-                      : "$0,00"}
+                      : calculatedTotal.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
                   </span>
                 </div>
               </div>

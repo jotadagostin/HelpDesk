@@ -20,6 +20,15 @@ export function ClientsNewCall() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [initialValue, setInitialValue] = useState<number | string>(0);
+
+  // Map category to display label and default price
+  const CATEGORY_INFO: Record<string, { label: string; price: number }> = {
+    "data-recover": { label: "Data Recover", price: 200.0 },
+    backup: { label: "Backup", price: 150.0 },
+    internet: { label: "Internet", price: 100.0 },
+    others: { label: "Others", price: 50.0 },
+  };
 
   // Submit handler(form):
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +45,12 @@ export function ClientsNewCall() {
       console.log("🔑 Token obtido:", token ? "✅ Sim" : "❌ Não");
 
       console.log("📤 Enviando requisição POST para /api/calls...");
-      console.log("Body:", { title, description, category });
+      console.log("Body:", {
+        title,
+        description,
+        category,
+        total: initialValue,
+      });
 
       const response = await fetch("http://localhost:3000/api/calls", {
         method: "POST",
@@ -44,7 +58,12 @@ export function ClientsNewCall() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ title, description, category }),
+        body: JSON.stringify({
+          title,
+          description,
+          category,
+          total: initialValue,
+        }),
       });
 
       console.log("✅ Resposta recebida!");
@@ -383,7 +402,13 @@ export function ClientsNewCall() {
                   id="categoria"
                   name="categoria"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCategory(val);
+                    // Set initial value based on category default price
+                    const info = CATEGORY_INFO[val];
+                    setInitialValue(info ? info.price : 0);
+                  }}
                   className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 w-full bg-transparent focus:outline-none"
                 >
                   <option value="">Select a category</option>
@@ -414,7 +439,9 @@ export function ClientsNewCall() {
                 </h3>
                 <div className="flex gap-1">
                   <span className="text-sm text-[var(--gray-200)] font-normal">
-                    Network error
+                    {category
+                      ? CATEGORY_INFO[category]?.label || category
+                      : "-"}
                   </span>
                 </div>
               </div>
@@ -424,10 +451,14 @@ export function ClientsNewCall() {
                   Initial value
                 </h3>
                 <div className="flex gap-1 text-[var(--gray-200)] items-center font-bold">
-                  $
-                  <span className="text-[25px] text-[var(--gray-200)] font-bold">
-                    100,00
-                  </span>
+                  <span className="text-[var(--gray-200)]">$</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={String(initialValue)}
+                    onChange={(e) => setInitialValue(Number(e.target.value))}
+                    className="bg-transparent text-[25px] font-bold focus:outline-none"
+                  />
                 </div>
               </div>
 

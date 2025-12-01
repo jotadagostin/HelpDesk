@@ -10,7 +10,8 @@ export const createCall = async (req: Request, res: Response) => {
   console.log("USER:", req.user);
 
   try {
-    const { title, description, category, total } = req.body;
+    const { title, description, category, total, additionalServices } =
+      req.body;
 
     const userId = (req as any).user?.id;
 
@@ -23,17 +24,22 @@ export const createCall = async (req: Request, res: Response) => {
         title,
         description: description || "",
         category,
-        // `total` is optional in the schema; accept value from the client or store null
         total: total ?? null,
+        // @ts-ignore
+        additionalServices: JSON.stringify(additionalServices || []),
         userId: Number(userId),
-        technicianName: null, // null por padrão, será definido pelo admin
-        status: "open", // default
+        technicianName: null,
+        status: "open",
         updatedAt: new Date(),
       },
-      include: { user: true }, // para retornar o user completo pro frontend
+      include: { user: true },
     });
 
-    return res.status(201).json(newCall);
+    return res.status(201).json({
+      ...newCall,
+      // @ts-ignore
+      additionalServices: JSON.parse(newCall.additionalServices),
+    });
   } catch (err: any) {
     console.error(err);
     return res.status(500).json({ error: err.message });
@@ -52,7 +58,14 @@ export const getCalls = async (req: Request, res: Response) => {
       include: { user: true },
     });
 
-    res.json(calls);
+    // @ts-ignore
+    const parsedCalls = calls.map((call) => ({
+      ...call,
+      // @ts-ignore
+      additionalServices: JSON.parse(call.additionalServices),
+    }));
+
+    res.json(parsedCalls);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });
@@ -76,7 +89,14 @@ export const getCallById = async (req: Request, res: Response) => {
       return res.status(403).json({ error: "Forbidden" });
     }
 
-    res.json(call);
+    // @ts-ignore
+    const parsedCall = {
+      ...call,
+      // @ts-ignore
+      additionalServices: JSON.parse(call.additionalServices),
+    };
+
+    res.json(parsedCall);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });
@@ -86,8 +106,15 @@ export const getCallById = async (req: Request, res: Response) => {
 export const updateCall = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const { title, description, category, total, status, technicianName } =
-      req.body;
+    const {
+      title,
+      description,
+      category,
+      total,
+      status,
+      technicianName,
+      additionalServices,
+    } = req.body;
 
     const existing = await prisma.call.findUnique({ where: { id } });
     if (!existing) return res.status(404).json({ error: "Call not found" });
@@ -98,20 +125,51 @@ export const updateCall = async (req: Request, res: Response) => {
       return res.status(403).json({ error: "Forbidden" });
     }
 
+    // Category base prices
+    const CATEGORY_PRICES: Record<string, number> = {
+      "data-recover": 200.0,
+      backup: 150.0,
+      internet: 100.0,
+      others: 50.0,
+    };
+
+    // Calculate total if additionalServices changed
+    let calculatedTotal = total ?? existing.total;
+    if (additionalServices !== undefined) {
+      const basePrice = CATEGORY_PRICES[category || existing.category] ?? 0;
+      const additionalTotal = (additionalServices as any[]).reduce(
+        (sum, service) => sum + (Number(service.price) || 0),
+        0
+      );
+      calculatedTotal = basePrice + additionalTotal;
+    }
+
     const updated = await prisma.call.update({
       where: { id },
       data: {
         title: title ?? existing.title,
         description: description ?? existing.description,
         category: category ?? existing.category,
-        total: total ?? existing.total,
+        total: calculatedTotal,
         status: status ?? existing.status,
         technicianName: technicianName ?? existing.technicianName,
+        // @ts-ignore
+        additionalServices:
+          additionalServices !== undefined
+            ? JSON.stringify(additionalServices)
+            : existing.additionalServices,
       },
       include: { user: true },
     });
 
-    res.json(updated);
+    // @ts-ignore
+    const parsedUpdated = {
+      ...updated,
+      // @ts-ignore
+      additionalServices: JSON.parse(updated.additionalServices),
+    };
+
+    res.json(parsedUpdated);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });

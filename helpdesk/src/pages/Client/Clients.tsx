@@ -204,11 +204,9 @@ export function Clients() {
 
         {/* Avatar Admin */}
         <div>
-          <img
-            src={avatarSvg}
-            alt="User avatar"
-            className="w-8 h-8 rounded-full"
-          />
+          <div className="w-8 h-8 rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white">
+            {getInitials(user.name)}
+          </div>
         </div>
       </div>
       <div className="hidden md:flex w-[200px] h-screen bg-[var(--gray-100)] flex-col">
@@ -733,21 +731,26 @@ export function Clients() {
                         </td>
 
                         <td className="p-[14px] hidden md:table-cell">
-                          <div className="flex gap-2">
-                            <img
-                              src={avatarSvg}
-                              className="w-[20px] h-[20px]"
-                            />
-                            <small>{user.name}</small>
+                          <div className="flex gap-2 items-center">
+                            <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[11px]">
+                              {getInitials(call.user?.name || user.name)}
+                            </div>
+                            <small>{call.user?.name || user.name}</small>
                           </div>
                         </td>
 
                         <td className="p-[14px] hidden md:table-cell">
-                          <div className="flex gap-2">
-                            <img
-                              src={avatarSvg}
-                              className="w-[20px] h-[20px]"
-                            />
+                          <div className="flex gap-2 items-center">
+                            {call.technicianName ? (
+                              <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[12px]">
+                                {getInitials(call.technicianName)}
+                              </div>
+                            ) : (
+                              <img
+                                src={avatarSvg}
+                                className="w-[20px] h-[20px]"
+                              />
+                            )}
                             <small>{call.technicianName || "-"}</small>
                           </div>
                         </td>
