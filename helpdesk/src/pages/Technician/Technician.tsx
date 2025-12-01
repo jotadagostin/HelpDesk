@@ -495,7 +495,6 @@ export function Technician() {
                               </div>
                               <span>{call.user?.name || "Unknown"}</span>
                             </div>
-                            <img src={statusOpen} alt="" className="w-5 h-5" />
                           </div>
                         </div>
                       </div>
