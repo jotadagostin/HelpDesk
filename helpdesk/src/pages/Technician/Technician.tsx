@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import statusInProgress from "../../assets/icons/icon/TagStatus(inprogress).svg";
 import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
-import statusClosed from "../../assets/icons/icon/TagStatus(closed).svg";
 import penEdit from "../../assets/icons/icon/pen-line.svg";
 import circleClose from "../../assets/icons/icon/white-circle.svg";
 import mobileStatusInProgress from "../../assets/icons/icon/statusInProgressMobile.svg";
@@ -24,11 +23,32 @@ export function Technician() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [calls, setCalls] = useState<any[]>([]);
   const navigate = useNavigate();
   const popupRef = useRef<HTMLDivElement>(null);
 
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Fetch calls from backend
+  const fetchCalls = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch("http://localhost:3000/api/calls", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      // Filter out closed calls
+      setCalls(data.filter((call: any) => call.status !== "closed"));
+    } catch (err) {
+      console.error("Error fetching calls:", err);
+    }
+  };
+
+  // Load calls on mount
+  useEffect(() => {
+    fetchCalls();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -350,214 +370,147 @@ export function Technician() {
           </h1>
         </div>
         <div className=" w-full h-screen ">
-          <div>
-            <div className="pb-5">
-              <img src={statusInProgress} alt="" />
-            </div>
-            <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
-              <div className="">
-                <div className="flex justify-between p-3">
-                  <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
-                    00003
-                  </span>
-                  <div className="flex gap-1">
-                    <button
-                      className="bg-[var(--gray-500)] p-2 rounded-md"
-                      onClick={() => navigate("details")}
+          {/* Group by in-progress status */}
+          {calls.filter((c) => c.status === "in-progress").length > 0 && (
+            <div>
+              <div className="pb-5">
+                <img src={statusInProgress} alt="" />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                {calls
+                  .filter((c) => c.status === "in-progress")
+                  .map((call) => (
+                    <div
+                      key={call.id}
+                      className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]"
                     >
-                      <img src={penEdit} className="w-[14px] h-[14px]" alt="" />
-                    </button>
-                    <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
-                      <img src={circleClose} alt="" />
-                      Close
-                    </button>
-                  </div>
-                </div>
-                <div className="px-3">
-                  <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
-                    Network slow
-                  </h1>
-                  <p className="text-[var(--gray-100)] text-[12px]">
-                    Network instalation
-                  </p>
-                  <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
-                    <span>10/04/25 15:30</span>
-                    <span>$200,00</span>
-                  </div>
-                  <div className="flex justify-between mt-4 ">
-                    <div className="flex gap-1 items-center  ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <span>Andre Costa</span>
+                      <div className="">
+                        <div className="flex justify-between p-3">
+                          <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
+                            {call.id}
+                          </span>
+                          <div className="flex gap-1">
+                            <button
+                              className="bg-[var(--gray-500)] p-2 rounded-md"
+                              onClick={() =>
+                                navigate(`/technician/details/${call.id}`)
+                              }
+                            >
+                              <img
+                                src={penEdit}
+                                className="w-[14px] h-[14px]"
+                                alt=""
+                              />
+                            </button>
+                            <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
+                              <img src={circleClose} alt="" />
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                        <div className="px-3">
+                          <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
+                            {call.title}
+                          </h1>
+                          <p className="text-[var(--gray-100)] text-[12px]">
+                            {call.category}
+                          </p>
+                          <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
+                            <span>
+                              {new Date(call.updatedAt).toLocaleDateString()}{" "}
+                              {new Date(call.updatedAt).toLocaleTimeString()}
+                            </span>
+                            <span>${call.total || "0,00"}</span>
+                          </div>
+                          <div className="flex justify-between mt-4 ">
+                            <div className="flex gap-1 items-center  ">
+                              <img
+                                src={avatarSvg}
+                                alt=""
+                                className="w-[20px] h-[20px]"
+                              />
+                              <span>{call.user?.name || "Unknown"}</span>
+                            </div>
+                            <img src={mobileStatusInProgress} alt="" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <img src={mobileStatusInProgress} alt="" />
-                  </div>
-                </div>
+                  ))}
               </div>
             </div>
-          </div>
+          )}
 
-          <div className="mt-6">
-            <div className="pb-5">
-              <img src={statusOpen} alt="" />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)] flex gap-55">
-                <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
-                  <div className="">
-                    <div className="flex justify-between p-3">
-                      <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
-                        00004
-                      </span>
-                      <div className="flex gap-1">
-                        <button
-                          className="bg-[var(--gray-500)] p-2 rounded-md"
-                          onClick={() => navigate("details")}
-                        >
-                          <img
-                            src={penEdit}
-                            className="w-[14px] h-[14px]"
-                            alt=""
-                          />
-                        </button>
-                        <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
-                          <img src={circleClose} alt="" />
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                    <div className="px-3">
-                      <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
-                        Network slow
-                      </h1>
-                      <p className="text-[var(--gray-100)] text-[12px]">
-                        Network instalation
-                      </p>
-                      <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
-                        <span>10/04/25 15:30</span>
-                        <span>$200,00</span>
-                      </div>
-                      <div className="flex justify-between mt-4 ">
-                        <div className="flex gap-1 items-center  ">
-                          <img
-                            src={avatarSvg}
-                            alt=""
-                            className="w-[20px] h-[20px]"
-                          />
-                          <span>Andre Costa</span>
+          {/* Group by open status */}
+          {calls.filter((c) => c.status === "open").length > 0 && (
+            <div className="mt-6">
+              <div className="pb-5">
+                <img src={statusOpen} alt="" />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                {calls
+                  .filter((c) => c.status === "open")
+                  .map((call) => (
+                    <div
+                      key={call.id}
+                      className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]"
+                    >
+                      <div className="">
+                        <div className="flex justify-between p-3">
+                          <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
+                            {call.id}
+                          </span>
+                          <div className="flex gap-1">
+                            <button
+                              className="bg-[var(--gray-500)] p-2 rounded-md"
+                              onClick={() =>
+                                navigate(`/technician/details/${call.id}`)
+                              }
+                            >
+                              <img
+                                src={penEdit}
+                                className="w-[14px] h-[14px]"
+                                alt=""
+                              />
+                            </button>
+                            <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
+                              <img src={circleClose} alt="" />
+                              Close
+                            </button>
+                          </div>
                         </div>
-                        <img src={mobileStatusInProgress} alt="" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)] flex gap-55">
-                <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
-                  <div className="">
-                    <div className="flex justify-between p-3">
-                      <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
-                        00006
-                      </span>
-                      <div className="flex gap-1">
-                        <button
-                          className="bg-[var(--gray-500)] p-2 rounded-md"
-                          onClick={() => navigate("/technician/details")}
-                        >
-                          <img
-                            src={penEdit}
-                            className="w-[14px] h-[14px]"
-                            alt=""
-                          />
-                        </button>
-                        <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
-                          <img src={circleClose} alt="" />
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                    <div className="px-3">
-                      <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
-                        Network slow
-                      </h1>
-                      <p className="text-[var(--gray-100)] text-[12px]">
-                        Network instalation
-                      </p>
-                      <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
-                        <span>10/04/25 15:30</span>
-                        <span>$200,00</span>
-                      </div>
-                      <div className="flex justify-between mt-4 ">
-                        <div className="flex gap-1 items-center  ">
-                          <img
-                            src={avatarSvg}
-                            alt=""
-                            className="w-[20px] h-[20px]"
-                          />
-                          <span>Andre Costa</span>
+                        <div className="px-3">
+                          <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
+                            {call.title}
+                          </h1>
+                          <p className="text-[var(--gray-100)] text-[12px]">
+                            {call.category}
+                          </p>
+                          <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
+                            <span>
+                              {new Date(call.updatedAt).toLocaleDateString()}{" "}
+                              {new Date(call.updatedAt).toLocaleTimeString()}
+                            </span>
+                            <span>${call.total || "0,00"}</span>
+                          </div>
+                          <div className="flex justify-between mt-4 ">
+                            <div className="flex gap-1 items-center  ">
+                              <img
+                                src={avatarSvg}
+                                alt=""
+                                className="w-[20px] h-[20px]"
+                              />
+                              <span>{call.user?.name || "Unknown"}</span>
+                            </div>
+                            <img src={statusOpen} alt="" className="w-5 h-5" />
+                          </div>
                         </div>
-                        <img src={mobileStatusInProgress} alt="" />
                       </div>
                     </div>
-                  </div>
-                </div>
+                  ))}
               </div>
             </div>
-          </div>
-          <div className="mt-6">
-            <div className="pb-5">
-              <img src={statusClosed} alt="" />
-            </div>
-            <div className="border w-[346px] h-[210px] rounded-md border-[var(--gray-500)]">
-              <div className="">
-                <div className="flex justify-between p-3">
-                  <span className="text-[var(--gray-400)] font-bold text-[12px] flex items-center justify-center">
-                    00003
-                  </span>
-                  <div className="flex gap-1">
-                    <button className="bg-[var(--gray-500)] p-2 rounded-md">
-                      <img
-                        src={penEdit}
-                        className="w-[14px] h-[14px]"
-                        alt=""
-                        onClick={() => navigate("details")}
-                      />
-                    </button>
-                    <button className="bg-black text-[var(--gray-600)] flex items-center justify-center p-1 px-2 gap-2 rounded-md">
-                      <img src={circleClose} alt="" />
-                      Close
-                    </button>
-                  </div>
-                </div>
-                <div className="px-3">
-                  <h1 className="text-[var(--gray-100)] font-bold text-[16px]">
-                    Network slow
-                  </h1>
-                  <p className="text-[var(--gray-100)] text-[12px]">
-                    Network instalation
-                  </p>
-                  <div className="flex border-b border-b-[var(--gray-500)] pt-4 pb-4 justify-between ">
-                    <span>10/04/25 15:30</span>
-                    <span>$200,00</span>
-                  </div>
-                  <div className="flex justify-between mt-4 ">
-                    <div className="flex gap-1 items-center  ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <span>Andre Costa</span>
-                    </div>
-                    <img src={mobileStatusInProgress} alt="" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
         {showModal && (
           <>

@@ -44,9 +44,11 @@ export const getCalls = async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
     const isAdmin = user?.role === "ADMIN";
+    const isTechnician = user?.role === "TEC";
 
+    // ADMIN and TEC see all calls; CLIENT sees only their own
     const calls = await prisma.call.findMany({
-      where: isAdmin ? undefined : { userId: user?.id },
+      where: isAdmin || isTechnician ? undefined : { userId: user?.id },
       include: { user: true },
     });
 
@@ -68,8 +70,9 @@ export const getCallById = async (req: Request, res: Response) => {
     if (!call) return res.status(404).json({ error: "Call not found" });
 
     const user = (req as any).user;
+    // clients and technicians can see all calls; only ADMIN has full access
     // clients can only see their own calls
-    if (user?.role !== "ADMIN" && call.userId !== user?.id) {
+    if (user?.role === "CLIENT" && call.userId !== user?.id) {
       return res.status(403).json({ error: "Forbidden" });
     }
 
@@ -90,8 +93,8 @@ export const updateCall = async (req: Request, res: Response) => {
     if (!existing) return res.status(404).json({ error: "Call not found" });
 
     const user = (req as any).user;
-    // clients can only update their own calls
-    if (user?.role !== "ADMIN" && existing.userId !== user?.id) {
+    // clients can only update their own calls; technicians and admins can update any call
+    if (user?.role === "CLIENT" && existing.userId !== user?.id) {
       return res.status(403).json({ error: "Forbidden" });
     }
 

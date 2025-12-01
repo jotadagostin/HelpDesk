@@ -1,9 +1,9 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/white-clock.svg";
 import checkSvg from "../../assets/icons/icon/black-circle-check.svg";
@@ -15,15 +15,37 @@ import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
 export function TechnicianDetails() {
+  const { id } = useParams<{ id: string }>();
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [call, setCall] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
-
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Fetch call details
+  useEffect(() => {
+    const fetchCall = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(`http://localhost:3000/api/calls/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setCall(data);
+      } catch (err) {
+        console.error("Error fetching call:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchCall();
+  }, [id]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -235,11 +257,47 @@ export function TechnicianDetails() {
 
           {/* Buttons */}
           <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto hover:bg-[var(--gray-500)]">
+            <button
+              onClick={async () => {
+                const token = localStorage.getItem("token");
+                try {
+                  await fetch(`http://localhost:3000/api/calls/${id}`, {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ status: "closed" }),
+                  });
+                  navigate("/technician");
+                } catch (err) {
+                  console.error("Error closing call:", err);
+                }
+              }}
+              className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto hover:bg-[var(--gray-500)]"
+            >
               <img src={checkSvg} alt="" />
               <span className="font-bold text-[14px] text-center">Closed</span>
             </button>
-            <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto hover:bg-[var(--gray-300)] hover:text-white">
+            <button
+              onClick={async () => {
+                const token = localStorage.getItem("token");
+                try {
+                  await fetch(`http://localhost:3000/api/calls/${id}`, {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ status: "in-progress" }),
+                  });
+                  setCall({ ...call, status: "in-progress" });
+                } catch (err) {
+                  console.error("Error updating call:", err);
+                }
+              }}
+              className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto hover:bg-[var(--gray-300)] hover:text-white"
+            >
               <img src={clockSvg} alt="" />
               <span className="font-bold">In attendance</span>
             </button>
@@ -247,156 +305,138 @@ export function TechnicianDetails() {
         </div>
 
         {/* Call Details and Technician Info */}
-        <div className="flex flex-col lg:flex-row w-full max-w-[1200px] gap-6 justify-center items-stretch mt-6">
-          {/* Call Details Card */}
-          <div className="flex flex-col">
-            <div className="border rounded border-[var(--gray-500)] w-full lg:w-[800px] p-5">
-              <div className="flex justify-between mb-5">
-                <div>
-                  <span className="text-[var(--gray-300)] text-[12px]">
-                    0004
-                  </span>
-                  <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
-                    Backup is not working
-                  </h3>
+        {loading ? (
+          <p className="text-[var(--gray-300)] mt-6">Loading call details...</p>
+        ) : call ? (
+          <div className="flex flex-col lg:flex-row w-full max-w-[1200px] gap-6 justify-center items-stretch mt-6">
+            {/* Call Details Card */}
+            <div className="flex flex-col">
+              <div className="border rounded border-[var(--gray-500)] w-full lg:w-[800px] p-5">
+                <div className="flex justify-between mb-5">
+                  <div>
+                    <span className="text-[var(--gray-300)] text-[12px]">
+                      {call.id}
+                    </span>
+                    <h3 className="text-[var(--gray-200)] text-[16px] font-bold">
+                      {call.title}
+                    </h3>
+                  </div>
+                  <img src={statusOpen} alt="" />
                 </div>
-                <img src={statusOpen} alt="" />
-              </div>
-              <div className="mb-5">
-                <span className="text-[var(--gray-400)] text-[12px]">
-                  Description
-                </span>
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  The automatic backup system has stopped working. The last
-                  successful run was a week ago.
-                </p>
-              </div>
-              <div className="mb-5">
-                <span className="text-[var(--gray-400)] text-[12px]">
-                  Category
-                </span>
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  Data recover
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-10 sm:gap-20 mb-5">
-                <div>
+                <div className="mb-5">
                   <span className="text-[var(--gray-400)] text-[12px]">
-                    Created at
+                    Description
                   </span>
                   <p className="text-[var(--gray-200)] text-[14px]">
-                    12/04/25 09:12
+                    {call.description}
                   </p>
                 </div>
-                <div>
+                <div className="mb-5">
                   <span className="text-[var(--gray-400)] text-[12px]">
-                    Updated at
+                    Category
                   </span>
                   <p className="text-[var(--gray-200)] text-[14px]">
-                    12/04/25 09:12
+                    {call.category}
                   </p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-10 sm:gap-20 mb-5">
+                  <div>
+                    <span className="text-[var(--gray-400)] text-[12px]">
+                      Created at
+                    </span>
+                    <p className="text-[var(--gray-200)] text-[14px]">
+                      {new Date(call.createdAt).toLocaleDateString()}{" "}
+                      {new Date(call.createdAt).toLocaleTimeString()}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[var(--gray-400)] text-[12px]">
+                      Updated at
+                    </span>
+                    <p className="text-[var(--gray-200)] text-[14px]">
+                      {new Date(call.updatedAt).toLocaleDateString()}{" "}
+                      {new Date(call.updatedAt).toLocaleTimeString()}
+                    </p>
+                  </div>
+                </div>
+                <div className="mb-5">
+                  <span className="text-[var(--gray-400)] text-[12px]">
+                    Client
+                  </span>
+                  <div className="flex gap-2 items-center">
+                    <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
+                    <p className="text-[var(--gray-200)] text-[14px]">
+                      {call.user?.name || "Unknown"}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="mb-5">
-                <span className="text-[var(--gray-400)] text-[12px]">
-                  Client
-                </span>
-                <div className="flex gap-2 items-center">
-                  <img src={avatarSvg} alt="" className="w-[20px] h-[20px]" />
-                  <p className="text-[var(--gray-200)] text-[14px]">
-                    Andre Costa
-                  </p>
+              <div className="border border-[var(--gray-500)] rounded-md mt-3">
+                <div className="flex items-center justify-between p-6">
+                  <span className="text-[var(--gray-400)] text-[12px] font-bold">
+                    Additional services
+                  </span>
+                  <button
+                    className="bg-[var(--gray-200)] p-2 rounded-md w-[28px] h-[28px]"
+                    onClick={() => setShowModal(true)}
+                  >
+                    <img src={plusSvg} alt="" />
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="border border-[var(--gray-500)] rounded-md mt-3">
-              <div className="flex items-center justify-between p-6">
-                <span className="text-[var(--gray-400)] text-[12px] font-bold">
-                  Additional services
+
+            {/* Technician + Prices Card */}
+            <div className="border rounded border-[var(--gray-500)] p-6 w-full lg:max-w-[400px]">
+              <div className="mb-5">
+                <span className="text-[var(--gray-400)] text-[12px]">
+                  Responsible technician
                 </span>
-                <button
-                  className="bg-[var(--gray-200)] p-2 rounded-md w-[28px] h-[28px]"
-                  onClick={() => setShowModal(true)}
-                >
-                  <img src={plusSvg} alt="" />
-                </button>
-              </div>
-              <div className="flex items-center justify-between p-6 border-b border-b-[var(--gray-500)]">
-                <h1 className="text-xs font-bold text-[var(--gray-200)]">
-                  Back signture
-                </h1>
-                <div className="flex items-center gap-5">
-                  <span>$120,00</span>
-                  <img src={redTrashSvg} alt="" />
+                <div className="flex gap-2 items-center mt-2">
+                  <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
+                  <div>
+                    <p className="text-[var(--gray-200)] text-[14px]">
+                      {call.technicianName || "Unassigned"}
+                    </p>
+                    <small className="text-[var(--gray-300)]">
+                      {user.email}
+                    </small>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between p-6 border-b border-b-[var(--gray-500)]">
-                <h1 className="text-xs font-bold text-[var(--gray-200)]">
-                  PC Clean up
-                </h1>
-                <div className="flex items-center gap-5">
-                  <span>$75,00</span>
-                  <img src={redTrashSvg} alt="" />
+
+              <div className="flex flex-col gap-2 mb-5">
+                <span className="text-[var(--gray-400)] text-[12px]">
+                  Prices
+                </span>
+                <div className="flex justify-between">
+                  <p className="text-[var(--gray-200)] text-[14px]">
+                    Base price
+                  </p>
+                  <p className="text-[var(--gray-200)] text-[14px]">
+                    ${call.total || "0,00"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-[var(--gray-400)] text-[12px]">
+                  Additional
+                </span>
+                <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
+                  <span className="text-[var(--gray-200)] text-[14px] font-bold">
+                    Total
+                  </span>
+                  <span className="text-[var(--gray-200)] text-[14px] font-bold">
+                    ${call.total || "0,00"}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Technician + Prices Card */}
-          <div className="border rounded border-[var(--gray-500)] p-6 w-full lg:max-w-[400px]">
-            <div className="mb-5">
-              <span className="text-[var(--gray-400)] text-[12px]">
-                Responsible technician
-              </span>
-              <div className="flex gap-2 items-center mt-2">
-                <img src={avatarSvg} alt="" className="w-[32px] h-[32px]" />
-                <div>
-                  <p className="text-[var(--gray-200)] text-[14px]">
-                    Carlos Silva
-                  </p>
-                  <small className="text-[var(--gray-300)]">
-                    carlos.silva@test.com
-                  </small>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2 mb-5">
-              <span className="text-[var(--gray-400)] text-[12px]">Prices</span>
-              <div className="flex justify-between">
-                <p className="text-[var(--gray-200)] text-[14px]">Base price</p>
-                <p className="text-[var(--gray-200)] text-[14px]">$400,00</p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-[var(--gray-400)] text-[12px]">
-                Additional
-              </span>
-              <div className="flex justify-between">
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  Backup sign up
-                </p>
-                <p className="text-[var(--gray-200)] text-[14px]">$120,00</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="text-[var(--gray-200)] text-[14px]">
-                  PC formatting
-                </p>
-                <p className="text-[var(--gray-200)] text-[14px]">$70,00</p>
-              </div>
-
-              <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
-                <span className="text-[var(--gray-200)] text-[14px] font-bold">
-                  Total
-                </span>
-                <span className="text-[var(--gray-200)] text-[14px] font-bold">
-                  $395,00
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        ) : (
+          <p className="text-[var(--gray-300)] mt-6">Call not found</p>
+        )}
         {showModal && (
           <>
             {/* Fundo escuro */}

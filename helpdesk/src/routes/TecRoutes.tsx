@@ -6,7 +6,7 @@ export function TecRoutes() {
   return (
     <Routes>
       <Route index element={<Technician />} />
-      <Route path="details" element={<TechnicianDetails />} />
+      <Route path="details/:id" element={<TechnicianDetails />} />
     </Routes>
   );
 }
