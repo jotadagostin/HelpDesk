@@ -704,94 +704,92 @@ export function Clients() {
                     </td>
                   </tr>
                 ) : (
-                  calls
-                    .filter((call: any) => call.status !== "closed")
-                    .map((call: any) => (
-                      <tr key={call.id}>
-                        <td className="p-[14px]">
-                          {new Date(call.updatedAt).toLocaleDateString()}{" "}
-                          {new Date(call.updatedAt)
-                            .toLocaleTimeString()
-                            .slice(0, 5)}
-                        </td>
+                  calls.map((call: any) => (
+                    <tr key={call.id}>
+                      <td className="p-[14px]">
+                        {new Date(call.updatedAt).toLocaleDateString()}{" "}
+                        {new Date(call.updatedAt)
+                          .toLocaleTimeString()
+                          .slice(0, 5)}
+                      </td>
 
-                        <td className="p-[14px] hidden md:table-cell">
-                          {call.id}
-                        </td>
+                      <td className="p-[14px] hidden md:table-cell">
+                        {call.id}
+                      </td>
 
-                        <td className="p-[14px]">
-                          <div className="flex flex-col">
-                            <strong>{call.title}</strong>
-                            <small>{call.category}</small>
+                      <td className="p-[14px]">
+                        <div className="flex flex-col">
+                          <strong>{call.title}</strong>
+                          <small>{call.category}</small>
+                        </div>
+                      </td>
+
+                      <td className="p-[14px] hidden md:table-cell">
+                        ${call.total || "0,00"}
+                      </td>
+
+                      <td className="p-[14px] hidden md:table-cell">
+                        <div className="flex gap-2 items-center">
+                          <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[11px]">
+                            {getInitials(call.user?.name || user.name)}
                           </div>
-                        </td>
+                          <small>{call.user?.name || user.name}</small>
+                        </div>
+                      </td>
 
-                        <td className="p-[14px] hidden md:table-cell">
-                          ${call.total || "0,00"}
-                        </td>
-
-                        <td className="p-[14px] hidden md:table-cell">
-                          <div className="flex gap-2 items-center">
-                            <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[11px]">
-                              {getInitials(call.user?.name || user.name)}
+                      <td className="p-[14px] hidden md:table-cell">
+                        <div className="flex gap-2 items-center">
+                          {call.technicianName ? (
+                            <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[12px]">
+                              {getInitials(call.technicianName)}
                             </div>
-                            <small>{call.user?.name || user.name}</small>
-                          </div>
-                        </td>
-
-                        <td className="p-[14px] hidden md:table-cell">
-                          <div className="flex gap-2 items-center">
-                            {call.technicianName ? (
-                              <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-[12px]">
-                                {getInitials(call.technicianName)}
-                              </div>
-                            ) : (
-                              <img
-                                src={avatarSvg}
-                                className="w-[20px] h-[20px]"
-                              />
-                            )}
-                            <small>{call.technicianName || "-"}</small>
-                          </div>
-                        </td>
-
-                        <td>
-                          <div className="flex justify-between p-2">
+                          ) : (
                             <img
-                              src={
-                                call.status === "open"
-                                  ? statusOpenSvg
-                                  : call.status === "in-progress"
-                                  ? statusInProgresSvg
-                                  : statusClosedSvg
-                              }
-                              alt=""
-                              className="hidden md:block"
+                              src={avatarSvg}
+                              className="w-[20px] h-[20px]"
                             />
+                          )}
+                          <small>{call.technicianName || "-"}</small>
+                        </div>
+                      </td>
 
-                            <img
-                              src={
-                                call.status === "open"
-                                  ? statusOpenMobile
-                                  : call.status === "in-progress"
-                                  ? statusInProgressMobile
-                                  : statusClosedMobile
-                              }
-                              alt=""
-                              className="block md:hidden"
-                            />
+                      <td>
+                        <div className="flex justify-between p-2">
+                          <img
+                            src={
+                              call.status === "open"
+                                ? statusOpenSvg
+                                : call.status === "in-progress"
+                                ? statusInProgresSvg
+                                : statusClosedSvg
+                            }
+                            alt=""
+                            className="hidden md:block"
+                          />
 
-                            <button
-                              onClick={() =>
-                                navigate(`/clients/details/${call.id}`)
-                              }
-                            >
-                              <img src={buttonEditSvg} alt="" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          <img
+                            src={
+                              call.status === "open"
+                                ? statusOpenMobile
+                                : call.status === "in-progress"
+                                ? statusInProgressMobile
+                                : statusClosedMobile
+                            }
+                            alt=""
+                            className="block md:hidden"
+                          />
+
+                          <button
+                            onClick={() =>
+                              navigate(`/clients/details/${call.id}`)
+                            }
+                          >
+                            <img src={buttonEditSvg} alt="" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>

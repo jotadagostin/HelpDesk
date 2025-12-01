@@ -7,7 +7,9 @@ import { useNavigate, useParams } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/clock-2.svg";
 import checkSvg from "../../assets/icons/icon/circle-check-big.svg";
-import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
+import statusOpen from "../../assets/icons/icon/TagStatus(open).svg";
+import statusClosed from "../../assets/icons/icon/TagStatus(closed).svg";
+import statusInProgress from "../../assets/icons/icon/TagStatus(inprogress).svg";
 import plusSvg from "../../assets/icons/icon/plusGraySvg.svg";
 import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
@@ -25,6 +27,7 @@ export function ClientsDetails() {
   const [callTitle, setCallTitle] = useState("");
   const [callDescription, setCallDescription] = useState("");
   const [callCategory, setCallCategory] = useState("");
+  const [callStatus, setCallStatus] = useState<string | undefined>(undefined);
   const [callTotal, setCallTotal] = useState<string>("");
   const [callTechnician, setCallTechnician] = useState<string>("");
   const [additionalServices, setAdditionalServices] = useState<
@@ -65,6 +68,14 @@ export function ClientsDetails() {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
+  const getStatusIcon = (status: string | undefined) => {
+    if (!status) return statusOpen;
+    if (status === "closed") return statusClosed;
+    if (status === "in-progress" || status === "inprogress")
+      return statusInProgress;
+    return statusOpen;
+  };
+
   // category info with default base prices
   const CATEGORY_INFO: Record<string, { label: string; price: number }> = {
     "data-recover": { label: "Data Recover", price: 200.0 },
@@ -88,6 +99,7 @@ export function ClientsDetails() {
         setCallTitle(data.title || "");
         setCallDescription(data.description || "");
         setCallCategory(data.category || "");
+        setCallStatus(data.status || undefined);
         setCallTotal(
           data.total != null
             ? String(data.total)
@@ -461,7 +473,7 @@ export function ClientsDetails() {
                   className="w-full text-[var(--gray-200)] text-[16px] font-bold bg-transparent border-b border-[var(--gray-500)] py-1"
                 />
               </div>
-              <img src={statusOpen} alt="" />
+              <img src={getStatusIcon(callStatus)} alt="" />
             </div>
 
             <div className="mb-5">
@@ -588,16 +600,6 @@ export function ClientsDetails() {
               )}
 
               <div className="mt-3">
-                <label className="text-[var(--gray-400)] text-[12px]">
-                  Total
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={callTotal}
-                  onChange={(e) => setCallTotal(e.target.value)}
-                  className="w-full text-[var(--gray-200)] text-[14px] bg-transparent border-b border-[var(--gray-500)] py-1 mt-2"
-                />
                 <div className="flex justify-between border-t border-[var(--gray-500)] pt-3 mt-3">
                   <span className="text-[var(--gray-200)] text-[14px] font-bold">
                     Total

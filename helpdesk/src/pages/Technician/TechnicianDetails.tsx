@@ -7,9 +7,10 @@ import avatarSvg from "../../assets/images/Avatar.svg";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import clockSvg from "../../assets/icons/icon/white-clock.svg";
 import checkSvg from "../../assets/icons/icon/black-circle-check.svg";
-import statusOpen from "../../assets/icons/icon/TagStatus(aberto).svg";
+import statusOpen from "../../assets/icons/icon/TagStatus(open).svg";
+import statusClosed from "../../assets/icons/icon/TagStatus(closed).svg";
+import statusInProgress from "../../assets/icons/icon/TagStatus(inprogress).svg";
 import plusSvg from "../../assets/icons/icon/plus.svg";
-import redTrashSvg from "../../assets/icons/icon/trashRed.svg";
 import buttonXSvg from "../../assets/icons/icon/x.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
@@ -75,6 +76,14 @@ export function TechnicianDetails() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const getStatusIcon = (status: string | undefined) => {
+    if (!status) return statusOpen;
+    if (status === "closed") return statusClosed;
+    if (status === "in-progress" || status === "inprogress")
+      return statusInProgress;
+    return statusOpen;
   };
 
   // Category info with default base prices
@@ -398,7 +407,7 @@ export function TechnicianDetails() {
                       {call.title}
                     </h3>
                   </div>
-                  <img src={statusOpen} alt="" />
+                  <img src={getStatusIcon(call?.status)} alt="status" />
                 </div>
                 <div className="mb-5">
                   <span className="text-[var(--gray-400)] text-[12px]">
