@@ -14,11 +14,20 @@ import plusSvg from "../../assets/icons/icon/plusGraySvg.svg";
 import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
+import buttonXSvg from "../../assets/icons/icon/x.svg";
+import uploadSvg from "../../assets/icons/icon/upload.svg";
+import trashSvg from "../../assets/icons/icon/trashRed.svg";
 
 export function ClientsDetails() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileName, setProfileName] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [profilePassword, setProfilePassword] = useState("");
+  const [profileNewPassword, setProfileNewPassword] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -39,6 +48,14 @@ export function ClientsDetails() {
 
   //  get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Load profile data when modal opens
+  useEffect(() => {
+    if (isProfileModalOpen) {
+      setProfileName(user.name || "");
+      setProfileEmail(user.email || "");
+    }
+  }, [isProfileModalOpen, user]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -179,6 +196,54 @@ export function ClientsDetails() {
     } catch (e) {
       console.error("Error saving call:", e);
       alert("Failed to save call");
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = user.id;
+
+      const updates: any = {};
+      if (profileName !== user.name) updates.name = profileName;
+      if (profileEmail !== user.email) updates.email = profileEmail;
+      if (profileNewPassword) updates.password = profileNewPassword;
+
+      if (Object.keys(updates).length === 0) {
+        alert("No changes to save");
+        return;
+      }
+
+      const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!res.ok) throw new Error("Failed to update profile");
+
+      const updatedUser = await res.json();
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      setIsProfileModalOpen(false);
+      alert("Profile updated successfully");
+    } catch (e) {
+      console.error("Error updating profile:", e);
+      alert("Failed to update profile");
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setProfileImage(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -357,7 +422,10 @@ export function ClientsDetails() {
               <span className="text-[14px] text-[var(--gray-400)] px-4 py-2">
                 Options
               </span>
-              <button className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2">
+              <button
+                onClick={() => setIsProfileModalOpen(true)}
+                className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2"
+              >
                 <img src={userWhite} alt="" />
                 Perfil
               </button>
@@ -377,6 +445,116 @@ export function ClientsDetails() {
           )}
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {isProfileModalOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-40"></div>
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[440px] bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 p-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-4 mb-4">
+              <span className="font-bold text-white">Perfil</span>
+              <button
+                onClick={() => setIsProfileModalOpen(false)}
+                className="text-[var(--gray-300)] hover:text-white"
+              >
+                <img src={buttonXSvg} alt="" className="w-[18px] h-[18px]" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Photo Section */}
+              <div>
+                <span className="text-[var(--gray-300)] text-xs font-bold block mb-2">
+                  FOTO DO PERFIL
+                </span>
+                <div className="flex gap-3 items-start">
+                  <div className="w-[60px] h-[60px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
+                    {getInitials(profileName || user.name)}
+                  </div>
+                  <div className="flex gap-2">
+                    <label className="flex items-center gap-1 bg-[var(--gray-500)] p-2 rounded-md cursor-pointer hover:bg-[var(--gray-400)]">
+                      <img
+                        src={uploadSvg}
+                        alt=""
+                        className="w-[12px] h-[12px]"
+                      />
+                      <span className="text-xs text-white">Alterar</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    <button className="bg-[var(--gray-500)] p-2 rounded-md hover:bg-[var(--gray-400)]">
+                      <img
+                        src={trashSvg}
+                        alt=""
+                        className="w-[12px] h-[12px]"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Name Input */}
+              <div>
+                <label className="text-[var(--gray-300)] text-xs font-bold block mb-1">
+                  NOME
+                </label>
+                <input
+                  type="text"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] bg-transparent text-white py-2 focus:outline-none focus:border-[var(--gray-300)]"
+                />
+              </div>
+
+              {/* Email Input */}
+              <div>
+                <label className="text-[var(--gray-300)] text-xs font-bold block mb-1">
+                  EMAIL
+                </label>
+                <input
+                  type="email"
+                  value={profileEmail}
+                  onChange={(e) => setProfileEmail(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] bg-transparent text-white py-2 focus:outline-none focus:border-[var(--gray-300)]"
+                />
+              </div>
+
+              {/* Password Section */}
+              <div>
+                <label className="text-[var(--gray-300)] text-xs font-bold block mb-1">
+                  ALTERAR SENHA
+                </label>
+                <input
+                  type="password"
+                  value={profilePassword}
+                  onChange={(e) => setProfilePassword(e.target.value)}
+                  placeholder="Senha atual"
+                  className="w-full border-b border-[var(--gray-500)] bg-transparent text-white py-2 mb-2 placeholder-[var(--gray-400)] focus:outline-none focus:border-[var(--gray-300)]"
+                />
+                <input
+                  type="password"
+                  value={profileNewPassword}
+                  onChange={(e) => setProfileNewPassword(e.target.value)}
+                  placeholder="Nova senha"
+                  className="w-full border-b border-[var(--gray-500)] bg-transparent text-white py-2 placeholder-[var(--gray-400)] focus:outline-none focus:border-[var(--gray-300)]"
+                />
+              </div>
+
+              {/* Save Button */}
+              <button
+                onClick={handleSaveProfile}
+                className="w-full bg-[var(--blue-dark)] text-white font-bold py-2 rounded-md mt-6 hover:bg-[var(--blue-dark)]/80"
+              >
+                Salvar Alterações
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Div Calldetails starts here: */}
       <div className="w-full bg-[var(--gray-600)] border rounded-tl-[20px] mt-3 flex flex-col items-center px-4 sm:px-8">
