@@ -9,21 +9,85 @@ import serviceSvg from "../../assets/icons/icon/service.svg";
 import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import bigAvatar from "../../assets/icons/icon/bigAvatar.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
+const timeSlots = {
+  MORNING: ["07:00", "08:00", "09:00", "10:00", "11:00"],
+  AFTERNOON: ["12:00", "13:00", "14:00", "15:00", "16:00"],
+  EVENING: ["17:00", "18:00", "19:00", "20:00", "21:00"],
+};
+
 export function TecProfileEdit() {
+  const { id } = useParams<{ id: string }>();
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [technicianName, setTechnicianName] = useState("");
+  const [technicianEmail, setTechnicianEmail] = useState("");
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  useEffect(() => {
+    const fetchTechnician = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
+      console.log("Fetching technician with id:", id);
+
+      try {
+        // Load saved times from localStorage if they exist
+        const saved = localStorage.getItem(`tech_times_${id}`);
+        console.log("Saved times from localStorage:", saved);
+        if (saved) {
+          setSelectedTimes(JSON.parse(saved));
+        }
+
+        // Try to fetch from API first
+        const token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Technician from API:", data);
+          setTechnicianName(data.name || "");
+          setTechnicianEmail(data.email || "");
+        } else {
+          // Fall back to localStorage for local technicians
+          const local = localStorage.getItem("local_technicians");
+          console.log("Local technicians:", local);
+          if (local) {
+            const techs = JSON.parse(local);
+            const tech = techs.find((t: any) => t.id === id);
+            console.log("Found local tech:", tech);
+            if (tech) {
+              setTechnicianName(tech.name);
+              setTechnicianEmail(tech.email);
+              setSelectedTimes(tech.availableTimes || []);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching technician:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTechnician();
+  }, [id]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,6 +115,47 @@ export function TecProfileEdit() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const handleTimeToggle = (time: string) => {
+    console.log("Toggle clicked for time:", time);
+    console.log("Before:", selectedTimes);
+    setSelectedTimes((prev) => {
+      const newTimes = prev.includes(time)
+        ? prev.filter((t) => t !== time)
+        : [...prev, time];
+      console.log("After:", newTimes);
+      return newTimes;
+    });
+  };
+
+  const handleSave = () => {
+    console.log("Save clicked, id:", id);
+    console.log("selectedTimes:", selectedTimes);
+
+    if (!id) {
+      console.log("No ID found");
+      return;
+    }
+
+    // Save times to localStorage
+    localStorage.setItem(`tech_times_${id}`, JSON.stringify(selectedTimes));
+    console.log("Saved to localStorage:", `tech_times_${id}`, selectedTimes);
+
+    // If it's a local technician, also update it in local_technicians
+    const local = localStorage.getItem("local_technicians");
+    if (local) {
+      const techs = JSON.parse(local);
+      const idx = techs.findIndex((t: any) => t.id === id);
+      if (idx !== -1) {
+        techs[idx].availableTimes = selectedTimes;
+        localStorage.setItem("local_technicians", JSON.stringify(techs));
+        console.log("Updated local technician");
+      }
+    }
+
+    alert("Technician times saved successfully!");
+    navigate("/admin/tec");
   };
 
   return (
@@ -340,12 +445,18 @@ export function TecProfileEdit() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-2 text-[var(--gray-100)] w-full sm:w-auto">
-              <button className="flex items-center bg-gray-300 rounded p-3 gap-2 justify-center w-full sm:w-auto">
+              <button
+                onClick={() => navigate("/admin/tec")}
+                className="flex items-center bg-gray-300 rounded p-3 gap-2 justify-center w-full sm:w-auto"
+              >
                 <span className="font-bold text-[14px] text-center px-3">
                   Cancel
                 </span>
               </button>
-              <button className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] justify-center w-full sm:w-auto">
+              <button
+                onClick={handleSave}
+                className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] justify-center w-full sm:w-auto"
+              >
                 <span className="font-bold px-3">Save</span>
               </button>
             </div>
@@ -373,7 +484,7 @@ export function TecProfileEdit() {
                   NAME
                 </label>
                 <span className="text-[16px] text-[var(--gray-200)] border-b border-[var(--gray-500)] pb-2 w-full sm:w-[60%] md:w-[40%]">
-                  Carlos Silva
+                  {loading ? "Loading..." : technicianName || "Unknown"}
                 </span>
                 <label
                   htmlFor="email"
@@ -382,7 +493,7 @@ export function TecProfileEdit() {
                   E-MAIL
                 </label>
                 <span className="text-[16px] text-[var(--gray-200)] border-b border-[var(--gray-500)] pb-2 w-full sm:w-[60%] md:w-[40%]">
-                  carlos.silva@test.com
+                  {loading ? "Loading..." : technicianEmail || "Unknown"}
                 </span>
               </div>
             </form>
@@ -397,24 +508,81 @@ export function TecProfileEdit() {
               </p>
             </div>
 
-            <div className="space-y-5">
-              {["MORNING", "AFTERNOON", "EVENING"].map((period) => (
-                <div key={period}>
-                  <h3 className="text-[var(--gray-300)] text-[10px]">
-                    {period}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {["7:00", "8:00", "9:00", "10:00", "11:00"].map((hour) => (
-                      <span
-                        key={hour}
-                        className="border rounded-2xl px-2 py-1 border-[var(--gray-400)] text-sm"
-                      >
-                        {hour}
-                      </span>
-                    ))}
-                  </div>
+            <div className="space-y-5 w-full">
+              <div>
+                <h3 className="text-[var(--gray-300)] text-[10px] mb-2">
+                  MORNING
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {["07:00", "08:00", "09:00", "10:00", "11:00"].map((time) => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => {
+                        console.log("Clicked:", time);
+                        handleTimeToggle(time);
+                      }}
+                      className={`border rounded-2xl px-3 py-1 text-sm transition-all cursor-pointer ${
+                        selectedTimes.includes(time)
+                          ? "bg-[var(--blue-dark)] text-white border-[var(--blue-dark)]"
+                          : "border-[var(--gray-400)] text-[var(--gray-100)]"
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <div>
+                <h3 className="text-[var(--gray-300)] text-[10px] mb-2">
+                  AFTERNOON 2
+                </h3>
+                <div className="flex flex-wrap gap-3 ">
+                  {["12:00", "13:00", "14:00", "15:00", "16:00"].map((time) => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => {
+                        console.log("Clicked:", time);
+                        handleTimeToggle(time);
+                      }}
+                      className={`border rounded-2xl px-3 py-1 text-sm transition-all cursor-pointer ${
+                        selectedTimes.includes(time)
+                          ? "bg-[var(--blue-dark)] text-white border-[var(--blue-dark)]"
+                          : "border-[var(--gray-400)] text-[var(--gray-100)]"
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-[var(--gray-300)] text-[10px] mb-2">
+                  EVENING
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {["17:00", "18:00", "19:00", "20:00", "21:00"].map((time) => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => {
+                        console.log("Clicked:", time);
+                        handleTimeToggle(time);
+                      }}
+                      className={`border rounded-2xl px-3 py-1 text-sm transition-all cursor-pointer ${
+                        selectedTimes.includes(time)
+                          ? "bg-[var(--blue-dark)] text-white border-[var(--blue-dark)]"
+                          : "border-[var(--gray-400)] text-[var(--gray-100)]"
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

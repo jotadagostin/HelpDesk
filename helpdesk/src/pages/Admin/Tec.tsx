@@ -27,6 +27,11 @@ export function Tec() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newAvailableTimes, setNewAvailableTimes] = useState("");
   const [technicians, setTechnicians] = useState<TechnicianType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,10 +63,24 @@ export function Tec() {
 
       const data = await res.json();
       // Filtra apenas técnicos com role TEC
-      const techs = Array.isArray(data)
+      const apiTechs = Array.isArray(data)
         ? data.filter((user: TechnicianType) => user.role === "TEC")
         : [];
-      setTechnicians(techs);
+
+      // merge local added technicians stored in localStorage under 'local_technicians'
+      const local = localStorage.getItem("local_technicians");
+      let localTechs: TechnicianType[] = [];
+      if (local) {
+        try {
+          localTechs = JSON.parse(local);
+        } catch (err) {
+          console.error("Error parsing local technicians", err);
+        }
+      }
+
+      // Combine local technicians (newly added) before API ones
+      const combined = [...localTechs, ...apiTechs];
+      setTechnicians(combined);
     } catch (err) {
       console.error("Error fetching technicians:", err);
       setError(
@@ -383,7 +402,7 @@ export function Tec() {
           <h1 className="w-[90%] h-[44px] font-bold text-[24px] text-[var(--blue-dark)] px-4 py-6 md:px-[48px] md:py-[52px] flex items-center">
             Technicians
           </h1>
-          <Button />
+          <Button onClick={() => setIsAddModalOpen(true)} />
         </div>
         <div className=" w-[90%] px-4 py-6 md:px-[48px] md:py-[52px] flex items-center justify-center">
           {/* Container com scroll horizontal no mobile */}
@@ -480,6 +499,126 @@ export function Tec() {
             </table>
           </div>
         </div>
+        {/* Add Technician Modal */}
+        {isAddModalOpen && (
+          <>
+            <div className="fixed inset-0 bg-black/40 z-40"></div>
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[520px] bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 p-6">
+              <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-3">
+                <span className="font-bold">Add Technician</span>
+                <button
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="text-[var(--gray-300)]"
+                >
+                  X
+                </button>
+              </div>
+
+              <div className="mt-4">
+                <label className="text-[var(--gray-300)] text-xs">NAME</label>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] py-2 mt-1 bg-transparent"
+                  placeholder="Full name"
+                />
+
+                <label className="text-[var(--gray-300)] text-xs mt-3 block">
+                  E-MAIL
+                </label>
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] py-2 mt-1 bg-transparent"
+                  placeholder="email@example.com"
+                />
+
+                <label className="text-[var(--gray-300)] text-xs mt-3 block">
+                  PASSWORD
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] py-2 mt-1 bg-transparent"
+                  placeholder="password"
+                />
+
+                <label className="text-[var(--gray-300)] text-xs mt-3 block">
+                  Available Times (comma separated)
+                </label>
+                <input
+                  type="text"
+                  value={newAvailableTimes}
+                  onChange={(e) => setNewAvailableTimes(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] py-2 mt-1 bg-transparent"
+                  placeholder="09:00, 14:00"
+                />
+
+                <div className="mt-6 flex justify-end gap-2">
+                  <button
+                    onClick={() => setIsAddModalOpen(false)}
+                    className="bg-[var(--gray-200)] text-white px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      // basic validation
+                      if (!newName || !newEmail) {
+                        alert("Name and email are required");
+                        return;
+                      }
+
+                      // create local technician and persist in localStorage
+                      const id = Date.now().toString();
+                      const localTech: TechnicianType = {
+                        id,
+                        name: newName,
+                        email: newEmail,
+                        role: "TEC",
+                        availableTimes: newAvailableTimes
+                          ? newAvailableTimes.split(",").map((s) => s.trim())
+                          : [],
+                      };
+
+                      const stored = localStorage.getItem("local_technicians");
+                      let arr: TechnicianType[] = [];
+                      if (stored) {
+                        try {
+                          arr = JSON.parse(stored);
+                        } catch (e) {
+                          console.error(e);
+                          arr = [];
+                        }
+                      }
+                      arr.unshift(localTech);
+                      localStorage.setItem(
+                        "local_technicians",
+                        JSON.stringify(arr)
+                      );
+
+                      // update state to show new technician immediately
+                      setTechnicians((prev) => [localTech, ...prev]);
+
+                      // reset form and close
+                      setNewName("");
+                      setNewEmail("");
+                      setNewPassword("");
+                      setNewAvailableTimes("");
+                      setIsAddModalOpen(false);
+                    }}
+                    className="bg-black text-[var(--gray-100)] px-4 py-2 rounded"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -90,10 +90,10 @@ export function LogIn() {
                 <p className="text-red-500 text-xs">{errors.email.message}</p>
               )}
             </div>
-            <div>
+            <div className="mb-10 flex flex-col gap-4">
               <label
                 htmlFor="password"
-                className="text-[var(--gray-300)] font-bold text-[10px] not-italic "
+                className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
               >
                 PASSWORD
               </label>
@@ -101,7 +101,7 @@ export function LogIn() {
                 id="password"
                 type="password"
                 placeholder="Type your password"
-                className="border-0 border-b border-gray-300 py-2 px-2 w-[344px] text-[var(--gray-300)] "
+                className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
                 {...register("password")}
               />
               {errors.password && (

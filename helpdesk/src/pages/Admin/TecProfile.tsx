@@ -14,6 +14,12 @@ import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
+const timeSlots = {
+  MORNING: ["07:00", "08:00", "09:00", "10:00", "11:00"],
+  AFTERNOON: ["12:00", "13:00", "14:00", "15:00", "16:00"],
+  EVENING: ["17:00", "18:00", "19:00", "20:00", "21:00"],
+};
+
 export type TechnicianDetailType = {
   id: string;
   name: string;
@@ -34,6 +40,7 @@ export function TecProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
@@ -44,25 +51,89 @@ export function TecProfile() {
 
   // 📌 Função para buscar dados do técnico (não existe endpoint, então apenas inicializa)
   const fetchTechnician = async () => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
 
-      // Sem endpoint disponível, apenas inicializa os campos vazios
-      // O usuário pode editar e salvar
-      setName("");
-      setEmail("");
-      setTechnician(null);
-    } catch (err) {
-      console.error("Error initializing technician form:", err);
+      // Load saved times from localStorage if they exist
+      const saved = localStorage.getItem(`tech_times_${id}`);
+      if (saved) {
+        setSelectedTimes(JSON.parse(saved));
+      }
+
+      // Try to fetch from API first
+      const token = localStorage.getItem("token");
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+
+        if (res.ok) {
+          const data = await res.json();
+          setName(data.name || "");
+          setEmail(data.email || "");
+          setTechnician(data);
+        } else {
+          // Fall back to localStorage for local technicians (404 is expected for locally created technicians)
+          loadFromLocalStorage();
+        }
+      } catch (apiErr) {
+        // Silently fail if API is unreachable, fall back to localStorage
+        clearTimeout(timeout);
+        loadFromLocalStorage();
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  const loadFromLocalStorage = () => {
+    const local = localStorage.getItem("local_technicians");
+    if (local) {
+      const techs = JSON.parse(local);
+      const tech = techs.find((t: any) => t.id === id);
+      if (tech) {
+        setName(tech.name);
+        setEmail(tech.email);
+        setTechnician(tech);
+        if (tech.availableTimes) {
+          setSelectedTimes(tech.availableTimes);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (id) {
       fetchTechnician();
     }
   }, [id]);
+
+  const getInitials = (fullName: string) => {
+    if (!fullName) return "";
+
+    const parts = fullName.trim().split(" ");
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const handleTimeToggle = (time: string) => {
+    setSelectedTimes((prev) => {
+      return prev.includes(time)
+        ? prev.filter((t) => t !== time)
+        : [...prev, time];
+    });
+  };
 
   // 📌 Função para salvar alterações do técnico
   const saveTechnician = async () => {
@@ -77,6 +148,7 @@ export function TecProfile() {
         id,
         name,
         email,
+        availableTimes: selectedTimes,
       };
 
       // Armazena o técnico editado no localStorage
@@ -84,6 +156,21 @@ export function TecProfile() {
         `technician_${id}`,
         JSON.stringify(updatedTechnician)
       );
+
+      // Save times to localStorage with key format
+      localStorage.setItem(`tech_times_${id}`, JSON.stringify(selectedTimes));
+
+      // If it's a local technician, also update it in local_technicians
+      const local = localStorage.getItem("local_technicians");
+      if (local) {
+        const techs = JSON.parse(local);
+        const idx = techs.findIndex((t: any) => t.id === id);
+        if (idx !== -1) {
+          techs[idx].availableTimes = selectedTimes;
+          localStorage.setItem("local_technicians", JSON.stringify(techs));
+        }
+      }
+
       console.log("Technician saved to localStorage:", updatedTechnician);
 
       // Simula uma pequena demora para visualizar o "Saving..."
@@ -116,15 +203,6 @@ export function TecProfile() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isUserPopupOpen]);
-
-  const getInitials = (fullName: string) => {
-    if (!fullName) return "";
-
-    const parts = fullName.trim().split(" ");
-    if (parts.length === 1) return parts[0][0].toUpperCase();
-
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  };
 
   return (
     //sidebar desktop:
@@ -458,7 +536,9 @@ export function TecProfile() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Type your full name"
-                        className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                        className={`border-0 border-b py-1 px-2 w-[344px] text-[var(--gray-300)] transition-colors ${
+                          name ? "border-[var(--blue-dark)]" : "border-gray-300"
+                        }`}
                       />
                       <label
                         htmlFor="email"
@@ -472,7 +552,11 @@ export function TecProfile() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="example@email.com"
-                        className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                        className={`border-0 border-b py-1 px-2 w-[344px] text-[var(--gray-300)] transition-colors ${
+                          email
+                            ? "border-[var(--blue-dark)]"
+                            : "border-gray-300"
+                        }`}
                       />
                       <label
                         htmlFor="password"
@@ -486,7 +570,7 @@ export function TecProfile() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Set the acess password"
-                        className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
+                        className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)] transition-colors"
                       />
                     </div>
                   </form>
@@ -499,71 +583,74 @@ export function TecProfile() {
                     Select the technician's availability hours for service
                   </p>
                 </div>
-                <div>
-                  <div className="mb-5">
-                    <h3 className="text-[var(--gray-300)] text-[10px]">
+                <div className="space-y-5 w-full">
+                  <div>
+                    <h3 className="text-[var(--gray-300)] text-[10px] mb-2">
                       MORNING
                     </h3>
-                    <div className="flex gap-1">
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        7:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        8:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        9:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        10:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        11:00
-                      </span>
+                    <div className="flex flex-wrap gap-3">
+                      {timeSlots.MORNING.map((time) => (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => {
+                            handleTimeToggle(time);
+                          }}
+                          className={`border rounded-2xl px-3 py-1 text-sm transition-all cursor-pointer ${
+                            selectedTimes.includes(time)
+                              ? "bg-[var(--blue-dark)] text-white border-[var(--blue-dark)]"
+                              : "border-[var(--gray-400)] text-[var(--gray-100)]"
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                  <div className="mb-5">
-                    <h3 className="text-[var(--gray-300)] text-[10px]">
+                  <div>
+                    <h3 className="text-[var(--gray-300)] text-[10px] mb-2">
                       AFTERNOON
                     </h3>
-                    <div className="flex gap-1">
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        7:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        8:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        9:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        10:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        11:00
-                      </span>
+                    <div className="flex flex-wrap gap-3">
+                      {timeSlots.AFTERNOON.map((time) => (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => {
+                            handleTimeToggle(time);
+                          }}
+                          className={`border rounded-2xl px-3 py-1 text-sm transition-all cursor-pointer ${
+                            selectedTimes.includes(time)
+                              ? "bg-[var(--blue-dark)] text-white border-[var(--blue-dark)]"
+                              : "border-[var(--gray-400)] text-[var(--gray-100)]"
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                  <div className="">
-                    <h3 className="text-[var(--gray-300)] text-[10px]">
+                  <div>
+                    <h3 className="text-[var(--gray-300)] text-[10px] mb-2">
                       EVENING
                     </h3>
-                    <div className="flex gap-1">
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        7:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        8:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        9:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        10:00
-                      </span>
-                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                        11:00
-                      </span>
+                    <div className="flex flex-wrap gap-3">
+                      {timeSlots.EVENING.map((time) => (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => {
+                            handleTimeToggle(time);
+                          }}
+                          className={`border rounded-2xl px-3 py-1 text-sm transition-all cursor-pointer ${
+                            selectedTimes.includes(time)
+                              ? "bg-[var(--blue-dark)] text-white border-[var(--blue-dark)]"
+                              : "border-[var(--gray-400)] text-[var(--gray-100)]"
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
