@@ -68,7 +68,9 @@ export function Clients() {
       const clientsList = Array.isArray(data)
         ? data.filter((user: ClientType) => user.role === "CLIENT")
         : [];
-      setClients(clientsList);
+      // Merge any local edits saved in localStorage (client_<id>)
+      const merged = clientsList.map((c) => getClientData(c));
+      setClients(merged);
     } catch (err) {
       console.error("Error fetching clients:", err);
       setError(err instanceof Error ? err.message : "Failed to load clients");
@@ -108,6 +110,18 @@ export function Clients() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const getClientData = (client: ClientType) => {
+    const edited = localStorage.getItem(`client_${client.id}`);
+    if (edited) {
+      try {
+        return JSON.parse(edited) as ClientType;
+      } catch (err) {
+        console.error("Error parsing client from localStorage:", err);
+      }
+    }
+    return client;
   };
 
   return (
@@ -360,12 +374,14 @@ export function Clients() {
                       <td className="px-2 py-4">
                         <div className="flex gap-2">
                           <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-xs font-bold">
-                            {getInitials(client.name)}
+                            {getInitials(getClientData(client).name)}
                           </div>
-                          <small className="font-bold">{client.name}</small>
+                          <small className="font-bold">
+                            {getClientData(client).name}
+                          </small>
                         </div>
                       </td>
-                      <td>{client.email}</td>
+                      <td>{getClientData(client).email}</td>
                       <td className="text-right pr-4">
                         <div className="flex justify-end gap-2">
                           <button
@@ -427,7 +443,9 @@ export function Clients() {
                 </button>
               </div>
               <div className="mb-5">
-                <img src={bigAvagarSvg} alt="" className="w-[48px] h-[48px]" />
+                <div className="w-[48px] h-[48px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-xl font-bold">
+                  {getInitials(getClientData(selectedClient).name)}
+                </div>
               </div>
 
               <div className="flex flex-col gap-4">
@@ -476,7 +494,18 @@ export function Clients() {
               </button> */}
               <button
                 onClick={() => {
-                  console.log("Salvando:", selectedClient);
+                  if (selectedClient && selectedClient.id) {
+                    // persist to localStorage so UI can show changes without backend
+                    localStorage.setItem(
+                      `client_${selectedClient.id}`,
+                      JSON.stringify(selectedClient)
+                    );
+                    setClients((prev) =>
+                      prev.map((c) =>
+                        c.id === selectedClient.id ? selectedClient : c
+                      )
+                    );
+                  }
                   setIsEditOpen(false);
                 }}
                 className="bg-[var(--gray-200)] text-white px-4 py-2 rounded font-bold hover:opacity-90 transition w-full"
@@ -536,7 +565,12 @@ export function Clients() {
               </button>
               <button
                 onClick={() => {
-                  console.log("Excluindo cliente:", selectedClient);
+                  if (selectedClient && selectedClient.id) {
+                    localStorage.removeItem(`client_${selectedClient.id}`);
+                    setClients((prev) =>
+                      prev.filter((c) => c.id !== selectedClient.id)
+                    );
+                  }
                   setIsDeleteOpen(false);
                 }}
                 className="bg-[var(--gray-200)] text-white px-4 py-2 rounded font-bold hover:opacity-90 transition w-screen"
