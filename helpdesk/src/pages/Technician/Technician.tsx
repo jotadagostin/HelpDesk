@@ -19,11 +19,20 @@ export function Technician() {
   const [isHovered, setIsHovered] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileName, setProfileName] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(
+    localStorage.getItem("profileImage") || null
+  );
   const [calls, setCalls] = useState<any[]>([]);
   const navigate = useNavigate();
   const popupRef = useRef<HTMLDivElement>(null);
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const [user, setUser] = useState<any>(() =>
+    JSON.parse(localStorage.getItem("user") || "{}")
+  );
 
   useEffect(() => {
     fetchCalls();
@@ -75,6 +84,42 @@ export function Technician() {
       console.error(e);
       alert("Failed to update status");
     }
+  };
+
+  const openProfileModal = () => {
+    setProfileName(user.name || "");
+    setProfileEmail(user.email || "");
+    setCurrentPassword("");
+    setNewPassword("");
+    setProfileImage(localStorage.getItem("profileImage") || null);
+    setIsUserPopupOpen(false);
+    setIsProfileModalOpen(true);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setProfileImage(result);
+        localStorage.setItem("profileImage", result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const deleteImage = () => {
+    setProfileImage(null);
+    localStorage.removeItem("profileImage");
+  };
+
+  const saveProfile = async () => {
+    const updatedUser = { ...user, name: profileName, email: profileEmail };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    setIsProfileModalOpen(false);
+    alert("Profile updated successfully!");
   };
 
   useEffect(() => {
@@ -136,8 +181,16 @@ export function Technician() {
             className="flex items-center gap-2 border-t border-t-[var(--gray-300)] py-5 px-4 cursor-pointer"
             onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
           >
-            <div className="w-[32px] h-[32px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white">
-              {getInitials(user.name)}
+            <div className="w-[32px] h-[32px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white overflow-hidden">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span>{getInitials(user.name)}</span>
+              )}
             </div>
             <div>
               <span className="text-[var(--gray-600)] text-[14px]">
@@ -156,7 +209,7 @@ export function Technician() {
                 Options
               </span>
               <button
-                onClick={() => setIsProfileModalOpen(true)}
+                onClick={() => openProfileModal()}
                 className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2"
               >
                 <img src={userWhite} alt="" /> Perfil
@@ -191,7 +244,7 @@ export function Technician() {
               <div className="pb-5">
                 <img src={statusInProgress} alt="in-progress" />
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
                 {inProgressCalls.map((call) => (
                   <article
                     key={call.id}
@@ -261,7 +314,7 @@ export function Technician() {
               <div className="pb-5">
                 <img src={statusOpen} alt="open" />
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
                 {openCalls.map((call) => (
                   <article
                     key={call.id}
@@ -339,7 +392,7 @@ export function Technician() {
               <div className="pb-5">
                 <img src={statusClosed} alt="closed" />
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
                 {closedCalls.map((call) => (
                   <article
                     key={call.id}
@@ -420,18 +473,38 @@ export function Technician() {
               />
             </div>
             <div className="mt-4">
-              <div className="flex gap-3">
-                <img src={tecProfileAvatar} alt="" />
+              <div className="flex gap-3 items-center">
+                {profileImage ? (
+                  <img
+                    src={profileImage}
+                    alt="profile"
+                    className="w-[64px] h-[64px] rounded-full object-cover"
+                  />
+                ) : (
+                  <img src={tecProfileAvatar} alt="" />
+                )}
+
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center bg-[var(--gray-500)] p-1 rounded-md gap-1">
+                  <label
+                    htmlFor="profileImageInput"
+                    className="flex items-center bg-[var(--gray-500)] p-1 rounded-md gap-1 cursor-pointer"
+                  >
                     <img src={uploadSvg} alt="" className="w-[12px] h-[12px]" />
                     <span className="text-xs">New Image</span>
-                  </div>
-                  <img
-                    src={trashSvg}
-                    alt=""
-                    className="bg-[var(--gray-500)] p-1 rounded-md"
+                  </label>
+                  <input
+                    id="profileImageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
                   />
+                  <button
+                    onClick={deleteImage}
+                    className="bg-[var(--gray-500)] p-1 rounded-md"
+                  >
+                    <img src={trashSvg} alt="" />
+                  </button>
                 </div>
               </div>
 
@@ -440,7 +513,9 @@ export function Technician() {
                 <input
                   type="text"
                   placeholder="Carlos Silva"
-                  className="w-full border-b border-[var(--gray-500)] py-3 mt-1"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] py-3 mt-1 bg-transparent"
                 />
                 <label className="text-[var(--gray-300)] text-xs mt-3 block">
                   E-MAIL
@@ -448,13 +523,15 @@ export function Technician() {
                 <input
                   type="email"
                   placeholder="carlos.silva@test.com"
-                  className="w-full border-b border-[var(--gray-500)] py-3 mt-1"
+                  value={profileEmail}
+                  onChange={(e) => setProfileEmail(e.target.value)}
+                  className="w-full border-b border-[var(--gray-500)] py-3 mt-1 bg-transparent"
                 />
               </div>
 
               <div className="mt-4 flex justify-end">
                 <button
-                  onClick={() => setIsProfileModalOpen(false)}
+                  onClick={saveProfile}
                   className="bg-[var(--gray-200)] text-white px-4 py-2 rounded"
                 >
                   Save
