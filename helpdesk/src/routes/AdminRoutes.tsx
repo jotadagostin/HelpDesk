@@ -14,9 +14,9 @@ export function AdminRoutes() {
       <Route path="tec" element={<Tec />} />
       <Route path="clients" element={<Clients />} />
       <Route path="services" element={<Services />} />
-      <Route path="callsdetails" element={<CallsDetails />} />
-      <Route path="tecprofile" element={<TecProfile />} />
-      <Route path="tecprofileedit" element={<TecProfileEdit />} />
+      <Route path="callsdetails/:id" element={<CallsDetails />} />
+      <Route path="tecprofile/:id" element={<TecProfile />} />
+      <Route path="tecprofileedit/:id" element={<TecProfileEdit />} />
     </Routes>
   );
 }

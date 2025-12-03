@@ -17,18 +17,70 @@ import bigAvagarSvg from "../../assets/icons/icon/bigAvatar.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
+export type ClientType = {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+};
+
 export function Clients() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState({ name: "", email: "" });
+  const [selectedClient, setSelectedClient] = useState<ClientType>({
+    id: "",
+    name: "",
+    email: "",
+  });
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [clients, setClients] = useState<ClientType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 📌 Função para buscar clientes
+  const fetchClients = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found - Please login again");
+      }
+
+      const res = await fetch("http://localhost:3000/api/users?role=CLIENT", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch clients: ${res.status}`);
+      }
+
+      const data = await res.json();
+      // Filtra apenas clientes com role CLIENT
+      const clientsList = Array.isArray(data)
+        ? data.filter((user: ClientType) => user.role === "CLIENT")
+        : [];
+      setClients(clientsList);
+    } catch (err) {
+      console.error("Error fetching clients:", err);
+      setError(err instanceof Error ? err.message : "Failed to load clients");
+      setClients([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -270,7 +322,6 @@ export function Clients() {
           <h1 className="w-[90%] font-bold text-[24px] text-[var(--blue-dark)] px-[48px] py-[52px]">
             Clients
           </h1>
-          <Button />
         </div>
 
         <div className="w-[90%] px-[48px] py-[52px] flex items-center justify-center">
@@ -285,45 +336,68 @@ export function Clients() {
               </thead>
 
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
-                <tr>
-                  <td className="px-2 py-4">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small className="font-bold">Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td>carlos.silve@test.com</td>
-                  <td className="text-right pr-4">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedClient({
-                            name: "Carlos Silva",
-                            email: "carlos.silve@test.com",
-                          });
-                          setIsEditOpen(true);
-                        }}
-                      >
-                        <img src={buttonEditSvg} alt="Edit" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedClient({
-                            name: "Carlos Silva",
-                            email: "carlos.silve@test.com",
-                          });
-                          setIsDeleteOpen(true);
-                        }}
-                      >
-                        <img src={buttonDeleteSvg} alt="Delete" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      Loading clients...
+                    </td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--feedback-danger)]"
+                    >
+                      Error: {error}
+                    </td>
+                  </tr>
+                ) : clients && clients.length > 0 ? (
+                  clients.map((client: ClientType) => (
+                    <tr key={client.id}>
+                      <td className="px-2 py-4">
+                        <div className="flex gap-2">
+                          <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-xs font-bold">
+                            {getInitials(client.name)}
+                          </div>
+                          <small className="font-bold">{client.name}</small>
+                        </div>
+                      </td>
+                      <td>{client.email}</td>
+                      <td className="text-right pr-4">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedClient(client);
+                              setIsEditOpen(true);
+                            }}
+                          >
+                            <img src={buttonEditSvg} alt="Edit" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedClient(client);
+                              setIsDeleteOpen(true);
+                            }}
+                          >
+                            <img src={buttonDeleteSvg} alt="Delete" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      No clients found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

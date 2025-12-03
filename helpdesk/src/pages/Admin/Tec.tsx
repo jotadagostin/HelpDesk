@@ -15,16 +15,67 @@ import buttonEditSvg from "../../assets/icons/icon/Button(Edit).svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
+export type TechnicianType = {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+  availableTimes?: string[];
+};
+
 export function Tec() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [technicians, setTechnicians] = useState<TechnicianType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
 
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 📌 Função para buscar técnicos
+  const fetchTechnicians = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found - Please login again");
+      }
+
+      const res = await fetch("http://localhost:3000/api/users?role=TEC", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch technicians: ${res.status}`);
+      }
+
+      const data = await res.json();
+      // Filtra apenas técnicos com role TEC
+      const techs = Array.isArray(data)
+        ? data.filter((user: TechnicianType) => user.role === "TEC")
+        : [];
+      setTechnicians(techs);
+    } catch (err) {
+      console.error("Error fetching technicians:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to load technicians"
+      );
+      setTechnicians([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTechnicians();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,6 +103,18 @@ export function Tec() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const getTechnicianData = (tech: TechnicianType) => {
+    const edited = localStorage.getItem(`technician_${tech.id}`);
+    if (edited) {
+      try {
+        return JSON.parse(edited);
+      } catch (err) {
+        console.error("Error parsing:", err);
+      }
+    }
+    return tech;
   };
 
   return (
@@ -334,150 +397,85 @@ export function Tec() {
                 </tr>
               </thead>
               <tbody className="border border-gray-200 text-[var(--gray-100)]">
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex items-center gap-2">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    carlos.silve@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      Loading technicians...
+                    </td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--feedback-danger)]"
+                    >
+                      Error: {error}
+                    </td>
+                  </tr>
+                ) : technicians && technicians.length > 0 ? (
+                  technicians.map((tech: TechnicianType) => (
+                    <tr key={tech.id}>
+                      <td className="px-2 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-xs font-bold">
+                            {getInitials(getTechnicianData(tech).name)}
+                          </div>
+                          <small className="font-bold text-sm">
+                            {getTechnicianData(tech).name}
+                          </small>
                         </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          09:00
+                      </td>
+                      <td className="hidden md:table-cell text-sm">
+                        {getTechnicianData(tech).email}
+                      </td>
+                      <td className="px-2 py-3">
+                        <div className="flex justify-between items-center">
+                          <div className="flex gap-1">
+                            {tech.availableTimes &&
+                            tech.availableTimes.length > 0 ? (
+                              tech.availableTimes.map((time, idx) => (
+                                <div
+                                  key={idx}
+                                  className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal"
+                                >
+                                  {time}
+                                </div>
+                              ))
+                            ) : (
+                              <small className="text-[var(--gray-400)]">
+                                No times available
+                              </small>
+                            )}
+                          </div>
+                          <div>
+                            <button>
+                              <img
+                                src={buttonEditSvg}
+                                alt="Edit"
+                                className="w-5 h-5"
+                                onClick={() =>
+                                  navigate(`/admin/tecprofile/${tech.id}`)
+                                }
+                              />
+                            </button>
+                          </div>
                         </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          10:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/admin/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex gap-2 items-center">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Ana Oliveria</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    ana.oliveira@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          15:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          16:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/admin/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex gap-2 items-center">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Cintia Lucia</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    cintia.lucia@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          11:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          18:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/admin/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-3">
-                    <div className="flex gap-2 items-center">
-                      <img src={avatarSvg} alt="" className="w-5 h-5" />
-                      <small className="font-bold text-sm">Marcos Alves</small>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell text-sm">
-                    marcos.alves@test.com
-                  </td>
-                  <td className="px-2 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1">
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          08:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          09:00
-                        </div>
-                        <div className="text-[10px] flex items-center text-[var(--gray-400)] border rounded-full px-2 py-0.5 font-normal">
-                          10:00
-                        </div>
-                      </div>
-                      <div>
-                        <button>
-                          <img
-                            src={buttonEditSvg}
-                            alt="Edit"
-                            className="w-5 h-5"
-                            onClick={() => navigate("/admin/tecprofile")}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      No technicians found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

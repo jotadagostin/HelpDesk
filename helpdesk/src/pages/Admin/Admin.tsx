@@ -25,12 +25,31 @@ import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 
+export type CallType = {
+  id: string | number;
+  title: string;
+  category: string;
+  total?: string;
+  updatedAt: string;
+  technicianName?: string;
+  status: "open" | "in-progress" | "closed";
+  user?: {
+    name: string;
+  };
+  technician?: {
+    name: string;
+  };
+};
+
 export function Admin() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [calls, setCalls] = useState<CallType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +57,48 @@ export function Admin() {
 
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 📌 Função fetchCalls para carregar as chamadas da API
+  const fetchCalls = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found - Please login again");
+      }
+
+      console.log("Fetching calls with token:", token.slice(0, 20) + "...");
+
+      const res = await fetch("http://localhost:3000/api/calls", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Response status:", res.status);
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          `API Error ${res.status}: ${errorData.error || res.statusText}`
+        );
+      }
+
+      const data = await res.json();
+      console.log("Calls fetched successfully:", data.length, "calls");
+      console.log("First call structure:", data[0]); // Debug: ver estrutura do primeiro call
+      setCalls(data || []);
+    } catch (err) {
+      console.error("Error fetching calls:", err);
+      setError(err instanceof Error ? err.message : "Failed to load calls");
+      setCalls([]);
+    } finally {
+      setLoading(false);
+    }
+  }; // UseEffect inicial para carregar os calls
+  useEffect(() => {
+    fetchCalls();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -75,6 +136,35 @@ export function Admin() {
     if (parts.length === 1) return parts[0][0].toUpperCase();
 
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "open":
+        return { desktop: statusOpenSvg, mobile: statusOpenMobile };
+      case "in-progress":
+        return { desktop: statusInProgresSvg, mobile: statusInProgressMobile };
+      case "closed":
+        return { desktop: statusClosedSvg, mobile: statusClosedMobile };
+      default:
+        return { desktop: statusOpenSvg, mobile: statusOpenMobile };
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return (
+      date.toLocaleDateString("pt-BR") +
+      " " +
+      date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+    );
+  };
+
+  const getTechnicianName = (call: CallType) => {
+    // Tenta diferentes possibilidades de onde o nome do técnico pode estar
+    if (call.technician?.name) return call.technician.name;
+    if (call.technicianName) return call.technicianName;
+    return "Unassigned";
   };
 
   return (
@@ -446,277 +536,89 @@ export function Admin() {
                 </tr>
               </thead>
               <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="p-[14px]">12/04/25 15:50</td>
-                  <td className="p-[14px] hidden md:table-cell">00004</td>
-                  <td className="p-[14px]">
-                    <div className="flex flex-col">
-                      <strong>Backup is not working</strong>
-                      <small>Data recuparation</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">$ 200,00</td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Andre Costa</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2 ">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex justify-between p-2">
-                      <img
-                        src={statusOpenSvg}
-                        alt=""
-                        className="hidden md:block "
-                      />
-                      <img
-                        src={statusOpenMobile}
-                        alt=""
-                        className="block md:hidden"
-                      />
-                      <button>
-                        <img
-                          src={buttonEditSvg}
-                          alt=""
-                          className=""
-                          onClick={() => navigate("/admin/callsdetails")}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr>
-                  <td className="p-[14px]">13/04/25 20:56</td>
-                  <td className="p-[14px] hidden md:table-cell">00003</td>
-                  <td className="p-[14px]">
-                    <div className="flex flex-col">
-                      <strong>Slow net</strong>
-                      <small>Net Instation</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">$ 170,00</td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Andre Costa</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex justify-between p-2">
-                      <img
-                        src={statusOpenSvg}
-                        alt=""
-                        className="hidden md:block "
-                      />
-                      <img
-                        src={statusOpenMobile}
-                        alt=""
-                        className="block md:hidden"
-                      />
-                      <button>
-                        <img
-                          src={buttonEditSvg}
-                          alt=""
-                          onClick={() => navigate("/admin/callsdetails")}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)]">
-                <tr>
-                  <td className="p-[14px]">12/04/25 09:56</td>
-                  <td className="p-[14px] hidden md:table-cell">00004</td>
-                  <td className="p-[14px]">
-                    <div className="flex flex-col">
-                      <strong>Pc does not turn on</strong>
-                      <small>Hardware support</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px ] hidden md:table-cell">$ 200,00</td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Julia Maria</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Carlos Silva</small>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex justify-between items-center gap-1 p-2">
-                      <img
-                        src={statusInProgresSvg}
-                        alt=""
-                        className="hidden md:block"
-                      />
-                      <img
-                        src={statusInProgressMobile}
-                        alt=""
-                        className="block md:hidden "
-                      />
-                      <button>
-                        <img
-                          src={buttonEditSvg}
-                          alt=""
-                          onClick={() => navigate("/admin/callsdetails")}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="p-[14px]">10/04/25 10:56</td>
-                  <td className="p-[14px] hidden md:table-cell">00005</td>
-                  <td className="p-[14px]">
-                    <div className="flex flex-col">
-                      <strong>Instalation of Software</strong>
-                      <small>Software support</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">$ 80,00</td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Julia Maria</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Ana Oliveira</small>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex justify-between p-2">
-                      <img
-                        src={statusClosedSvg}
-                        alt=""
-                        className="hidden md:block"
-                      />
-                      <img
-                        src={statusClosedMobile}
-                        alt=""
-                        className="block md:hidden"
-                      />
-                      <button>
-                        <img
-                          src={buttonEditSvg}
-                          alt=""
-                          onClick={() => navigate("/admin/callsdetails")}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)]">
-                <tr>
-                  <td className="p-[14px]">11/04/25 10:56</td>
-                  <td className="p-[14px] hidden md:table-cell">00006</td>
-                  <td className="p-[14px]">
-                    <div className="flex flex-col">
-                      <strong>
-                        My phone does not connect with the computer
-                      </strong>
-                      <small>Software support</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">$ 80,00</td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex  gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Suzana Moura</small>
-                    </div>
-                  </td>
-                  <td className="p-[14px] hidden md:table-cell">
-                    <div className="flex gap-2">
-                      <img
-                        src={avatarSvg}
-                        alt=""
-                        className="w-[20px] h-[20px]"
-                      />
-                      <small>Ana Oliveira</small>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex justify-between p-2">
-                      <img
-                        src={statusClosedSvg}
-                        alt=""
-                        className="hidden md:block"
-                      />
-                      <img
-                        src={statusClosedMobile}
-                        alt=""
-                        className="block md:hidden"
-                      />
-                      <button>
-                        <img
-                          src={buttonEditSvg}
-                          alt=""
-                          onClick={() => navigate("/admin/callsdetails")}
-                        />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      Loading calls...
+                    </td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="p-[14px] text-center text-[var(--feedback-danger)]"
+                    >
+                      Error: {error}
+                    </td>
+                  </tr>
+                ) : calls && calls.length > 0 ? (
+                  calls.map((call: CallType) => (
+                    <tr key={String(call.id)} className="">
+                      <td className="p-[14px]">{formatDate(call.updatedAt)}</td>
+                      <td className="p-[14px] hidden md:table-cell">
+                        {String(call.id).slice(0, 5).toUpperCase()}
+                      </td>
+                      <td className="p-[14px]">
+                        <div className="flex flex-col">
+                          <strong>{call.title}</strong>
+                          <small>{call.category}</small>
+                        </div>
+                      </td>
+                      <td className="p-[14px] hidden md:table-cell">
+                        $ {call.total || "0,00"}
+                      </td>
+                      <td className="p-[14px] hidden md:table-cell">
+                        <div className="flex gap-2 ">
+                          <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-xs font-bold">
+                            {getInitials(call.user?.name || "")}
+                          </div>
+                          <small>{call.user?.name || "N/A"}</small>
+                        </div>
+                      </td>
+                      <td className="p-[14px] hidden md:table-cell">
+                        <div className="flex gap-2 ">
+                          <div className="w-[20px] h-[20px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-xs font-bold">
+                            {getInitials(getTechnicianName(call))}
+                          </div>
+                          <small>{getTechnicianName(call)}</small>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex justify-between p-2">
+                          <img
+                            src={getStatusIcon(call.status).desktop}
+                            alt=""
+                            className="hidden md:block "
+                          />
+                          <img
+                            src={getStatusIcon(call.status).mobile}
+                            alt=""
+                            className="block md:hidden"
+                          />
+                          <button
+                            onClick={() =>
+                              navigate(`/admin/callsdetails/${call.id}`)
+                            }
+                          >
+                            <img src={buttonEditSvg} alt="" className="" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      No calls found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

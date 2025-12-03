@@ -9,21 +9,94 @@ import serviceSvg from "../../assets/icons/icon/service.svg";
 import servicesWhiteSvg from "../../assets/icons/icon/wrench-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
+
+export type TechnicianDetailType = {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+  availableTimes?: string[];
+};
 
 export function TecProfile() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [technician, setTechnician] = useState<TechnicianDetailType | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
 
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 📌 Função para buscar dados do técnico (não existe endpoint, então apenas inicializa)
+  const fetchTechnician = async () => {
+    try {
+      setLoading(true);
+
+      // Sem endpoint disponível, apenas inicializa os campos vazios
+      // O usuário pode editar e salvar
+      setName("");
+      setEmail("");
+      setTechnician(null);
+    } catch (err) {
+      console.error("Error initializing technician form:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (id) {
+      fetchTechnician();
+    }
+  }, [id]);
+
+  // 📌 Função para salvar alterações do técnico
+  const saveTechnician = async () => {
+    if (!name || !email) {
+      console.warn("Name and email are required");
+      return;
+    }
+    try {
+      setSaving(true);
+      // Salva os dados editados no localStorage
+      const updatedTechnician = {
+        id,
+        name,
+        email,
+      };
+
+      // Armazena o técnico editado no localStorage
+      localStorage.setItem(
+        `technician_${id}`,
+        JSON.stringify(updatedTechnician)
+      );
+      console.log("Technician saved to localStorage:", updatedTechnician);
+
+      // Simula uma pequena demora para visualizar o "Saving..."
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Volta para a página anterior
+      navigate("/admin/tec");
+    } catch (err) {
+      console.error("Error saving technician:", err);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -335,144 +408,168 @@ export function TecProfile() {
 
           {/* Buttons */}
           <div className="flex flex-row gap-2 text-[var(--gray-100)] ">
-            <button className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto ">
+            <button
+              onClick={() => navigate("/admin/tec")}
+              className="flex items-center bg-gray-300 rounded p-3 gap-2 w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto "
+            >
               <span className="font-bold text-[14px] text-center px-3">
                 Cancel
               </span>
             </button>
             <button
-              className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto "
-              onClick={() => navigate("/admin/tecprofileedit")}
+              disabled={saving}
+              className="flex items-center bg-[var(--gray-200)] text-[var(--gray-600)] rounded p-3 gap-2 font-bold text-[14px] w-[173px] h-[40px] justify-center sm:w-auto sm:h-auto disabled:opacity-50"
+              onClick={saveTechnician}
             >
-              <span className="font-bold px-3 ">Save</span>
+              <span className="font-bold px-3 ">
+                {saving ? "Saving..." : "Save"}
+              </span>
             </button>
           </div>
         </div>
 
         <div className="flex  justify-center gap-10 items-start mt-10 w-[100%] ">
-          <div className="border border-[var(--gray-600)] rounded ">
-            <div className="">
-              <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+          {loading ? (
+            <div className="text-center text-[var(--gray-400)]">
+              Loading technician profile...
+            </div>
+          ) : (
+            <>
+              <div className="border border-[var(--gray-600)] rounded ">
+                <div className="">
+                  <form className="w-full max-w-sm border border-gray-200 flex flex-col items-start justify-start p-7 rounded">
+                    <div className="mb-10">
+                      <h1 className="text-xl font-bold">Personal data</h1>
+                      <p className="font-normal text-[12px] text-[var(--gray-300)] ">
+                        Set technician profile information
+                      </p>
+                    </div>
+
+                    <div className="mb-10 flex flex-col gap-4">
+                      <label
+                        htmlFor="name"
+                        className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                      >
+                        NAME
+                      </label>
+                      <input
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Type your full name"
+                        className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                      />
+                      <label
+                        htmlFor="email"
+                        className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                      >
+                        E-MAIL
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="example@email.com"
+                        className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
+                      />
+                      <label
+                        htmlFor="password"
+                        className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
+                      >
+                        PASSWORD
+                      </label>
+                      <input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Set the acess password"
+                        className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div className="border border-[var(--gray-500)] rounded flex flex-col items-start justify-start pt-5 pl-10 pb-10 w-[45%] ">
                 <div className="mb-10">
-                  <h1 className="text-xl font-bold">Personal data</h1>
+                  <h1 className="text-xl font-bold">Opening hours</h1>
                   <p className="font-normal text-[12px] text-[var(--gray-300)] ">
-                    Set technician profile information
+                    Select the technician's availability hours for service
                   </p>
                 </div>
-
-                <div className="mb-10 flex flex-col gap-4">
-                  <label
-                    htmlFor="name"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    NAME
-                  </label>
-                  <input
-                    id="name"
-                    type="name"
-                    placeholder="Type your full name"
-                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
-                  />
-                  <label
-                    htmlFor="email"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    E-MAIL
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="example@email.com"
-                    className="border-0 border-b border-gray-300  text-[var(--gray-300)] py-1 px-2 w-[344px]"
-                  />
-                  <label
-                    htmlFor="password"
-                    className="text-[var(--gray-300)] font-bold text-[10px] not-italic"
-                  >
-                    PASSWORD
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    placeholder="Set the acess password"
-                    className="border-0 border-b border-gray-300 py-1 px-2 w-[344px] text-[var(--gray-300)]"
-                  />
-                </div>
-              </form>
-            </div>
-          </div>
-          <div className="border border-[var(--gray-500)] rounded flex flex-col items-start justify-start pt-5 pl-10 pb-10 w-[45%] ">
-            <div className="mb-10">
-              <h1 className="text-xl font-bold">Opening hours</h1>
-              <p className="font-normal text-[12px] text-[var(--gray-300)] ">
-                Select the technician's availability hours for service
-              </p>
-            </div>
-            <div>
-              <div className="mb-5">
-                <h3 className="text-[var(--gray-300)] text-[10px]">MORNING</h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
-                </div>
-              </div>
-              <div className="mb-5">
-                <h3 className="text-[var(--gray-300)] text-[10px]">
-                  AFTERNOON
-                </h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
+                <div>
+                  <div className="mb-5">
+                    <h3 className="text-[var(--gray-300)] text-[10px]">
+                      MORNING
+                    </h3>
+                    <div className="flex gap-1">
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        7:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        8:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        9:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        10:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        11:00
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mb-5">
+                    <h3 className="text-[var(--gray-300)] text-[10px]">
+                      AFTERNOON
+                    </h3>
+                    <div className="flex gap-1">
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        7:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        8:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        9:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        10:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        11:00
+                      </span>
+                    </div>
+                  </div>
+                  <div className="">
+                    <h3 className="text-[var(--gray-300)] text-[10px]">
+                      EVENING
+                    </h3>
+                    <div className="flex gap-1">
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        7:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        8:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        9:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        10:00
+                      </span>
+                      <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
+                        11:00
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="">
-                <h3 className="text-[var(--gray-300)] text-[10px]">EVENING</h3>
-                <div className="flex gap-1">
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    7:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    8:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    9:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    10:00
-                  </span>
-                  <span className="border rounded-2xl px-2 py-1 border-[var(--gray-400)]">
-                    11:00
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
