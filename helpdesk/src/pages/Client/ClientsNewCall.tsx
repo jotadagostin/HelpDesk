@@ -10,34 +10,51 @@ import { useNavigate } from "react-router";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
+export type ServiceType = {
+  id: string;
+  title: string;
+  value: number;
+  isActive: boolean;
+};
+
 export function ClientsNewCall() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [services, setServices] = useState<ServiceType[]>([]);
   const popupRef = useRef<HTMLDivElement>(null);
 
   //Field states
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [serviceId, setServiceId] = useState("");
   const [initialValue, setInitialValue] = useState<number | string>(0);
 
-  // Map category to display label and default price
-  const CATEGORY_INFO: Record<string, { label: string; price: number }> = {
-    "data-recover": { label: "Data Recover", price: 200.0 },
-    backup: { label: "Backup", price: 150.0 },
-    internet: { label: "Internet", price: 100.0 },
-    others: { label: "Others", price: 50.0 },
-  };
+  // Load services from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("services");
+    if (saved) {
+      try {
+        setServices(JSON.parse(saved));
+      } catch (err) {
+        console.error("Error loading services:", err);
+      }
+    }
+  }, []);
 
   // Submit handler(form):
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("🔥 HANDLE SUBMIT DISPAROU!");
-    if (!title || !description || !category) {
+
+    if (!title || !description || !serviceId) {
       alert("Fill in all the fields.");
       return;
     }
+
+    // Get the service name from ID
+    const selectedService = services.find((s) => s.id === serviceId);
+    const categoryName = selectedService?.title || "";
 
     try {
       console.log("📝 Tentando obter token...");
@@ -48,7 +65,7 @@ export function ClientsNewCall() {
       console.log("Body:", {
         title,
         description,
-        category,
+        category: categoryName,
         total: initialValue,
       });
 
@@ -61,7 +78,7 @@ export function ClientsNewCall() {
         body: JSON.stringify({
           title,
           description,
-          category,
+          category: categoryName,
           total: initialValue,
         }),
       });
@@ -401,21 +418,24 @@ export function ClientsNewCall() {
                 <select
                   id="categoria"
                   name="categoria"
-                  value={category}
+                  value={serviceId}
                   onChange={(e) => {
-                    const val = e.target.value;
-                    setCategory(val);
-                    // Set initial value based on category default price
-                    const info = CATEGORY_INFO[val];
-                    setInitialValue(info ? info.price : 0);
+                    const id = e.target.value;
+                    setServiceId(id);
+                    // Set initial value based on selected service
+                    const service = services.find((s) => s.id === id);
+                    setInitialValue(service ? service.value : 0);
                   }}
                   className="border-0 border-b border-gray-300 text-[var(--gray-300)] py-1 w-full bg-transparent focus:outline-none"
                 >
-                  <option value="">Select a category</option>
-                  <option value="data-recover">Data Recover</option>
-                  <option value="backup">Backup</option>
-                  <option value="internet">Internet</option>
-                  <option value="others">Others</option>
+                  <option value="">Select a service</option>
+                  {services
+                    .filter((s) => s.isActive)
+                    .map((service) => (
+                      <option key={service.id} value={service.id}>
+                        {service.title}
+                      </option>
+                    ))}
                 </select>
               </div>
             </form>
@@ -439,8 +459,9 @@ export function ClientsNewCall() {
                 </h3>
                 <div className="flex gap-1">
                   <span className="text-sm text-[var(--gray-200)] font-normal">
-                    {category
-                      ? CATEGORY_INFO[category]?.label || category
+                    {serviceId
+                      ? services.find((s) => s.id === serviceId)?.title ||
+                        "Unknown"
                       : "-"}
                   </span>
                 </div>

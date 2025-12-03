@@ -2,7 +2,6 @@ import adminMenuSvg from "../../assets/images/NavHeaderAdmin.svg";
 import callsSvg from "../../assets/icons/icon/clipboard-list.svg";
 import callsWhiteSvg from "../../assets/icons/icon/clipboard-list-white.svg";
 import avatarSvg from "../../assets/images/Avatar.svg";
-import avatarClientSvg from "../../assets/icons/icon/AvatarClient.svg";
 import { useState, useRef, useEffect } from "react";
 import { Notification } from "../../components/Notification";
 import { useLocation, useNavigate } from "react-router";
@@ -18,7 +17,6 @@ import plusWhiteSvg from "../../assets/icons/icon/plus.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 import buttonXSvg from "../../assets/icons/icon/x.svg";
-import arrowSvg from "../../assets/icons/icon/arrow-left.svg";
 import uploadSvg from "../../assets/icons/icon/upload.svg";
 import trashSvg from "../../assets/icons/icon/trashRed.svg";
 
@@ -38,8 +36,14 @@ export function Clients() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [calls, setCalls] = useState<CallType[]>([]);
+
+  // Profile edit states
+  const [profileName, setProfileName] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -98,14 +102,35 @@ export function Clients() {
     };
   }, [isUserPopupOpen]);
 
-  const handleClick = () => {
-    setIsProfileModalOpen(false);
-    setShowModal(true);
+  const openProfileModal = () => {
+    setProfileName(user.name || "");
+    setProfileEmail(user.email || "");
+    setIsUserPopupOpen(false);
+    setIsProfileModalOpen(true);
   };
 
-  const handleClick2 = () => {
-    setIsProfileModalOpen(true);
-    setShowModal(false);
+  const saveProfile = async () => {
+    // TODO: Save profile to API
+    const updatedUser = {
+      ...user,
+      name: profileName,
+      email: profileEmail,
+    };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setIsProfileModalOpen(false);
+    alert("Profile updated successfully!");
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+        localStorage.setItem("profileImage", reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const getInitials = (fullName: string) => {
@@ -288,7 +313,7 @@ export function Clients() {
                 Options
               </span>
               <button
-                onClick={() => setIsProfileModalOpen(true)}
+                onClick={() => openProfileModal()}
                 className="px-4 py-2 text-left text-[var(--gray-600)] hover:bg-[var(--gray-200)] flex gap-2"
               >
                 <img src={userWhite} alt="" />
@@ -318,70 +343,131 @@ export function Clients() {
           <div className="fixed inset-0 bg-black/40 z-40"></div>
 
           {/* Modal central */}
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[440px]  max-h-[90vh] overflow-y-auto bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-4">
-            <div className="flex flex-col gap-2 ">
-              <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-4">
-                <span className="font-bold text-md">Perfil</span>
-                <img
-                  src={buttonXSvg}
-                  alt=""
-                  className="w-[18px] h-[18px] cursor-pointer"
-                  onClick={() => setIsProfileModalOpen(false)}
-                />
-              </div>
-              <div className="flex gap-3">
-                <img src={avatarClientSvg} alt="" />
-                <button className="flex items-center gap-1">
-                  <div className="flex items-center bg-[var(--gray-500)] p-1 rounded-md gap-1">
-                    <img src={uploadSvg} alt="" className="w-[12px] h-[12px]" />
-                    <span className="text-xs">New Image</span>
-                  </div>
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[440px] max-h-[90vh] overflow-y-auto bg-[var(--gray-600)] rounded-md shadow-xl border border-[var(--gray-400)] z-50 flex flex-col p-6">
+            <div className="flex items-center justify-between border-b border-[var(--gray-500)] pb-4 mb-4">
+              <span className="font-bold text-md text-[var(--gray-200)]">
+                Edit Profile
+              </span>
+              <img
+                src={buttonXSvg}
+                alt="Close"
+                className="w-[18px] h-[18px] cursor-pointer hover:opacity-70"
+                onClick={() => setIsProfileModalOpen(false)}
+              />
+            </div>
+
+            {/* Profile Image */}
+            <div className="flex gap-3 mb-6">
+              <div className="w-[60px] h-[60px] rounded-full bg-[var(--blue-dark)] flex items-center justify-center text-white text-2xl font-bold">
+                {profileImage ? (
                   <img
-                    src={trashSvg}
-                    alt=""
-                    className="bg-[var(--gray-500)] p-1 rounded-md"
+                    src={profileImage}
+                    alt="Profile"
+                    className="w-full h-full rounded-full object-cover"
                   />
-                </button>
+                ) : (
+                  getInitials(profileName || user.name)
+                )}
               </div>
-              <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
+              <div className="flex flex-col gap-2 justify-center">
+                <label
+                  htmlFor="imageUpload"
+                  className="flex items-center gap-1 bg-[var(--gray-500)] hover:bg-[var(--gray-400)] p-2 rounded-md cursor-pointer transition"
+                >
+                  <img
+                    src={uploadSvg}
+                    alt="Upload"
+                    className="w-[12px] h-[12px]"
+                  />
+                  <span className="text-xs text-[var(--gray-100)]">Upload</span>
+                </label>
+                <input
+                  id="imageUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+                {profileImage && (
+                  <button
+                    onClick={() => {
+                      setProfileImage(null);
+                      localStorage.removeItem("profileImage");
+                    }}
+                    className="flex items-center gap-1 bg-[var(--gray-500)] hover:bg-[var(--feedback-danger)] p-2 rounded-md transition"
+                  >
+                    <img
+                      src={trashSvg}
+                      alt="Delete"
+                      className="w-[12px] h-[12px]"
+                    />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Name Input */}
+            <div className="mb-6">
+              <label className="text-[var(--gray-300)] text-xs font-bold block mb-2">
                 NAME
               </label>
               <input
                 type="text"
-                placeholder="Andre Costa"
-                className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
+                placeholder="Your name"
+                className="border-b border-[var(--gray-500)] bg-transparent text-[var(--gray-100)] py-2 px-2 w-full focus:outline-none focus:border-[var(--gray-400)] transition"
               />
-              <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
+            </div>
+
+            {/* Email Input */}
+            <div className="mb-6">
+              <label className="text-[var(--gray-300)] text-xs font-bold block mb-2">
                 E-MAIL
               </label>
               <input
                 type="email"
-                placeholder="andre.costa@test.com"
-                className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)]"
+                value={profileEmail}
+                onChange={(e) => setProfileEmail(e.target.value)}
+                placeholder="your.email@example.com"
+                className="border-b border-[var(--gray-500)] bg-transparent text-[var(--gray-100)] py-2 px-2 w-full focus:outline-none focus:border-[var(--gray-400)] transition"
               />
-              <label htmlFor="" className="text-[var(--gray-300)] text-xs mt-3">
-                Password
-              </label>
-
-              <div className="relative w-full mt-4 ">
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  className="border-b border-[var(--gray-500)] py-3 px-3 placeholder-[var(--gray-200)] w-full pr-16"
-                />
-                <button
-                  className="absolute right-1 bottom-2 bg-[var(--gray-500)] text-[var(--gray-200)] text-xs font-bold px-2 py-2 rounded-md"
-                  onClick={handleClick}
-                >
-                  Change
-                </button>
-              </div>
             </div>
+
+            {/* Current Password */}
+            <div className="mb-6">
+              <label className="text-[var(--gray-300)] text-xs font-bold block mb-2">
+                CURRENT PASSWORD
+              </label>
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="••••••••"
+                className="border-b border-[var(--gray-500)] bg-transparent text-[var(--gray-100)] py-2 px-2 w-full focus:outline-none focus:border-[var(--gray-400)] transition"
+              />
+            </div>
+
+            {/* New Password */}
+            <div className="mb-6">
+              <label className="text-[var(--gray-300)] text-xs font-bold block mb-2">
+                NEW PASSWORD
+              </label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                className="border-b border-[var(--gray-500)] bg-transparent text-[var(--gray-100)] py-2 px-2 w-full focus:outline-none focus:border-[var(--gray-400)] transition"
+              />
+            </div>
+
+            {/* Save Button */}
             <button
-              onClick={() => setIsProfileModalOpen(false)}
-              className="mt-10 bg-[var(--gray-200)] text-white px-4 py-2 rounded "
+              onClick={() => saveProfile()}
+              className="mt-6 bg-[var(--gray-200)] hover:bg-[var(--gray-300)] text-white px-4 py-2 rounded font-bold transition w-full"
             >
-              Save
+              Save Changes
             </button>
           </div>
         </>
@@ -795,70 +881,6 @@ export function Clients() {
             </table>
           </div>
         </div>
-        {showModal && (
-          <>
-            {/* Fundo escuro */}
-            <div
-              className="fixed inset-0 bg-black/40 z-40"
-              onClick={() => setShowModal(false)}
-            ></div>
-
-            {/* Conteúdo do modal */}
-            <div
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                    bg-[var(--gray-600)] rounded-lg shadow-lg z-50 
-                    p-6 w-[90%] max-w-md border border-[var(--gray-400)]"
-            >
-              <div className="flex items-center justify-between  mb-4 border-b border-b-[var(--gray-500)] pb-4">
-                <div className="flex gap-2 items-center">
-                  <button onClick={handleClick2}>
-                    <img src={arrowSvg} alt="" className="w-[20px] h-[20px]" />
-                  </button>
-                  <h2 className="text-[var(--gray-200)] font-bold text-lg ">
-                    Change Password
-                  </h2>
-                </div>
-                <button onClick={() => setShowModal(false)}>
-                  <img src={buttonXSvg} alt="" className="w-[24px] h-[24px]" />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <div>
-                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
-                    Current password
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
-                    placeholder="Type your current password"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[var(--gray-300)] text-sm font-semibold mb-1">
-                    New password
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full border-b border-[var(--gray-500)]  py-3 focus:outline-none focus:border-[var(--gray-400)]"
-                    placeholder="type your new password"
-                  />
-                </div>
-              </div>
-
-              {/* Botão de salvar */}
-              <div className="flex justify-end mt-6">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="bg-[var(--gray-100)] hover:bg-[var(--gray-200)] text-white px-4 py-2 rounded-md font-semibold transition-colors w-screen"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );

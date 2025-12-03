@@ -16,16 +16,58 @@ import blockSvg from "../../assets/icons/icon/ban.svg";
 import userWhite from "../../assets/icons/icon/user-white.svg";
 import exitRed from "../../assets/icons/icon/log-out-red.svg";
 
+export type ServiceType = {
+  id: string;
+  title: string;
+  value: number;
+  isActive: boolean;
+};
+
 export function Services() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNewOpen, setIsNewOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [services, setServices] = useState<ServiceType[]>([]);
+  const [newServiceTitle, setNewServiceTitle] = useState("");
+  const [newServiceValue, setNewServiceValue] = useState("");
+  const [selectedService, setSelectedService] = useState<ServiceType | null>(
+    null
+  );
+  const [editTitle, setEditTitle] = useState("");
+  const [editValue, setEditValue] = useState("");
   const popupRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
   // 🔥 get the user in the localstorage:
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 📌 Initialize services from localStorage or defaults
+  const initializeServices = () => {
+    const saved = localStorage.getItem("services");
+    if (saved) {
+      try {
+        setServices(JSON.parse(saved));
+      } catch (err) {
+        console.error("Error loading services:", err);
+        setServices(getDefaultServices());
+      }
+    } else {
+      setServices(getDefaultServices());
+    }
+  };
+
+  const getDefaultServices = (): ServiceType[] => [
+    { id: "1", title: "Net Installation", value: 190, isActive: true },
+    { id: "2", title: "Recover Data", value: 200, isActive: false },
+    { id: "3", title: "Hardware Support", value: 140, isActive: true },
+    { id: "4", title: "Software Support", value: 200, isActive: true },
+  ];
+
+  useEffect(() => {
+    initializeServices();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,6 +87,62 @@ export function Services() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isUserPopupOpen]);
+
+  const saveServices = (updatedServices: ServiceType[]) => {
+    setServices(updatedServices);
+    localStorage.setItem("services", JSON.stringify(updatedServices));
+  };
+
+  const toggleServiceStatus = (id: string) => {
+    const updated = services.map((s) =>
+      s.id === id ? { ...s, isActive: !s.isActive } : s
+    );
+    saveServices(updated);
+  };
+
+  const deleteService = (id: string) => {
+    const updated = services.filter((s) => s.id !== id);
+    saveServices(updated);
+  };
+
+  const addNewService = () => {
+    if (!newServiceTitle.trim() || !newServiceValue) return;
+
+    const newService: ServiceType = {
+      id: Date.now().toString(),
+      title: newServiceTitle,
+      value: parseFloat(newServiceValue),
+      isActive: true,
+    };
+
+    saveServices([...services, newService]);
+    setNewServiceTitle("");
+    setNewServiceValue("");
+    setIsNewOpen(false);
+  };
+
+  const openEditModal = (service: ServiceType) => {
+    setSelectedService(service);
+    setEditTitle(service.title);
+    setEditValue(service.value.toString());
+    setIsEditOpen(true);
+  };
+
+  const saveEditedService = () => {
+    if (!selectedService || !editTitle.trim() || !editValue) return;
+
+    const updated = services.map((s) =>
+      s.id === selectedService.id
+        ? { ...s, title: editTitle, value: parseFloat(editValue) }
+        : s
+    );
+
+    saveServices(updated);
+    setIsEditOpen(false);
+    setSelectedService(null);
+    setEditTitle("");
+    setEditValue("");
+  };
 
   return (
     <div className="w-full h-screen bg-[var(--gray-100)] flex flex-col md:flex-row ">
@@ -326,89 +424,119 @@ export function Services() {
                 </tr>
               </thead>
               <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="px-2 py-4">
-                    <div className="flex gap-2 ">
-                      <small className="font-bold">Net Instalation</small>
-                    </div>
-                  </td>
-                  <td>$190,00</td>
-                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
-                    <span className="flex mr-9 text-[12px] text-[var(--feedback-done)] font-bold bg-[var(--feedback-bg)] py-1 px-2 rounded-2xl">
-                      Active
-                    </span>
-                    <img src={blockSvg} alt="" />
-                    <small className="text-[var(--gray-300)] text-[12px]">
-                      Desactivate
-                    </small>
-                    <img src={buttonEditSvg} alt="" />
-                  </div>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="px-2 py-4">
-                    <div className="flex gap-2 ">
-                      <small className="font-bold">Recover Data</small>
-                    </div>
-                  </td>
-                  <td> $200,00</td>
-                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
-                    <span className="flex mr-9 text-[12px] text-[var(--feedback-danger)] font-bold bg-[var(--feedback-danger-bg)] py-1 px-2 rounded-2xl">
-                      Inactive
-                    </span>
-                    <img src={blockSvg} alt="" />
-                    <small className="text-[var(--gray-300)] text-[12px]">
-                      Desactivate
-                    </small>
-                    <img src={buttonEditSvg} alt="" />
-                  </div>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="px-2 py-4">
-                    <div className="flex gap-2 ">
-                      <small className="font-bold">Hardware Support</small>
-                    </div>
-                  </td>
-                  <td>$140,00</td>
-                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
-                    <span className="flex mr-9 text-[12px] text-[var(--feedback-done)] font-bold bg-[var(--feedback-bg)] py-1 px-2 rounded-2xl">
-                      Active
-                    </span>
-                    <img src={blockSvg} alt="" />
-                    <small className="text-[var(--gray-300)] text-[12px]">
-                      Desactivate
-                    </small>
-                    <img src={buttonEditSvg} alt="" />
-                  </div>
-                </tr>
-              </tbody>
-              <tbody className="border border-gray-200 text-[var(--gray-100)] ">
-                <tr className="">
-                  <td className="px-2 py-4">
-                    <div className="flex gap-2 ">
-                      <small className="font-bold">Software Support</small>
-                    </div>
-                  </td>
-                  <td>$200,00</td>
-                  <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
-                    <span className="flex mr-9 text-[12px] text-[var(--feedback-done)] font-bold bg-[var(--feedback-bg)] py-1 px-2 rounded-2xl">
-                      Active
-                    </span>
-                    <img src={blockSvg} alt="" />
-                    <small className="text-[var(--gray-300)] text-[12px]">
-                      Desactivate
-                    </small>
-                    <img src={buttonEditSvg} alt="" />
-                  </div>
-                </tr>
+                {services && services.length > 0 ? (
+                  services.map((service) => (
+                    <tr key={service.id} className="">
+                      <td className="px-2 py-4">
+                        <div className="flex gap-2 ">
+                          <small className="font-bold">{service.title}</small>
+                        </div>
+                      </td>
+                      <td>${service.value.toFixed(2)}</td>
+                      <div className="flex items-center justify-end pr-[18px] gap-3  h-[50px]  ">
+                        <span
+                          className={`flex mr-9 text-[12px] font-bold py-1 px-2 rounded-2xl ${
+                            service.isActive
+                              ? "text-[var(--feedback-done)] bg-[var(--feedback-bg)]"
+                              : "text-[var(--feedback-danger)] bg-[var(--feedback-danger-bg)]"
+                          }`}
+                        >
+                          {service.isActive ? "Active" : "Inactive"}
+                        </span>
+                        <button
+                          onClick={() => toggleServiceStatus(service.id)}
+                          className="hover:opacity-70 transition"
+                        >
+                          <img src={blockSvg} alt="" />
+                        </button>
+                        <small className="text-[var(--gray-300)] text-[12px]">
+                          {service.isActive ? "Deactivate" : "Activate"}
+                        </small>
+                        <button
+                          onClick={() => openEditModal(service)}
+                          className="hover:opacity-70 transition"
+                        >
+                          <img src={buttonEditSvg} alt="" />
+                        </button>
+                      </div>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="p-[14px] text-center text-[var(--gray-400)]"
+                    >
+                      No services found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+      {/* ✅ Modal edit open*/}
+      {isEditOpen && selectedService && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white w-[440px] h-[336px] rounded-xl p-6 flex flex-col gap-4 shadow-lg">
+            <div className="flex justify-between items-center">
+              <h2 className="text-md font-bold text-[var(--gray-200)]">
+                Edit Service
+              </h2>
+              <button
+                onClick={() => setIsEditOpen(false)}
+                className="text-[var(--gray-400)] hover:text-[var(--gray-300)] transition"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="flex flex-col gap-3">
+              <label className="text-[var(--gray-300)] text-[16px]">
+                Title
+              </label>
+              <input
+                type="text"
+                placeholder="Name of the service"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="border border-gray-300 rounded-md p-2 focus:border-[var(--gray-400)] outline-none text-[var(--gray-300)] text-[16px]"
+              />
+              <label className="text-[var(--gray-300)] text-[16px]">
+                Value
+              </label>
+              <input
+                type="number"
+                placeholder="Value"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                className="border border-gray-300 rounded-md p-2 focus:border-[var(--gray-400)] outline-none text-[var(--gray-300)] text-[16px]"
+              />
+            </div>
+            <div className="flex justify-end gap-3 mt-auto">
+              <button
+                onClick={saveEditedService}
+                className="px-4 py-2 rounded-md bg-[var(--gray-200)] text-white hover:bg-[var(--gray-300)] transition-all w-full"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* ✅ Modal new open*/}
       {isNewOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
@@ -444,31 +572,37 @@ export function Services() {
                     </div>
                     <div className="flex flex-col gap-3">
                       <label
-                        htmlFor=""
+                        htmlFor="title"
                         className="text-[var(--gray-300)] text-[16px]"
                       >
                         Title
                       </label>
                       <input
+                        id="title"
                         type="text"
                         placeholder="Name of the service"
+                        value={newServiceTitle}
+                        onChange={(e) => setNewServiceTitle(e.target.value)}
                         className="border border-gray-300 rounded-md p-2 focus:border-[var(--gray-400)] outline-none text-[var(--gray-300)] text-[16px]"
                       />
                       <label
-                        htmlFor=""
+                        htmlFor="value"
                         className="text-[var(--gray-300)] text-[16px]"
                       >
                         Value
                       </label>
                       <input
+                        id="value"
                         type="number"
                         placeholder="Value"
+                        value={newServiceValue}
+                        onChange={(e) => setNewServiceValue(e.target.value)}
                         className="border border-gray-300 rounded-md p-2 focus:border-[var(--gray-400)] outline-none text-[var(--gray-300)] text-[16px]"
                       />
                     </div>
                     <div className="flex justify-end gap-3 mt-auto">
                       <button
-                        onClick={() => setIsNewOpen(false)}
+                        onClick={addNewService}
                         className="px-4 py-2 rounded-md bg-[var(--gray-200)] text-white hover:bg-[var(--gray-300)] transition-all w-full"
                       >
                         Save
