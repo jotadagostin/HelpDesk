@@ -66,7 +66,7 @@ export function SignIn() {
       {/* error notification */}
       {error && <Notification message={error} duration={4000} />}
       <div className="w-full md:w-[50%]  h-full md:h-[98%] bg-[var(--gray-600)] rounded-tl flex flex-col items-center justify-start ">
-        <div className="flex flex-col items-center pt-13 gap-3">
+        <div className="flex flex-col items-center pt-3 gap-3">
           <div className="mb-7">
             <img src={headerLogoSvg} alt="Helpdesk purple iconlogo" />
           </div>

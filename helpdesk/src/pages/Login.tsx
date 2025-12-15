@@ -57,7 +57,7 @@ export function LogIn() {
   return (
     <div className="w-full h-screen bg-login  bg-cover bg-center flex items-end justify-end">
       <div className="w-full md:w-[50%] h-full md:h-[98%] bg-[var(--gray-600)] rounded-tl flex flex-col items-center justify-start ">
-        <div className="flex flex-col items-center pt-13 gap-3">
+        <div className="flex flex-col items-center pt-3 gap-3">
           <div className="mb-7">
             <img src={headerLogoSvg} alt="Helpdesk purple iconlogo" />
           </div>
