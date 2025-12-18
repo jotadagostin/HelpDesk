@@ -31,6 +31,17 @@ export function ClientsNewCall() {
   const [initialValue, setInitialValue] = useState<number | string>(0);
 
   // Load services from localStorage on mount
+  // useEffect(() => {
+  //   const saved = localStorage.getItem("services");
+  //   if (saved) {
+  //     try {
+  //       setServices(JSON.parse(saved));
+  //     } catch (err) {
+  //       console.error("Error loading services:", err);
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
     const saved = localStorage.getItem("services");
     if (saved) {
@@ -39,6 +50,26 @@ export function ClientsNewCall() {
       } catch (err) {
         console.error("Error loading services:", err);
       }
+    } else {
+      // Inicializa com alguns serviços padrão caso não exista
+      const defaultServices = [
+        {
+          id: "1",
+          title: "Softaware installation",
+          value: 100,
+          isActive: true,
+        },
+        {
+          id: "2",
+          title: "Hardware repair",
+          value: 150,
+          isActive: true,
+        },
+        { id: "3", title: "Printer support", value: 80, isActive: true },
+        { id: "4", title: "Network setup", value: 120, isActive: true },
+      ];
+      setServices(defaultServices);
+      localStorage.setItem("services", JSON.stringify(defaultServices));
     }
   }, []);
 
